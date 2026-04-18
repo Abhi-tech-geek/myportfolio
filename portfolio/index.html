@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,10 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;800&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;800&display=swap"
+        rel="stylesheet">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -21,9 +24,12 @@
             --bg-surface-hover: rgba(255, 255, 255, 0.08);
             --text-primary: #ffffff;
             --text-secondary: #a1a1aa;
-            --accent-1: #8b5cf6; /* Violet */
-            --accent-2: #3b82f6; /* Blue */
-            --accent-3: #ec4899; /* Pink */
+            --accent-1: #8b5cf6;
+            /* Violet */
+            --accent-2: #3b82f6;
+            /* Blue */
+            --accent-3: #ec4899;
+            /* Pink */
             --gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
             --gradient-text: linear-gradient(to right, var(--accent-1), var(--accent-3));
             --border-color: rgba(255, 255, 255, 0.1);
@@ -49,7 +55,11 @@
             position: relative;
         }
 
-        h1, h2, h3, h4, .nav-brand {
+        h1,
+        h2,
+        h3,
+        h4,
+        .nav-brand {
             font-family: 'Outfit', sans-serif;
         }
 
@@ -84,22 +94,31 @@
         }
 
         .blob-1 {
-            top: -10%; left: -10%;
-            width: 50vw; height: 50vw;
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
             background: rgba(139, 92, 246, 0.3);
             animation-delay: 0s;
         }
-        
+
         .blob-2 {
-            bottom: -10%; right: -10%;
-            width: 40vw; height: 40vw;
+            bottom: -10%;
+            right: -10%;
+            width: 40vw;
+            height: 40vw;
             background: rgba(59, 130, 246, 0.2);
             animation-delay: -5s;
         }
 
         @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(10%, 10%) scale(1.1); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(10%, 10%) scale(1.1);
+            }
         }
 
         /* Typography Highlights */
@@ -115,7 +134,9 @@
         /* Navbar */
         nav {
             position: fixed;
-            top: 0; left: 0; width: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
             padding: 1.5rem 5%;
             display: flex;
             justify-content: space-between;
@@ -148,10 +169,31 @@
             font-weight: 500;
             font-size: 0.95rem;
             color: var(--text-secondary);
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--gradient);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
         }
 
         .nav-links a:hover {
             color: var(--text-primary);
+            text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
         }
 
         .mobile-toggle {
@@ -210,8 +252,16 @@
             text-align: center;
         }
 
+        @keyframes titlePulse {
+            0% { text-shadow: 0 0 5px rgba(139, 92, 246, 0.2); transform: translateY(0px) scale(1); }
+            50% { text-shadow: 0 0 25px rgba(139, 92, 246, 0.9); transform: translateY(-2px) scale(1.02); }
+            100% { text-shadow: 0 0 5px rgba(139, 92, 246, 0.2); transform: translateY(0px) scale(1); }
+        }
+
         .section-title span {
             color: var(--accent-1);
+            display: inline-block;
+            animation: titlePulse 3s infinite ease-in-out;
         }
 
         /* Hero Section */
@@ -285,6 +335,7 @@
             opacity: 0.9;
             transition: transform 0.5s ease;
         }
+
         .about-img-wrapper:hover img {
             transform: scale(1.05);
         }
@@ -340,7 +391,10 @@
         .skill-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
             background: var(--gradient);
             transform: scaleX(0);
             transform-origin: left;
@@ -373,7 +427,7 @@
         /* Skill bars */
         .skill-bar-container {
             width: 100%;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             height: 6px;
             border-radius: 10px;
             overflow: hidden;
@@ -399,7 +453,8 @@
             position: absolute;
             width: 2px;
             background: var(--border-color);
-            top: 0; bottom: 0;
+            top: 0;
+            bottom: 0;
             left: 20px;
         }
 
@@ -476,7 +531,7 @@
             border-radius: 15px;
             font-size: 1.2rem;
         }
-        
+
         .contact-card:hover {
             background: var(--bg-surface-hover);
         }
@@ -556,7 +611,7 @@
         .project-card:hover {
             border-color: var(--accent-1);
         }
-        
+
         .project-card::before {
             content: '';
             position: absolute;
@@ -624,16 +679,100 @@
             color: var(--accent-2);
         }
 
+        /* --- NEW 3D & FUTURISTIC CSS --- */
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .floating-icon {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.03);
+            z-index: -1;
+            animation: floatIcon 15s infinite alternate linear;
+        }
+        .icon-1 { top: 15%; left: 10%; font-size: 6rem; animation-delay: 0s; }
+        .icon-2 { bottom: 20%; right: 10%; font-size: 9rem; animation-delay: -5s; }
+        .icon-3 { top: 70%; left: 15%; font-size: 5rem; animation-delay: -9s; }
+        
+        @keyframes floatIcon {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-80px) rotate(60deg); }
+        }
+
+        .about-img-wrapper::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.4), rgba(59, 130, 246, 0.4));
+            mix-blend-mode: overlay; pointer-events: none;
+            border-radius: 20px;
+        }
+
+        .flip-card {
+            background: transparent;
+            perspective: 1000px;
+            min-height: 280px;
+            border-radius: 20px;
+        }
+        .flip-inner {
+            position: relative;
+            width: 100%; height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-front, .flip-back {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .flip-card:hover .flip-front, .flip-card:hover .flip-back {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+        }
+        .flip-back {
+            transform: rotateY(180deg);
+            background: rgba(139, 92, 246, 0.03);
+        }
+        
+        /* Reset old project card padding for inner flips */
+        .project-card, .skill-card {
+            border: none !important; background: none !important; padding: 0 !important;
+        }
+        .project-card:hover, .skill-card:hover {
+            border-color: transparent !important; background: none !important; transform: none !important; box-shadow: none !important;
+        }
+        .project-card::before, .skill-card::before { display: none !important; }
+        
+        /* --- END NEW CSS --- */
+
         /* Responsive Design */
         @media (max-width: 900px) {
-            .about-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 3.5rem; }
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
         }
 
         @media (max-width: 768px) {
             .nav-links {
                 position: absolute;
-                top: 100%; left: 0; width: 100%;
+                top: 100%;
+                left: 0;
+                width: 100%;
                 background: rgba(10, 10, 12, 0.95);
                 backdrop-filter: blur(10px);
                 flex-direction: column;
@@ -647,29 +786,48 @@
                 display: flex;
             }
 
-            .mobile-toggle { display: block; }
-            
-            .hero h1 { font-size: 2.8rem; }
-            .hero-cta { flex-direction: column; }
-            
-            .timeline::before { left: 0; }
-            .timeline-item { padding-left: 30px; }
-            .timeline-dot { left: -9px; }
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+
+            .timeline::before {
+                left: 0;
+            }
+
+            .timeline-item {
+                padding-left: 30px;
+            }
+
+            .timeline-dot {
+                left: -9px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Ambient Background -->
     <div class="ambient-bg">
         <div class="ambient-blob blob-1"></div>
         <div class="ambient-blob blob-2"></div>
+        <i class="fa-brands fa-react floating-icon icon-1"></i>
+        <i class="fa-brands fa-python floating-icon icon-2"></i>
+        <i class="fa-solid fa-code-commit floating-icon icon-3"></i>
     </div>
 
     <!-- Navigation -->
     <nav id="navbar">
         <a href="#" class="nav-brand">Abhinav.<span class="text-gradient">dev</span></a>
-        
+
         <ul class="nav-links" id="navLinks">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -688,14 +846,14 @@
     <section id="home" class="hero container">
         <div class="reveal">
             <div class="tagline">
-                <i class="fa-solid fa-code" style="margin-right: 8px;"></i> tech + learning mindset + grounded personality
+                <i class="fa-solid fa-bolt" style="margin-right: 8px;"></i> tech + learning mindset + vibe coder
             </div>
             <h1>Hi, I'm <span class="text-gradient">Abhinav Saxena</span></h1>
-            <p>A passionate QA Tester & Automation Specialist based in Gurgaon. I build expertise in ensuring top-tier software quality while constantly exploring new technologies.</p>
-            
+            <p>A passionate QA Tester & Automation Specialist based in Gurgaon. I build expertise in ensuring top-tier
+                software quality while constantly exploring new technologies.</p>
+
             <div class="hero-cta">
                 <a href="#about" class="btn btn-primary">Discover My Journey</a>
-                <a href="#contact" class="btn btn-outline">Let's Connect</a>
             </div>
         </div>
     </section>
@@ -703,21 +861,25 @@
     <!-- About Section -->
     <section id="about" class="container">
         <h2 class="section-title reveal">About <span>Me</span></h2>
-        
+
         <div class="about-grid">
             <div class="about-img-wrapper reveal">
                 <img src="avatar.png" alt="Abhinav Saxena Avatar">
             </div>
-            
+
             <div class="about-content reveal">
                 <h3>QA Tester @ Accenture</h3>
                 <p class="about-text">
-                    I am a BCA graduate from Lovely Professional University and currently working as a QA Tester at Accenture with more than 2 years of experience in software testing and quality assurance.
+                    I am a BCA graduate from Lovely Professional University and currently working as a QA Tester at
+                    Accenture with more than 2 years of experience in software testing and quality assurance.
                 </p>
                 <p class="about-text">
-                    I am passionate about continuous learning and enjoy exploring new technologies, tools, and innovative solutions that improve product quality and processes. Being a Person with Disability (PwD) has given me a unique perspective on resilience and determination. I strongly believe that challenges are opportunities in disguise, and with the right mindset, growth has no limits.
+                    I am passionate about continuous learning and enjoy exploring new technologies, tools, and
+                    innovative solutions that improve product quality and processes. Being a Person with Disability
+                    (PwD) has given me a unique perspective on resilience and determination. I strongly believe that
+                    challenges are opportunities in disguise, and with the right mindset, growth has no limits.
                 </p>
-                
+
                 <div class="defining-traits">
                     <div class="trait-item">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -743,48 +905,84 @@
     <!-- Skills Section -->
     <section id="skills" class="container">
         <h2 class="section-title reveal">Core <span>Skills</span></h2>
-        
+
         <div class="skills-grid">
-            <div class="skill-card reveal">
-                <i class="fa-solid fa-vial skill-icon"></i>
-                <h4 class="skill-title">Manual & Functional Testing</h4>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">Comprehensive test case design and execution ensuring high product quality.</p>
-                <div class="skill-bar-container"><div class="skill-bar" style="width: 95%;"></div></div>
-            </div>
-            
-            <div class="skill-card reveal">
-                <i class="fa-solid fa-robot skill-icon"></i>
-                <h4 class="skill-title">Automation Testing</h4>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">Proficient in Selenium, TestNG, Robot Framework, and Python.</p>
-                <div class="skill-bar-container"><div class="skill-bar" style="width: 85%;"></div></div>
-            </div>
-            
-            <div class="skill-card reveal">
-                <i class="fa-solid fa-bug skill-icon"></i>
-                <h4 class="skill-title">Defect Tracking</h4>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">Expertise in bug reporting and lifecycle management tools like Jira, ALM.</p>
-                <div class="skill-bar-container"><div class="skill-bar" style="width: 90%;"></div></div>
-            </div>
-            
-            <div class="skill-card reveal">
-                <i class="fa-solid fa-database skill-icon"></i>
-                <h4 class="skill-title">Database Testing</h4>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">Skilled in crafting complex SQL queries for backend validation.</p>
-                <div class="skill-bar-container"><div class="skill-bar" style="width: 80%;"></div></div>
+            <div class="skill-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-solid fa-vial skill-icon"></i>
+                        <h4 class="skill-title">Manual Testing</h4>
+                    </div>
+                    <div class="flip-back">
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Executing precision test vectors and edge-case protocols to ensure zero-defect product quality.</p>
+                        <div class="skill-bar-container"><div class="skill-bar" style="width: 95%;"></div></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="skill-card reveal">
-                <i class="fa-brands fa-react skill-icon"></i>
-                <h4 class="skill-title">Web Output Tech</h4>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">Foundational and growing skills in React.js, Node.js, and modern JS.</p>
-                <div class="skill-bar-container"><div class="skill-bar" style="width: 70%;"></div></div>
+            <div class="skill-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-solid fa-robot skill-icon"></i>
+                        <h4 class="skill-title">Automation Testing</h4>
+                    </div>
+                    <div class="flip-back">
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Proficient in Selenium, TestNG, Robot Framework, and deep Python integrations.</p>
+                        <div class="skill-bar-container"><div class="skill-bar" style="width: 85%;"></div></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="skill-card reveal">
-                <i class="fa-brands fa-figma skill-icon"></i>
-                <h4 class="skill-title">UI/UX & Design</h4>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">Experience using Figma to align testing expectations with design.</p>
-                <div class="skill-bar-container"><div class="skill-bar" style="width: 75%;"></div></div>
+            <div class="skill-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-solid fa-bug skill-icon"></i>
+                        <h4 class="skill-title">Defect Tracking</h4>
+                    </div>
+                    <div class="flip-back">
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Expertise in algorithmic bug tracking and lifecycle management using Jira & ALM.</p>
+                        <div class="skill-bar-container"><div class="skill-bar" style="width: 90%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-solid fa-database skill-icon"></i>
+                        <h4 class="skill-title">Database Validation</h4>
+                    </div>
+                    <div class="flip-back">
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Skilled in crafting complex SQL telemetry queries for strict backend validation.</p>
+                        <div class="skill-bar-container"><div class="skill-bar" style="width: 80%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-brands fa-react skill-icon"></i>
+                        <h4 class="skill-title">Web Interfaces</h4>
+                    </div>
+                    <div class="flip-back">
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Foundational skills in React.js, Node.js, and scaling modern JS architectures.</p>
+                        <div class="skill-bar-container"><div class="skill-bar" style="width: 70%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-brands fa-figma skill-icon"></i>
+                        <h4 class="skill-title">UI/UX Design</h4>
+                    </div>
+                    <div class="flip-back">
+                        <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Bridge testing and design expectations using Figma for pixel-perfect deployments.</p>
+                        <div class="skill-bar-container"><div class="skill-bar" style="width: 75%;"></div></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -792,40 +990,54 @@
     <!-- Projects Section -->
     <section id="projects" class="container">
         <h2 class="section-title reveal">Featured <span>Projects</span></h2>
-        
+
         <div class="projects-grid">
             <!-- AbhiMate -->
-            <div class="project-card reveal" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.2">
-                <i class="fa-solid fa-robot project-icon"></i>
-                <h3 class="project-title">AbhiMate</h3>
-                <p class="project-desc">
-                    A premium Cyber-QA Platform built to autonomously generate comprehensive software test cases utilizing Groq API (llama3-70b-8192). Designed with flexibility for future browser automation integrations.
-                </p>
-                <div class="project-tags">
-                    <span class="project-tag">Python</span>
-                    <span class="project-tag">Groq API</span>
-                    <span class="project-tag">AI Testing</span>
+            <div class="project-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-solid fa-robot project-icon"></i>
+                        <h3 class="project-title">AbhiMate</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Autonomous Cyber-QA & Generative AI Platform</p>
+                    </div>
+                    <div class="flip-back">
+                        <p class="project-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">
+                            An autonomous Cyber-QA synthesis engine. Leverage local LLM neural nets (Groq API, llama3) to self-generate critical software test vectors. Engineered for predictive browser automation integrations.
+                        </p>
+                        <div class="project-tags" style="justify-content: center; margin-bottom: 1rem;">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Groq API</span>
+                            <span class="project-tag">AI Testing</span>
+                        </div>
+                        <a href="https://github.com/Abhi-tech-geek/AbhiMate" target="_blank" class="project-link">
+                            View System Source <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                <a href="https://github.com/Abhi-tech-geek/AbhiMate" target="_blank" class="project-link">
-                    View Repository <i class="fa-solid fa-arrow-right"></i>
-                </a>
             </div>
 
             <!-- AbhiNova -->
-            <div class="project-card reveal" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.2">
-                <i class="fa-solid fa-network-wired project-icon"></i>
-                <h3 class="project-title">AbhiNova</h3>
-                <p class="project-desc">
-                    A Next-Generation AI Solution featuring advanced prompt management and dynamic agent capabilities. Crafted to push the boundaries of automated assistance and stateful AI interactions.
-                </p>
-                <div class="project-tags">
-                    <span class="project-tag">AI Agents</span>
-                    <span class="project-tag">LLM</span>
-                    <span class="project-tag">Automation</span>
+            <div class="project-card flip-card reveal">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="fa-solid fa-network-wired project-icon"></i>
+                        <h3 class="project-title">AbhiNova</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Next-Gen LLM Workflow Agent</p>
+                    </div>
+                    <div class="flip-back">
+                        <p class="project-desc" style="font-size: 0.9rem; margin-bottom: 1rem;">
+                            A cutting-edge generative AI matrix. Pioneers adaptive agent behaviors, stateful conversational memory, and dynamic prompt orchestration to deliver a next-generation automated reasoning interface.
+                        </p>
+                        <div class="project-tags" style="justify-content: center; margin-bottom: 1rem;">
+                            <span class="project-tag">AI Agents</span>
+                            <span class="project-tag">LLM Architecture</span>
+                            <span class="project-tag">Neural Workflows</span>
+                        </div>
+                        <a href="https://github.com/Abhi-tech-geek?tab=repositories" target="_blank" class="project-link">
+                            View Neural Logs <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-                <a href="https://github.com/Abhi-tech-geek?tab=repositories" target="_blank" class="project-link">
-                    View Repository <i class="fa-solid fa-arrow-right"></i>
-                </a>
             </div>
         </div>
     </section>
@@ -833,7 +1045,7 @@
     <!-- Experience & Education Section -->
     <section id="experience" class="container">
         <h2 class="section-title reveal">My <span>Journey</span></h2>
-        
+
         <div class="timeline">
             <!-- Experience 1 -->
             <div class="timeline-item reveal">
@@ -842,10 +1054,14 @@
                     <span class="timeline-date">Present</span>
                     <h3 class="timeline-title">QA Tester</h3>
                     <div class="timeline-company">Accenture</div>
-                    <ul style="color: var(--text-secondary); font-size: 0.95rem; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1rem; list-style-type: disc;">
-                        <li>Conducted comprehensive Manual & Functional Testing for large-scale enterprise applications.</li>
-                        <li>Designed & Executed test cases to ensure all edge cases and business requirements are covered.</li>
-                        <li>Automated redundant workflows using Selenium, TestNG, Robot framework and Python, significantly cutting down testing turnaround time.</li>
+                    <ul
+                        style="color: var(--text-secondary); font-size: 0.95rem; display: flex; flex-direction: column; gap: 0.5rem; padding-left: 1rem; list-style-type: disc;">
+                        <li>Conducted comprehensive Manual & Functional Testing for large-scale enterprise applications.
+                        </li>
+                        <li>Designed & Executed test cases to ensure all edge cases and business requirements are
+                            covered.</li>
+                        <li>Automated redundant workflows using Selenium, TestNG, Robot framework and Python,
+                            significantly cutting down testing turnaround time.</li>
                         <li>Tracked software defects tightly using Jira and successfully managed the bug lifecycle.</li>
                         <li>Performed extensive database validation using SQL.</li>
                     </ul>
@@ -860,11 +1076,13 @@
                     <h3 class="timeline-title">Bachelor of Computer Applications (BCA)</h3>
                     <div class="timeline-company">Lovely Professional University</div>
                     <p style="color: var(--text-secondary); font-size: 0.95rem;">
-                        Built a strong foundational understanding of computer science, programming algorithms, and software development lifecycles. Participated actively in tech seminars and cultivated a lifelong learning mindset.
+                        Built a strong foundational understanding of computer science, programming algorithms, and
+                        software development lifecycles. Participated actively in tech seminars and cultivated a
+                        lifelong learning mindset.
                     </p>
                 </div>
             </div>
-            
+
 
         </div>
     </section>
@@ -872,18 +1090,19 @@
     <!-- Contact Section -->
     <section id="contact" class="container" style="padding-bottom: 8rem;">
         <h2 class="section-title reveal">Get In <span>Touch</span></h2>
-        
+
         <div class="contact-content reveal">
             <p style="color: var(--text-secondary); font-size: 1.2rem; margin-bottom: 2rem;">
-                I look forward to expanding my expertise in the IT industry and contributing to impactful projects. Let's build something great.
+                I look forward to expanding my expertise in the IT industry and contributing to impactful projects.
+                Let's build something great.
             </p>
-            
+
             <div class="contact-cards">
                 <a href="mailto:abhinav.ujjwal98@gmail.com" class="contact-card">
                     <i class="fa-regular fa-envelope"></i>
                     <span>abhinav.ujjwal98@gmail.com</span>
                 </a>
-                
+
                 <div class="contact-card">
                     <i class="fa-solid fa-location-dot"></i>
                     <span>Gurgaon, India</span>
@@ -905,7 +1124,9 @@
                 <i class="fa-regular fa-envelope"></i>
             </a>
         </div>
-        <p>&copy; <script>document.write(new Date().getFullYear())</script> Abhinav Saxena. Designed with ambition & code.</p>
+        <p>&copy;
+            <script>document.write(new Date().getFullYear())</script> Abhinav Saxena. Designed with ambition & code.
+        </p>
     </footer>
 
     <!-- Scripts for interactivity -->
@@ -923,7 +1144,7 @@
         // Mobile Menu Toggle
         const mobileToggle = document.getElementById('mobileToggle');
         const navLinks = document.getElementById('navLinks');
-        
+
         mobileToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             const icon = mobileToggle.querySelector('i');
@@ -951,7 +1172,7 @@
             rootMargin: "0px 0px -50px 0px"
         };
 
-        const revealObserver = new IntersectionObserver(function(entries, observer) {
+        const revealObserver = new IntersectionObserver(function (entries, observer) {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) {
                     return;
@@ -966,7 +1187,7 @@
             revealObserver.observe(el);
         });
     </script>
-    
+
     <!-- Vanilla Tilt for 3D Cards -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
@@ -983,4 +1204,5 @@
         });
     </script>
 </body>
+
 </html>
