@@ -711,6 +711,8 @@
             perspective: 1000px;
             min-height: 280px;
             border-radius: 20px;
+            cursor: pointer;
+            touch-action: manipulation;
         }
         .flip-inner {
             position: relative;
@@ -1214,7 +1216,10 @@
 
         // Mobile touch support for 3D flip cards
         document.querySelectorAll('.flip-card').forEach(card => {
-            card.addEventListener('click', function() {
+            card.addEventListener('click', function(e) {
+                // Prevent intercepting clicks on internal links
+                if (e.target.closest('a')) return;
+
                 const isFlipped = this.classList.contains('flipped');
                 // Remove flipped class from all cards
                 document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
