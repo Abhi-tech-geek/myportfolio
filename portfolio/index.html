@@ -719,8 +719,21 @@
             transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             transform-style: preserve-3d;
         }
-        .flip-card:hover .flip-inner {
+        @media (hover: hover) {
+            .flip-card:hover .flip-inner {
+                transform: rotateY(180deg);
+            }
+            .flip-card:hover .flip-front, .flip-card:hover .flip-back {
+                border-color: var(--accent-1);
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+            }
+        }
+        .flip-card.flipped .flip-inner {
             transform: rotateY(180deg);
+        }
+        .flip-card.flipped .flip-front, .flip-card.flipped .flip-back {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
         }
         .flip-front, .flip-back {
             position: absolute;
@@ -735,10 +748,6 @@
             display: flex; flex-direction: column; 
             justify-content: center; align-items: center;
             transition: border-color 0.4s ease, box-shadow 0.4s ease;
-        }
-        .flip-card:hover .flip-front, .flip-card:hover .flip-back {
-            border-color: var(--accent-1);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
         }
         .flip-back {
             transform: rotateY(180deg);
@@ -1200,6 +1209,20 @@
                 const y = e.clientY - rect.top;
                 card.style.setProperty('--mouse-x', `${x}px`);
                 card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+        // Mobile touch support for 3D flip cards
+        document.querySelectorAll('.flip-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const isFlipped = this.classList.contains('flipped');
+                // Remove flipped class from all cards
+                document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+                
+                // Toggle current card
+                if (!isFlipped) {
+                    this.classList.add('flipped');
+                }
             });
         });
     </script>
