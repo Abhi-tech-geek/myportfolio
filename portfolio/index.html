@@ -1187,8 +1187,8 @@
         }
         .bot-antenna::after {
             content: ''; position: absolute; top: -4px; left: -3px; width: 10px; height: 10px;
-            background: var(--accent-3); border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-3);
+            background: var(--accent-2); border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-2);
             animation: pulseAntenna 2s infinite;
         }
         @keyframes pulseAntenna { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
@@ -1288,10 +1288,10 @@
         .ai-robot-body.dancing .bot-head,
         .ai-robot-body.dancing .bot-torso,
         .ai-robot-body.dancing .bot-arm {
-            border-color: var(--accent-3);
+            border-color: var(--accent-2);
         }
-        .ai-robot-body.dancing .bot-eye { background: var(--accent-3); box-shadow: 0 0 15px var(--accent-3); height: 10px; border-radius: 5px 5px 0 0; }
-        .ai-robot-body.dancing .bot-base { background: var(--accent-3); box-shadow: 0 0 20px var(--accent-3); }
+        .ai-robot-body.dancing .bot-eye { background: var(--accent-2); box-shadow: 0 0 15px var(--accent-2); height: 10px; border-radius: 5px 5px 0 0; }
+        .ai-robot-body.dancing .bot-base { background: var(--accent-2); box-shadow: 0 0 20px var(--accent-2); }
         .ai-robot-body.dancing .bot-arm.left { animation: danceLeft 0.4s infinite alternate; }
         .ai-robot-body.dancing .bot-arm.right { animation: danceRight 0.4s infinite alternate; }
         .ai-robot-body.dancing .bot-head { animation: danceHead 0.4s infinite alternate; }
@@ -1798,6 +1798,8 @@
                 aiMessageTimeout = setTimeout(() => {
                     aiSpeech.classList.remove('visible');
                 }, 3500);
+            } else {
+                aiSpeech.classList.remove('visible');
             }
         }
 
@@ -1846,7 +1848,7 @@
         });
 
         // Section Observer for AI Context
-        const secOptions = { threshold: 0.4 };
+        const secOptions = { threshold: 0.2, rootMargin: "-10% 0px" };
         const secObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
