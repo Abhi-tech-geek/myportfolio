@@ -25,14 +25,25 @@
             --text-primary: #ffffff;
             --text-secondary: #a1a1aa;
             --accent-1: #8b5cf6;
-            /* Violet */
             --accent-2: #3b82f6;
-            /* Blue */
             --accent-3: #ec4899;
-            /* Pink */
             --gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
             --gradient-text: linear-gradient(to right, var(--accent-1), var(--accent-3));
             --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Light Theme Variables */
+        :root[data-theme="light"] {
+            --bg-color: #f8fafc;
+            --bg-surface: rgba(0, 0, 0, 0.03);
+            --bg-surface-hover: rgba(0, 0, 0, 0.08);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        :root[data-theme="light"] .ambient-bg {
+            background: var(--bg-color);
         }
 
         /* Reset & Base Styles */
@@ -301,6 +312,33 @@
         .nav-links a:hover::after {
             width: 100%;
             box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+        }
+        
+        .theme-toggle:hover {
+            color: var(--accent-1);
+            transform: rotate(15deg);
+            border-color: var(--accent-1);
         }
 
         .mobile-toggle {
@@ -1116,23 +1154,96 @@
             transform: translateY(0) scale(1);
         }
 
-        .ai-robot {
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            background: rgba(20, 20, 25, 0.9);
-            border: 2px solid var(--text-secondary);
+        /* AI Full Body Robot */
+        .ai-robot-body {
+            position: relative;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            backdrop-filter: blur(10px);
-            pointer-events: auto;
             cursor: pointer;
             transition: all 0.3s ease;
             animation: aiFloatSide 4s infinite ease-in-out;
+            pointer-events: auto;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+        }
+
+        .bot-antenna {
+            width: 4px; height: 12px; background: var(--text-secondary);
             position: relative;
+            border-radius: 2px 2px 0 0;
+            z-index: 1;
+        }
+        .bot-antenna::after {
+            content: ''; position: absolute; top: -4px; left: -3px; width: 10px; height: 10px;
+            background: var(--accent-3); border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-3);
+            animation: pulseAntenna 2s infinite;
+        }
+        @keyframes pulseAntenna { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+        .bot-head {
+            width: 45px; height: 35px; background: var(--bg-color);
+            border: 2px solid var(--accent-1);
+            border-radius: 12px 12px 6px 6px;
+            display: flex; justify-content: center; align-items: center;
+            transition: all 0.3s ease;
+            z-index: 2;
+            box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.2);
+        }
+        .bot-eyes { display: flex; gap: 10px; }
+        .bot-eye { 
+            width: 10px; height: 6px;
+            background: var(--accent-1);
+            border-radius: 50px;
+            box-shadow: 0 0 8px var(--accent-1);
+            transition: all 0.2s ease;
+        }
+
+        .bot-torso {
+            width: 35px; height: 30px;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-1);
+            border-radius: 6px;
+            margin-top: 2px;
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+        .bot-screen {
+            width: 15px; height: 8px; background: var(--accent-2); border-radius: 3px;
+            box-shadow: 0 0 5px var(--accent-2); opacity: 0.7;
+        }
+
+        .bot-arm {
+            width: 8px; height: 25px;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-1);
+            border-radius: 4px;
+            position: absolute;
+            top: 5px;
+            transform-origin: top center;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+        .bot-arm.left { left: -14px; transform: rotate(15deg); }
+        .bot-arm.right { right: -14px; transform: rotate(-15deg); }
+
+        .bot-base {
+            width: 25px; height: 12px;
+            background: var(--accent-1);
+            border-radius: 0 0 12px 12px;
+            margin-top: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-1);
+            z-index: 2;
+        }
+
+        /* Hover/Idle Tweaks */
+        .ai-robot-body:hover .bot-head {
+            transform: translateY(-2px);
+            border-color: #fff;
+            box-shadow: 0 0 15px var(--accent-1);
         }
 
         @keyframes aiFloatSide {
@@ -1140,41 +1251,38 @@
             50% { transform: translateY(-8px); }
         }
 
-        .ai-robot:hover {
-            border-color: var(--accent-1);
-            color: var(--accent-1);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-            transform: scale(1.05);
-        }
-
         /* AI Working State */
-        .ai-robot.working {
+        .ai-robot-body.working .bot-head,
+        .ai-robot-body.working .bot-torso {
             border-color: var(--accent-2);
-            color: var(--accent-2);
-            animation: aiWork 0.4s infinite alternate;
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
         }
+        .ai-robot-body.working .bot-eye { background: var(--accent-2); box-shadow: 0 0 10px var(--accent-2); width: 12px; height: 4px; }
+        .ai-robot-body.working .bot-screen { background: var(--accent-3); animation: codeScreen 0.2s infinite; }
+        .ai-robot-body.working .bot-arm { border-color: var(--accent-2); animation: typeArms 0.15s infinite alternate; }
+        .ai-robot-body.working .bot-base { background: var(--accent-2); box-shadow: 0 0 15px var(--accent-2); }
+        .ai-robot-body.working .bot-head { animation: scanHead 0.5s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); }
 
-        @keyframes aiWork {
-            0% { transform: translateY(0) rotate(-10deg); }
-            100% { transform: translateY(-5px) rotate(10deg); }
-        }
+        @keyframes scanHead { 0% { transform: translateX(-4px) rotate(-5deg); } 100% { transform: translateX(4px) rotate(5deg); } }
+        @keyframes typeArms { 0% { transform: rotate(5deg); } 100% { transform: rotate(35deg); } }
+        @keyframes codeScreen { 0%, 100% { opacity: 0.5; width: 10px; } 50% { opacity: 1; width: 18px; } }
 
         /* AI Dancing State */
-        .ai-robot.dancing {
+        .ai-robot-body.dancing .bot-head,
+        .ai-robot-body.dancing .bot-torso,
+        .ai-robot-body.dancing .bot-arm {
             border-color: var(--accent-3);
-            color: var(--accent-3);
-            animation: aiDance 0.8s infinite;
-            box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
         }
+        .ai-robot-body.dancing .bot-eye { background: var(--accent-3); box-shadow: 0 0 15px var(--accent-3); height: 10px; border-radius: 5px 5px 0 0; }
+        .ai-robot-body.dancing .bot-base { background: var(--accent-3); box-shadow: 0 0 20px var(--accent-3); }
+        .ai-robot-body.dancing .bot-arm.left { animation: danceLeft 0.4s infinite alternate; }
+        .ai-robot-body.dancing .bot-arm.right { animation: danceRight 0.4s infinite alternate; }
+        .ai-robot-body.dancing .bot-head { animation: danceHead 0.4s infinite alternate; }
+        .ai-robot-body.dancing .bot-torso { animation: danceTorso 0.4s infinite alternate; }
 
-        @keyframes aiDance {
-            0% { transform: translateY(0) scale(1) rotate(0deg); }
-            25% { transform: translateY(-15px) scale(1.1) rotate(20deg); }
-            50% { transform: translateY(0) scale(1) rotate(0deg); }
-            75% { transform: translateY(-15px) scale(1.1) rotate(-20deg); }
-            100% { transform: translateY(0) scale(1) rotate(0deg); }
-        }
+        @keyframes danceLeft { 0% { transform: rotate(10deg) translateY(0); } 100% { transform: rotate(150deg) translateY(-5px); } }
+        @keyframes danceRight { 0% { transform: rotate(-10deg) translateY(0); } 100% { transform: rotate(-150deg) translateY(-5px); } }
+        @keyframes danceHead { 0% { transform: translateY(0) rotate(-10deg); } 100% { transform: translateY(-8px) rotate(10deg); } }
+        @keyframes danceTorso { 0% { transform: rotate(5deg); } 100% { transform: rotate(-5deg); } }
 
         @media (max-width: 768px) {
             .ai-wrap {
@@ -1221,8 +1329,13 @@
             <li><a href="#contact">Contact</a></li>
         </ul>
 
-        <div class="mobile-toggle" id="mobileToggle">
-            <i class="fa-solid fa-bars"></i>
+        <div class="nav-actions">
+            <div class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                <i class="fa-solid fa-sun"></i>
+            </div>
+            <div class="mobile-toggle" id="mobileToggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
         </div>
     </nav>
 
@@ -1639,7 +1752,7 @@
         let aiMessageTimeout;
 
         function setAiState(state, message) {
-            aiRobot.className = 'ai-robot ' + state;
+            aiRobot.className = 'ai-robot-body ' + state;
             if (message) {
                 aiSpeech.textContent = message;
                 aiSpeech.classList.add('visible');
@@ -1678,7 +1791,7 @@
                     if (id === 'experience') msg = 'Reviewing logs timeline...';
                     if (id === 'contact') msg = 'Standing by for communication.';
                     
-                    if (aiRobot.className.trim() === 'ai-robot') {
+                    if (aiRobot.className.trim() === 'ai-robot-body') {
                          setAiState('', msg);
                     }
                 }
@@ -1686,13 +1799,54 @@
         }, secOptions);
 
         document.querySelectorAll('section').forEach(sec => secObserver.observe(sec));
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if(savedTheme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeIcon.className = 'fa-solid fa-moon';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            let newTheme = 'dark';
+            if (currentTheme !== 'light') {
+                newTheme = 'light';
+            }
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if(newTheme === 'light') {
+                themeIcon.className = 'fa-solid fa-moon';
+                setAiState('working', 'Light Mode Engaged!');
+            } else {
+                themeIcon.className = 'fa-solid fa-sun';
+                setAiState('dancing', 'Dark Mode Restored!');
+            }
+        });
     </script>
 
     <!-- AI Assistant HTML -->
     <div class="ai-wrap">
         <div class="ai-speech" id="aiSpeech">System Online</div>
-        <div class="ai-robot" id="aiRobot">
-            <i class="fa-solid fa-robot"></i>
+        <div class="ai-robot-body" id="aiRobot">
+            <div class="bot-antenna"></div>
+            <div class="bot-head">
+                 <div class="bot-eyes">
+                      <div class="bot-eye left"></div>
+                      <div class="bot-eye right"></div>
+                 </div>
+            </div>
+            <div class="bot-torso">
+                 <div class="bot-arm left"></div>
+                 <div class="bot-screen"></div>
+                 <div class="bot-arm right"></div>
+            </div>
+            <div class="bot-base"></div>
         </div>
     </div>
 </body>
