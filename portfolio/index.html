@@ -30,6 +30,9 @@
             --gradient: linear-gradient(135deg, var(--accent-1), var(--accent-2));
             --gradient-text: linear-gradient(to right, var(--accent-1), var(--accent-3));
             --border-color: rgba(255, 255, 255, 0.1);
+            --thunder-flash: #fff;
+            --thunder-glow: rgba(255, 255, 255, 0.9);
+            --icon-color: rgba(255, 255, 255, 0.1);
         }
 
         /* Light Theme Variables */
@@ -40,6 +43,13 @@
             --text-primary: #0f172a;
             --text-secondary: #475569;
             --border-color: rgba(0, 0, 0, 0.1);
+            --thunder-flash: var(--accent-1);
+            --thunder-glow: rgba(139, 92, 246, 0.7);
+            --icon-color: rgba(139, 92, 246, 0.3);
+        }
+
+        :root[data-theme="light"] .floating-icon {
+            color: var(--icon-color) !important;
         }
         
         :root[data-theme="light"] .ambient-bg {
@@ -157,8 +167,8 @@
             30% {
                 top: 30%;
                 transform: translate3d(0, 0, 100px) rotate(0deg);
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
-                color: #fff;
+                filter: drop-shadow(0 0 25px var(--thunder-glow));
+                color: var(--thunder-flash);
             }
             50% {
                 top: 15%;
@@ -170,8 +180,8 @@
             70% {
                 top: 40%;
                 transform: translate3d(0, 0, 100px) rotate(25deg);
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
-                color: #fff;
+                filter: drop-shadow(0 0 25px var(--thunder-glow));
+                color: var(--thunder-flash);
             }
             85% {
                 opacity: 0.5;
@@ -210,8 +220,8 @@
             30% {
                 top: 60%;
                 transform: translate3d(0, 0, 100px) rotate(0deg);
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
-                color: #fff;
+                filter: drop-shadow(0 0 25px var(--thunder-glow));
+                color: var(--thunder-flash);
             }
             50% {
                 top: 80%;
@@ -223,8 +233,8 @@
             70% {
                 top: 50%;
                 transform: translate3d(0, 0, 100px) rotate(-25deg);
-                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
-                color: #fff;
+                filter: drop-shadow(0 0 25px var(--thunder-glow));
+                color: var(--thunder-flash);
             }
             85% {
                 opacity: 0.5;
@@ -1789,25 +1799,35 @@
             }
         }
 
-        // AI Dodge/Run Away Mechanic
-        let escapeCount = 0;
-        aiRobot.addEventListener('mouseenter', () => {
-            escapeCount++;
-            if(escapeCount <= 3) {
-                const randomX = Math.floor(Math.random() * -200) - 20; 
-                const randomY = Math.floor(Math.random() * -200) - 20;
-                aiRobot.style.transform = `translate(${randomX}px, ${randomY}px)`;
-                setAiState('dancing', 'Haha, miss me! 💨');
-                
-                setTimeout(() => {
-                    aiRobot.style.transform = `translate(0px, 0px)`;
-                }, 2000);
-            } else {
-                aiRobot.style.transform = `translate(0px, 0px)`;
-                setAiState('working', 'Ok I surrender! 🤖');
-                setTimeout(() => { escapeCount = 0; }, 8000);
-            }
-        });
+        // AI Organic Roaming Mechanic
+        const aiWrap = document.querySelector('.ai-wrap');
+        let botPos = { x: 0, y: 0 };
+        let targetBotPos = { x: 0, y: 0 };
+        let roamInterval;
+        
+        function pickNewTarget() {
+            // Keep bounds somewhat off the bottom right so it doesn't leave the screen entirely
+            const maxX = -(window.innerWidth - 120); 
+            const maxY = -(window.innerHeight - 150);
+            targetBotPos.x = Math.random() * maxX;
+            targetBotPos.y = Math.random() * maxY;
+        }
+
+        pickNewTarget();
+        roamInterval = setInterval(pickNewTarget, 4000);
+
+        function roamRobot() {
+            // Lerp towards target position for smooth organic drifting
+            botPos.x += (targetBotPos.x - botPos.x) * 0.005;
+            botPos.y += (targetBotPos.y - botPos.y) * 0.005;
+            aiWrap.style.transform = `translate(${botPos.x}px, ${botPos.y}px)`;
+            requestAnimationFrame(roamRobot);
+        }
+        roamRobot();
+
+        // Pause roaming when hovered
+        aiRobot.addEventListener('mouseenter', () => clearInterval(roamInterval));
+        aiRobot.addEventListener('mouseleave', () => roamInterval = setInterval(pickNewTarget, 4000));
 
         aiRobot.addEventListener('click', () => {
             setAiState('dancing', 'Vibe Matrix Active! 🚀');
