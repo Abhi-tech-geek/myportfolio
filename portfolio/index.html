@@ -1197,6 +1197,11 @@
             border-radius: 50px;
             box-shadow: 0 0 8px var(--accent-1);
             transition: all 0.2s ease;
+            animation: blinkEyes 4s infinite;
+        }
+        @keyframes blinkEyes {
+            0%, 90%, 100% { height: 6px; }
+            95% { height: 0px; margin-top: 3px; }
         }
 
         .bot-torso {
@@ -1247,8 +1252,9 @@
         }
 
         @keyframes aiFloatSide {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-8px) rotate(-3deg); }
+            66% { transform: translateY(-4px) rotate(3deg); }
         }
 
         /* AI Working State */
@@ -1709,6 +1715,26 @@
         });
     </script>
 
+    <!-- AI Assistant HTML -->
+    <div class="ai-wrap">
+        <div class="ai-speech" id="aiSpeech">System Online</div>
+        <div class="ai-robot-body" id="aiRobot">
+            <div class="bot-antenna"></div>
+            <div class="bot-head">
+                 <div class="bot-eyes">
+                      <div class="bot-eye left"></div>
+                      <div class="bot-eye right"></div>
+                 </div>
+            </div>
+            <div class="bot-torso">
+                 <div class="bot-arm left"></div>
+                 <div class="bot-screen"></div>
+                 <div class="bot-arm right"></div>
+            </div>
+            <div class="bot-base"></div>
+        </div>
+    </div>
+
     <!-- Vanilla Tilt for 3D Cards -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <script>
@@ -1762,6 +1788,26 @@
                 }, 3500);
             }
         }
+
+        // AI Dodge/Run Away Mechanic
+        let escapeCount = 0;
+        aiRobot.addEventListener('mouseenter', () => {
+            escapeCount++;
+            if(escapeCount <= 3) {
+                const randomX = Math.floor(Math.random() * -200) - 20; 
+                const randomY = Math.floor(Math.random() * -200) - 20;
+                aiRobot.style.transform = `translate(${randomX}px, ${randomY}px)`;
+                setAiState('dancing', 'Haha, miss me! 💨');
+                
+                setTimeout(() => {
+                    aiRobot.style.transform = `translate(0px, 0px)`;
+                }, 2000);
+            } else {
+                aiRobot.style.transform = `translate(0px, 0px)`;
+                setAiState('working', 'Ok I surrender! 🤖');
+                setTimeout(() => { escapeCount = 0; }, 8000);
+            }
+        });
 
         aiRobot.addEventListener('click', () => {
             setAiState('dancing', 'Vibe Matrix Active! 🚀');
@@ -1829,26 +1875,6 @@
             }
         });
     </script>
-
-    <!-- AI Assistant HTML -->
-    <div class="ai-wrap">
-        <div class="ai-speech" id="aiSpeech">System Online</div>
-        <div class="ai-robot-body" id="aiRobot">
-            <div class="bot-antenna"></div>
-            <div class="bot-head">
-                 <div class="bot-eyes">
-                      <div class="bot-eye left"></div>
-                      <div class="bot-eye right"></div>
-                 </div>
-            </div>
-            <div class="bot-torso">
-                 <div class="bot-arm left"></div>
-                 <div class="bot-screen"></div>
-                 <div class="bot-arm right"></div>
-            </div>
-            <div class="bot-base"></div>
-        </div>
-    </div>
 </body>
 
 </html>
