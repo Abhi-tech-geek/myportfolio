@@ -33,6 +33,8 @@
             --thunder-flash: #fff;
             --thunder-glow: rgba(255, 255, 255, 0.9);
             --icon-color: rgba(255, 255, 255, 0.1);
+            --nav-bg-scrolled: rgba(10, 10, 12, 0.8);
+            --speech-bg: rgba(255, 255, 255, 0.05);
         }
 
         /* Light Theme Variables */
@@ -46,6 +48,8 @@
             --thunder-flash: var(--accent-1);
             --thunder-glow: rgba(139, 92, 246, 0.7);
             --icon-color: rgba(139, 92, 246, 0.3);
+            --nav-bg-scrolled: rgba(255, 255, 255, 0.9);
+            --speech-bg: #ffffff;
         }
 
         :root[data-theme="light"] .floating-icon {
@@ -277,7 +281,7 @@
         }
 
         nav.scrolled {
-            background: rgba(10, 10, 12, 0.8);
+            background: var(--nav-bg-scrolled);
             border-bottom: 1px solid var(--border-color);
             padding: 1rem 5%;
         }
@@ -485,7 +489,7 @@
             content: '';
             position: absolute;
             inset: 1.5px;
-            background: #0a0a0c;
+            background: var(--bg-color);
             border-radius: 50px;
             z-index: -1;
         }
@@ -1147,7 +1151,7 @@
         }
 
         .ai-speech {
-            background: var(--bg-surface);
+            background: var(--speech-bg);
             border: 1px solid var(--accent-1);
             color: var(--text-primary);
             padding: 0.6rem 1.2rem;
