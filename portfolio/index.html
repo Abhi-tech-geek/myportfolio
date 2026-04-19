@@ -121,6 +121,56 @@
             }
         }
 
+        /* Floating Thunder Icon moving left to right */
+        .floating-thunder {
+            position: absolute;
+            color: var(--accent-1);
+            z-index: -1;
+            font-size: 6rem;
+            animation: floatThunder 20s infinite ease-in-out;
+        }
+
+        @keyframes floatThunder {
+            0% {
+                top: 80%;
+                left: -10%;
+                transform: rotate(-15deg);
+                opacity: 0;
+                filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
+            }
+            15% {
+                opacity: 0.5;
+            }
+            30% {
+                top: 30%;
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
+                color: #fff;
+            }
+            50% {
+                top: 15%;
+                left: 50%;
+                transform: rotate(15deg);
+                filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
+                color: var(--accent-1);
+            }
+            70% {
+                top: 40%;
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
+                color: #fff;
+            }
+            85% {
+                opacity: 0.5;
+            }
+            100% {
+                top: 70%;
+                left: 110%;
+                transform: rotate(35deg);
+                opacity: 0;
+                filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
+                color: var(--accent-1);
+            }
+        }
+
         /* Typography Highlights */
         .text-gradient {
             background: var(--gradient-text);
@@ -924,6 +974,7 @@
     <div class="ambient-bg">
         <div class="ambient-blob blob-1"></div>
         <div class="ambient-blob blob-2"></div>
+        <i class="fa-solid fa-bolt floating-thunder"></i>
         <i class="fa-brands fa-react floating-icon icon-1"></i>
         <i class="fa-brands fa-python floating-icon icon-2"></i>
         <i class="fa-solid fa-code-commit floating-icon icon-3"></i>
