@@ -171,6 +171,57 @@
             }
         }
 
+        /* Floating Thunder Icon moving right to left */
+        .floating-thunder-reverse {
+            position: absolute;
+            color: var(--accent-1);
+            z-index: -1;
+            font-size: 5rem;
+            animation: floatThunderReverse 20s infinite ease-in-out;
+            animation-delay: -5s;
+        }
+
+        @keyframes floatThunderReverse {
+            0% {
+                top: 20%;
+                left: 110%;
+                transform: rotate(15deg);
+                opacity: 0;
+                filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
+            }
+            15% {
+                opacity: 0.5;
+            }
+            30% {
+                top: 60%;
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
+                color: #fff;
+            }
+            50% {
+                top: 80%;
+                left: 50%;
+                transform: rotate(-15deg);
+                filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
+                color: var(--accent-1);
+            }
+            70% {
+                top: 50%;
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.9));
+                color: #fff;
+            }
+            85% {
+                opacity: 0.5;
+            }
+            100% {
+                top: 30%;
+                left: -10%;
+                transform: rotate(-35deg);
+                opacity: 0;
+                filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
+                color: var(--accent-1);
+            }
+        }
+
         /* Typography Highlights */
         .text-gradient {
             background: var(--gradient-text);
@@ -805,6 +856,27 @@
             animation-delay: -7s;
         }
 
+        .icon-6 {
+            top: 45%;
+            left: 80%;
+            font-size: 5.5rem;
+            animation-delay: -11s;
+        }
+
+        .icon-7 {
+            bottom: 35%;
+            left: 5%;
+            font-size: 7.5rem;
+            animation-delay: -6s;
+        }
+
+        .icon-8 {
+            top: 55%;
+            left: 45%;
+            font-size: 6.5rem;
+            animation-delay: -1s;
+        }
+
         @keyframes floatIcon {
             0% {
                 transform: translateY(0) rotate(0deg);
@@ -975,11 +1047,15 @@
         <div class="ambient-blob blob-1"></div>
         <div class="ambient-blob blob-2"></div>
         <i class="fa-solid fa-bolt floating-thunder"></i>
+        <i class="fa-solid fa-bolt floating-thunder-reverse"></i>
         <i class="fa-brands fa-react floating-icon icon-1"></i>
         <i class="fa-brands fa-python floating-icon icon-2"></i>
         <i class="fa-solid fa-code-commit floating-icon icon-3"></i>
         <i class="fa-solid fa-database floating-icon icon-4"></i>
         <i class="fa-brands fa-node-js floating-icon icon-5"></i>
+        <i class="fa-brands fa-linux floating-icon icon-6"></i>
+        <i class="fa-brands fa-docker floating-icon icon-7"></i>
+        <i class="fa-brands fa-git-alt floating-icon icon-8"></i>
     </div>
 
     <!-- Navigation -->
