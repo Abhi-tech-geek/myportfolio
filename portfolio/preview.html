@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Animation Preview</title>
+    <style>
+        body { 
+            background: #0a0a0c; 
+            color: white; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* Thunder/Lightning effect */
+        .thunder-icon {
+            font-size: 8rem;
+            color: #8b5cf6; /* Violet */
+            animation: float 8s infinite alternate linear, thunder 6s infinite;
+            position: relative;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-40px) rotate(15deg); }
+        }
+
+        @keyframes thunder {
+            0%, 90%, 94%, 98%, 100% { 
+                filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.4));
+                opacity: 0.8;
+                color: #8b5cf6;
+            }
+            91%, 95% { 
+                /* Thunder strike flashes */
+                filter: drop-shadow(0 0 60px rgba(255, 255, 255, 1)) drop-shadow(0 0 100px rgba(200, 200, 255, 0.8));
+                opacity: 1;
+                color: #ffffff;
+            }
+            92%, 96% { 
+                /* Brief dim between flashes */
+                filter: drop-shadow(0 0 0px transparent);
+                opacity: 0.1;
+                color: #8b5cf6;
+            }
+        }
+        
+        .label {
+            margin-top: 40px;
+            font-size: 1.2rem;
+            color: #a1a1aa;
+            text-align: center;
+        }
+
+        .btn {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Assuming fa-chart-line to represent Matplotlib as FontAwesome lacks a specific matplotlib logo -->
+    <i class="fa-solid fa-chart-line thunder-icon"></i>
+    <div class="label">Preview: Matplotlib (Chart) Icon with Thunder/Lightning Animation</div>
+    <a href="index.html" class="btn">Back to Portfolio</a>
+</body>
+</html>
