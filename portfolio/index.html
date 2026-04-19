@@ -393,17 +393,56 @@
         }
 
         .tagline {
-            display: inline-block;
-            padding: 0.5rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.8rem;
             border-radius: 50px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
+            background: transparent;
             color: var(--text-secondary);
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 2rem;
             letter-spacing: 1px;
             text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .tagline span {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+        }
+
+        .tagline::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: conic-gradient(transparent 0deg, transparent 270deg, var(--accent-1) 360deg);
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            z-index: -2;
+            animation: rotateTagline 3s linear infinite;
+        }
+
+        .tagline::after {
+            content: '';
+            position: absolute;
+            inset: 1.5px;
+            background: #0a0a0c;
+            border-radius: 50px;
+            z-index: -1;
+        }
+
+        @keyframes rotateTagline {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         .hero h1 {
@@ -1043,6 +1082,111 @@
                 left: -9px;
             }
         }
+
+        /* --- AI Assistant --- */
+        .ai-wrap {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+        }
+
+        .ai-speech {
+            background: var(--bg-surface);
+            border: 1px solid var(--accent-1);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 15px 15px 0px 15px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px) scale(0.9);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
+            white-space: nowrap;
+        }
+
+        .ai-speech.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .ai-robot {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(20, 20, 25, 0.9);
+            border: 2px solid var(--text-secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            backdrop-filter: blur(10px);
+            pointer-events: auto;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: aiFloatSide 4s infinite ease-in-out;
+            position: relative;
+        }
+
+        @keyframes aiFloatSide {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .ai-robot:hover {
+            border-color: var(--accent-1);
+            color: var(--accent-1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* AI Working State */
+        .ai-robot.working {
+            border-color: var(--accent-2);
+            color: var(--accent-2);
+            animation: aiWork 0.4s infinite alternate;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+        }
+
+        @keyframes aiWork {
+            0% { transform: translateY(0) rotate(-10deg); }
+            100% { transform: translateY(-5px) rotate(10deg); }
+        }
+
+        /* AI Dancing State */
+        .ai-robot.dancing {
+            border-color: var(--accent-3);
+            color: var(--accent-3);
+            animation: aiDance 0.8s infinite;
+            box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+        }
+
+        @keyframes aiDance {
+            0% { transform: translateY(0) scale(1) rotate(0deg); }
+            25% { transform: translateY(-15px) scale(1.1) rotate(20deg); }
+            50% { transform: translateY(0) scale(1) rotate(0deg); }
+            75% { transform: translateY(-15px) scale(1.1) rotate(-20deg); }
+            100% { transform: translateY(0) scale(1) rotate(0deg); }
+        }
+
+        @media (max-width: 768px) {
+            .ai-wrap {
+                bottom: 20px;
+                right: 20px;
+            }
+            .ai-robot {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 
@@ -1086,7 +1230,7 @@
     <section id="home" class="hero container">
         <div class="reveal">
             <div class="tagline">
-                <i class="fa-solid fa-bolt" style="margin-right: 8px;"></i> tech + learning mindset + vibe coder
+                <span><i class="fa-solid fa-bolt" style="margin-right: 8px;"></i> tech + learning mindset + vibe coder</span>
             </div>
             <h1>Hi, I'm <span class="text-gradient">Abhinav Saxena</span></h1>
             <p>A passionate QA Tester & Automation Specialist based in Gurgaon. I build expertise in ensuring top-tier
@@ -1488,7 +1632,69 @@
                 }
             });
         });
+
+        // AI Assistant Logic
+        const aiRobot = document.getElementById('aiRobot');
+        const aiSpeech = document.getElementById('aiSpeech');
+        let aiMessageTimeout;
+
+        function setAiState(state, message) {
+            aiRobot.className = 'ai-robot ' + state;
+            if (message) {
+                aiSpeech.textContent = message;
+                aiSpeech.classList.add('visible');
+                clearTimeout(aiMessageTimeout);
+                aiMessageTimeout = setTimeout(() => {
+                    aiSpeech.classList.remove('visible');
+                }, 3500);
+            }
+        }
+
+        aiRobot.addEventListener('click', () => {
+            setAiState('dancing', 'Vibe Matrix Active! 🚀');
+        });
+
+        document.querySelectorAll('.skill-card').forEach(card => {
+            card.addEventListener('mouseenter', () => setAiState('working', 'Scanning Skill Modules...'));
+            card.addEventListener('mouseleave', () => setAiState('', ''));
+        });
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', () => setAiState('dancing', 'Analyzing Systems! ⚡'));
+            card.addEventListener('mouseleave', () => setAiState('', ''));
+        });
+
+        // Section Observer for AI Context
+        const secOptions = { threshold: 0.4 };
+        const secObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    let msg = '';
+                    if (id === 'home') msg = 'Hello! I am your AI Companion.';
+                    if (id === 'about') msg = 'Running Background Check...';
+                    if (id === 'skills') msg = 'Hover items to test me!';
+                    if (id === 'projects') msg = 'Exploring deployed nodes...';
+                    if (id === 'experience') msg = 'Reviewing logs timeline...';
+                    if (id === 'contact') msg = 'Standing by for communication.';
+                    
+                    if (aiRobot.className.trim() === 'ai-robot') {
+                         setAiState('', msg);
+                    }
+                }
+            });
+        }, secOptions);
+
+        document.querySelectorAll('section').forEach(sec => secObserver.observe(sec));
     </script>
+
+    <!-- AI Assistant HTML -->
+    <div class="ai-wrap">
+        <div class="ai-speech" id="aiSpeech">System Online</div>
+        <div class="ai-robot" id="aiRobot">
+            <i class="fa-solid fa-robot"></i>
+        </div>
+    </div>
 </body>
 
 </html>
