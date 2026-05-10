@@ -999,7 +999,7 @@
         .flip-card {
             background: transparent;
             perspective: 1000px;
-            min-height: 350px;
+            min-height: 420px;
             border-radius: 20px;
             cursor: pointer;
             touch-action: manipulation;
@@ -1051,13 +1051,18 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
             transition: border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
         .flip-back {
             transform: rotateY(180deg);
             background: rgba(139, 92, 246, 0.03);
+            overflow-y: auto;
+            scrollbar-width: none; /* Hide scrollbar for Chrome/Safari/Firefox */
+        }
+        .flip-back::-webkit-scrollbar {
+            display: none;
         }
 
         /* Reset old project card padding for inner flips */
