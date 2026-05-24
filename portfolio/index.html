@@ -1362,6 +1362,16 @@
             pointer-events: auto;
         }
 
+        .ai-menu.menu-bottom {
+            bottom: auto;
+            top: 95px;
+            transform: translateY(-15px) scale(0.9);
+        }
+
+        .ai-menu.menu-bottom.active {
+            transform: translateY(0) scale(1);
+        }
+
         .ai-menu-title {
             font-family: 'Outfit', sans-serif;
             font-size: 0.8rem;
@@ -1608,6 +1618,429 @@
                 box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
             }
         }
+
+        /* --- FEATURE 1: Particle Canvas --- */
+        #matrixGridCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.15;
+            display: block;
+        }
+
+
+
+        /* --- FEATURE 3: CI/CD Pipeline Section --- */
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 3rem;
+            align-items: stretch;
+            margin-top: 2rem;
+        }
+
+        .pipeline-visual {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 3rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .pipeline-visual::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient);
+        }
+
+        .pipeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .pipeline-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pipeline-header h3 i {
+            color: var(--accent-1);
+            animation: spinGently 8s infinite linear;
+        }
+
+        @keyframes spinGently {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pipeline-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            padding: 0 1rem;
+            flex-wrap: nowrap;
+        }
+
+        .pipeline-connector-line {
+            position: absolute;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background: var(--border-color);
+            z-index: 1;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .pipeline-connector-progress {
+            position: absolute;
+            left: 10%;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-1), var(--accent-3));
+            z-index: 2;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px var(--accent-1);
+            transition: width 0.1s linear;
+        }
+
+        .pipeline-stage {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 80px;
+        }
+
+        .pipeline-stage-node {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 0 rgba(139, 92, 246, 0);
+        }
+
+        .pipeline-stage-node i {
+            transition: transform 0.3s ease;
+        }
+
+        .pipeline-stage.active .pipeline-stage-node {
+            border-color: var(--accent-1);
+            color: var(--accent-1);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .pipeline-stage.active .pipeline-stage-node i {
+            transform: scale(1.15);
+        }
+
+        .pipeline-stage.success .pipeline-stage-node {
+            border-color: #10b981;
+            color: #10b981;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .pipeline-stage-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+
+        .pipeline-stage.active .pipeline-stage-title {
+            color: var(--accent-1);
+        }
+
+        .pipeline-stage.success .pipeline-stage-title {
+            color: #10b981;
+        }
+
+        .pipeline-console {
+            background: #060608;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            min-height: 280px;
+            max-height: 380px;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .pipeline-console::-webkit-scrollbar {
+            display: none;
+        }
+
+        .console-title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.6rem;
+            font-size: 0.75rem;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .console-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .console-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .console-dot.red { background: #ef4444; }
+        .console-dot.yellow { background: #eab308; }
+        .console-dot.green { background: #22c55e; }
+
+        .console-screen {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.82rem;
+            color: #38bdf8;
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        .console-log {
+            opacity: 0;
+            transform: translateX(-5px);
+            transition: all 0.2s ease;
+        }
+
+        .console-log.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .console-tag-info { color: #3b82f6; font-weight: bold; }
+        .console-tag-pass { color: #10b981; font-weight: bold; }
+        .console-tag-warn { color: #f59e0b; font-weight: bold; }
+        .console-tag-err { color: #ef4444; font-weight: bold; }
+
+        @media (max-width: 900px) {
+            .pipeline-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        /* --- FEATURE 4: Bug Squasher Game --- */
+        .glitch-bug {
+            position: fixed;
+            width: 48px;
+            height: 48px;
+            background: rgba(239, 68, 68, 0.25);
+            border: 2px dashed #ef4444;
+            border-radius: 50%;
+            font-size: 1.6rem;
+            color: #ef4444;
+            cursor: pointer;
+            z-index: 9998;
+            pointer-events: auto;
+            animation: bugGlitch 0.4s infinite alternate, bugFloat 3s infinite alternate ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8));
+            user-select: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glitch-bug::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid #ef4444;
+            animation: bugPulse 1.5s infinite ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes bugPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        .glitch-bug:hover {
+            transform: scale(1.3) rotate(15deg);
+        }
+
+        @keyframes bugGlitch {
+            0% { transform: skew(0deg); filter: hue-rotate(0deg); }
+            50% { transform: skew(10deg); filter: hue-rotate(90deg) brightness(1.2); }
+            100% { transform: skew(-5deg); filter: hue-rotate(180deg); }
+        }
+
+        @keyframes bugFloat {
+            0% { margin-top: 0px; margin-left: 0px; }
+            100% { margin-top: 15px; margin-left: 10px; }
+        }
+
+        .bug-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #ef4444;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 0 8px #ef4444;
+            animation: bugParticleFade 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+
+        @keyframes bugParticleFade {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+        }
+
+        .cert-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 95%;
+            max-width: 580px;
+            background: var(--modal-bg);
+            border: 2px solid var(--accent-1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            z-index: 10002;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 40px rgba(139, 92, 246, 0.25);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            text-align: center;
+        }
+
+        .cert-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .cert-seal {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cert-seal-star {
+            position: absolute;
+            font-size: 5rem;
+            color: #eab308;
+            animation: spinGently 15s infinite linear;
+            filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.5));
+        }
+
+        .cert-seal-icon {
+            position: relative;
+            z-index: 2;
+            font-size: 2.2rem;
+            color: #000;
+            font-weight: 900;
+        }
+
+        .cert-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .cert-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .cert-recipient {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .cert-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            max-width: 420px;
+            margin: 0 auto 2.5rem;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        .cert-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 1rem;
+        }
     </style>
 </head>
 
@@ -1615,6 +2048,7 @@
 
     <!-- Ambient Background -->
     <div class="ambient-bg">
+        <canvas id="matrixGridCanvas"></canvas>
         <div class="ambient-blob blob-1"></div>
         <div class="ambient-blob blob-2"></div>
         <i class="fa-solid fa-bolt floating-thunder"></i>
@@ -1689,12 +2123,6 @@
                     (PwD) has given me a unique perspective on resilience and determination. I strongly believe that
                     challenges are opportunities in disguise, and with the right mindset, growth has no limits.
                 </p>
-
-                <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
-                    <a href="https://www.linkedin.com/in/abhinav-saxena-5a4017123/" target="_blank" class="btn btn-outline" style="display: inline-flex; align-items: center; gap: 10px; border-color: var(--accent-1);">
-                        <i class="fa-brands fa-linkedin-in" style="color: var(--accent-1);"></i> Connect on LinkedIn
-                    </a>
-                </div>
 
                 <div class="defining-traits">
                     <div class="trait-item">
@@ -1901,6 +2329,68 @@
         </div>
     </section>
 
+    <!-- CI/CD Pipeline Section -->
+    <section id="pipeline" class="container">
+        <h2 class="section-title reveal">Automated <span>CI/CD Pipeline</span></h2>
+        <div class="pipeline-grid reveal">
+            <div class="pipeline-visual">
+                <div class="pipeline-header">
+                    <h3><i class="fa-solid fa-circle-notch"></i> QA Telemetry Dashboard</h3>
+                    <button class="btn btn-primary" id="pipelineDeployBtn" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-play"></i> Trigger Commit Build
+                    </button>
+                </div>
+                
+                <div class="pipeline-flow">
+                    <div class="pipeline-connector-line"></div>
+                    <div class="pipeline-connector-progress" id="pipelineProgress"></div>
+                    
+                    <div class="pipeline-stage" id="stage-git">
+                        <div class="pipeline-stage-node">
+                            <i class="fa-brands fa-git-alt"></i>
+                        </div>
+                        <span class="pipeline-stage-title">Git Push</span>
+                    </div>
+                    
+                    <div class="pipeline-stage" id="stage-build">
+                        <div class="pipeline-stage-node">
+                            <i class="fa-brands fa-docker"></i>
+                        </div>
+                        <span class="pipeline-stage-title">Build compiles</span>
+                    </div>
+                    
+                    <div class="pipeline-stage" id="stage-qa">
+                        <div class="pipeline-stage-node">
+                            <i class="fa-solid fa-vial"></i>
+                        </div>
+                        <span class="pipeline-stage-title">QA Selenium Test</span>
+                    </div>
+                    
+                    <div class="pipeline-stage" id="stage-deploy">
+                        <div class="pipeline-stage-node">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <span class="pipeline-stage-title">Deploy Cloud</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pipeline-console">
+                <div class="console-title-bar">
+                    <div class="console-dots">
+                        <span class="console-dot red"></span>
+                        <span class="console-dot yellow"></span>
+                        <span class="console-dot green"></span>
+                    </div>
+                    <span>Selenium Telemetry Console</span>
+                </div>
+                <div class="console-screen" id="pipelineConsoleScreen">
+                    <div class="console-log visible" style="color: #64748b;">$ standby for commit build execution...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Experience & Education Section -->
     <section id="experience" class="container">
         <h2 class="section-title reveal">My <span>Journey</span></h2>
@@ -2054,7 +2544,7 @@
 
     <!-- AI Assistant HTML -->
     <div class="ai-wrap">
-        <div class="ai-speech" id="aiSpeech">System Online</div>
+        <div class="ai-speech visible" id="aiSpeech">Click me! 🤖</div>
 
         <!-- Companion Smart Menu -->
         <div class="ai-menu" id="aiMenu">
@@ -2062,6 +2552,7 @@
             <button class="ai-menu-btn" data-action="scan"><i class="fa-solid fa-expand"></i> Scan Website (QA)</button>
             <button class="ai-menu-btn" data-action="skills"><i class="fa-solid fa-code"></i> Skill Scan</button>
             <button class="ai-menu-btn" data-action="project"><i class="fa-solid fa-robot"></i> Highlight Project</button>
+            <button class="ai-menu-btn" data-action="bug"><i class="fa-solid fa-bug"></i> QA Bug Hunter</button>
             <button class="ai-menu-btn" data-action="dance"><i class="fa-solid fa-music"></i> Vibe Matrix (Dance)</button>
         </div>
         <div class="ai-robot-body" id="aiRobot">
@@ -2095,6 +2586,25 @@
         </div>
         <div class="qa-modal-body" id="qaModalBody">
             <!-- Logs dynamically injected -->
+        </div>
+    </div>
+
+
+
+    <!-- Holographic QA Elite Bug Hunter Certificate Modal -->
+    <div class="cert-modal" id="certModal">
+        <button class="qa-modal-close" id="certModalClose" style="position: absolute; top: 15px; right: 20px;" aria-label="Close Certificate">&times;</button>
+        <div class="cert-seal">
+            <i class="fa-solid fa-certificate cert-seal-star"></i>
+            <i class="fa-solid fa-check cert-seal-icon"></i>
+        </div>
+        <h3 class="cert-title">Elite QA Bug Hunter</h3>
+        <p class="cert-subtitle">This digital telemetry seal certifies that the visitor has successfully debugged and verified Abhinav Saxena's portfolio nodes with zero residual glitches.</p>
+        <div class="cert-recipient" id="certRecipient">GUEST DEBUGGER</div>
+        <p class="cert-text">Asserted & Verified by AbhiMate Multi-Agent Security Protocol. Standard of QA Automation Excellence.</p>
+        <div class="cert-footer">
+            <span id="certDate">DATE: 2026-05-24</span>
+            <span>STATUS: SECURED</span>
         </div>
     </div>
 
@@ -2167,19 +2677,20 @@
         let roamInterval;
         
         function pickNewTarget() {
-            // Keep bounds somewhat off the bottom right so it doesn't leave the screen entirely
-            const maxX = -(window.innerWidth - 120); 
-            const maxY = -(window.innerHeight - 150);
-            targetBotPos.x = Math.random() * maxX;
-            targetBotPos.y = Math.random() * maxY;
+            // Keep bounds in a neat, premium bottom-right quadrant to stay within active view
+            const limitX = Math.min(window.innerWidth - 150, 350);
+            const limitY = Math.min(window.innerHeight - 200, 250);
+            targetBotPos.x = -(Math.random() * limitX); 
+            targetBotPos.y = -(Math.random() * limitY);
         }
 
         pickNewTarget();
         roamInterval = setInterval(pickNewTarget, 4000);
 
         function roamRobot() {
-            // Lerp towards target position for smooth organic drifting (only if not scripted)
-            if (!isScriptedMove) {
+            const isMenuOpen = aiMenu.classList.contains('active');
+            // Lerp towards target position for smooth organic drifting (only if not scripted and menu is closed)
+            if (!isScriptedMove && !isMenuOpen) {
                 botPos.x += (targetBotPos.x - botPos.x) * 0.005;
                 botPos.y += (targetBotPos.y - botPos.y) * 0.005;
                 aiWrap.style.transform = `translate(${botPos.x}px, ${botPos.y}px)`;
@@ -2199,15 +2710,27 @@
             }
         });
 
-        // Toggle Smart Menu on click
-        aiRobot.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (isScriptedMove) return;
-            aiMenu.classList.toggle('active');
-            if (aiMenu.classList.contains('active')) {
-                setAiState('working', 'Select Protocol ⚡');
-            } else {
-                setAiState('', '');
+        // Toggle Smart Menu on click (robust selector for whole body + head + torso)
+        const robotElements = [aiRobot, document.querySelector('.bot-head'), document.querySelector('.bot-torso')];
+        robotElements.forEach(el => {
+            if (el) {
+                el.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (isScriptedMove) return;
+                    aiMenu.classList.toggle('active');
+                    if (aiMenu.classList.contains('active')) {
+                        // Dynamically check position to prevent menu clipping at the top
+                        const rect = aiRobot.getBoundingClientRect();
+                        if (rect.top < 280) {
+                            aiMenu.classList.add('menu-bottom');
+                        } else {
+                            aiMenu.classList.remove('menu-bottom');
+                        }
+                        setAiState('working', 'Select Protocol ⚡');
+                    } else {
+                        setAiState('', '');
+                    }
+                });
             }
         });
 
@@ -2238,6 +2761,8 @@
                 triggerSkillTelemetry();
             } else if (action === 'project') {
                 triggerProjectHighlight();
+            } else if (action === 'bug') {
+                triggerBugGame();
             } else if (action === 'dance') {
                 triggerDanceVibe();
             }
@@ -2443,7 +2968,7 @@
                 if (entry.isIntersecting && !isScriptedMove) {
                     const id = entry.target.id;
                     let msg = '';
-                    if (id === 'home') msg = 'Hello! I am your AI Companion.';
+                    if (id === 'home') msg = 'Click me for protocols! 🤖';
                     if (id === 'about') msg = 'Running Background Check...';
                     if (id === 'skills') msg = 'Hover items to test me!';
                     if (id === 'projects') msg = 'Exploring deployed nodes...';
@@ -2458,6 +2983,361 @@
         }, secOptions);
 
         document.querySelectorAll('section').forEach(sec => secObserver.observe(sec));
+
+        /* --- FEATURE 1: Interactive Canvas Engine --- */
+        const canvas = document.getElementById('matrixGridCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const maxParticles = 65;
+        let mouseX = null;
+        let mouseY = null;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                else if (this.y < 0) this.y = canvas.height;
+
+                // Mouse magnetic effect
+                if (mouseX !== null && mouseY !== null) {
+                    const dx = mouseX - this.x;
+                    const dy = mouseY - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        const force = (120 - dist) / 120;
+                        this.x -= (dx / dist) * force * 1.5;
+                        this.y -= (dy / dist) * force * 1.5;
+                    }
+                }
+            }
+            draw() {
+                ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(139, 92, 246, 0.4)' : 'rgba(139, 92, 246, 0.3)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < maxParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Draw connecting lines
+            ctx.strokeStyle = document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(139, 92, 246, 0.04)' : 'rgba(139, 92, 246, 0.06)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        /* --- FEATURE 2: Trailing Custom Cursor & HUD Selector --- */
+        const cursor = document.getElementById('customCursor');
+        const cursorDot = document.getElementById('customCursorDot');
+        const cursorHud = document.getElementById('cursorHud');
+        let cursorX = 0, cursorY = 0;
+        let targetX = 0, targetY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            targetX = e.clientX;
+            targetY = e.clientY;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if (!cursor.classList.contains('active')) {
+                cursor.classList.add('active');
+                cursorDot.classList.add('active');
+                document.body.classList.add('custom-cursor-active');
+            }
+            cursorDot.style.left = `${targetX}px`;
+            cursorDot.style.top = `${targetY}px`;
+        });
+
+        window.addEventListener('mouseleave', () => {
+            cursor.classList.remove('active');
+            cursorDot.classList.remove('active');
+            document.body.classList.remove('custom-cursor-active');
+            mouseX = null;
+            mouseY = null;
+        });
+
+        function updateCursor() {
+            cursorX += (targetX - cursorX) * 0.12;
+            cursorY += (targetY - cursorY) * 0.12;
+            cursor.style.left = `${cursorX}px`;
+            cursor.style.top = `${cursorY}px`;
+            requestAnimationFrame(updateCursor);
+        }
+        updateCursor();
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        window.addEventListener('mouseleave', () => {
+            mouseX = null;
+            mouseY = null;
+        });
+
+        /* --- FEATURE 3: CI/CD Pipeline Controller --- */
+        const pipelineDeployBtn = document.getElementById('pipelineDeployBtn');
+        const pipelineProgress = document.getElementById('pipelineProgress');
+        const pipelineConsoleScreen = document.getElementById('pipelineConsoleScreen');
+        let isPipelineRunning = false;
+
+        const stages = [
+            { id: 'stage-git', percent: 25, name: "Git Push" },
+            { id: 'stage-build', percent: 55, name: "Build compiles" },
+            { id: 'stage-qa', percent: 85, name: "QA Selenium Test" },
+            { id: 'stage-deploy', percent: 100, name: "Deploy Cloud" }
+        ];
+
+        function logToConsole(message, type = 'info', delay = 0) {
+            setTimeout(() => {
+                const log = document.createElement('div');
+                log.className = 'console-log';
+                
+                let tag = '';
+                if (type === 'info') tag = '<span class="console-tag-info">[INFO]</span>';
+                if (type === 'pass') tag = '<span class="console-tag-pass">[PASS]</span>';
+                if (type === 'warn') tag = '<span class="console-tag-warn">[WARN]</span>';
+                if (type === 'err') tag = '<span class="console-tag-err">[ERR]</span>';
+
+                log.innerHTML = `${tag} ${message}`;
+                pipelineConsoleScreen.appendChild(log);
+                
+                log.offsetHeight; 
+                log.classList.add('visible');
+                pipelineConsoleScreen.scrollTop = pipelineConsoleScreen.scrollHeight;
+            }, delay);
+        }
+
+        pipelineDeployBtn.addEventListener('click', () => {
+            if (isPipelineRunning) return;
+            isPipelineRunning = true;
+            pipelineDeployBtn.disabled = true;
+            pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pipe Running...';
+            setAiState('working', 'CI/CD pipeline asserts active!');
+
+            pipelineConsoleScreen.innerHTML = '';
+            pipelineProgress.style.width = '0%';
+            stages.forEach(s => {
+                const node = document.getElementById(s.id);
+                node.className = 'pipeline-stage';
+            });
+
+            logToConsole('Triggering automated pipeline build...', 'info', 0);
+            
+            // Stage 1: Git Push
+            setTimeout(() => {
+                const stage = document.getElementById('stage-git');
+                stage.classList.add('active');
+                logToConsole('Code pushed: git commit verified (sha: 0f2b8a7c)', 'info');
+                logToConsole('Initiating Docker environment container build...', 'info', 300);
+            }, 600);
+
+            // Stage 2: Docker Build
+            setTimeout(() => {
+                document.getElementById('stage-git').className = 'pipeline-stage success';
+                document.getElementById('stage-build').classList.add('active');
+                pipelineProgress.style.width = '25%';
+                logToConsole('Docker Base Container Compiled successfully.', 'pass');
+                logToConsole('Resolving npm dependencies and running bundler check...', 'info', 300);
+            }, 1800);
+
+            // Stage 3: QA Test
+            setTimeout(() => {
+                document.getElementById('stage-build').className = 'pipeline-stage success';
+                document.getElementById('stage-qa').classList.add('active');
+                pipelineProgress.style.width = '55%';
+                logToConsole('Bundle compilation successful. Web assets verified.', 'pass');
+                logToConsole('Launching Chrome headless driver via Selenium grid...', 'info', 300);
+                logToConsole('Running 148 automated Selenium UI and API assertions...', 'info', 600);
+            }, 3200);
+
+            setTimeout(() => {
+                logToConsole('Assert: Check navigation link DOM binding... PASS', 'pass');
+                logToConsole('Assert: Check light/dark theme switch latency... PASS (12ms)', 'pass');
+                logToConsole('Assert: QA AI companion roaming vital check... PASS', 'pass');
+            }, 4400);
+
+            // Stage 4: Deploy
+            setTimeout(() => {
+                document.getElementById('stage-qa').className = 'pipeline-stage success';
+                document.getElementById('stage-deploy').classList.add('active');
+                pipelineProgress.style.width = '85%';
+                logToConsole('All 148 automated Selenium assertions complete. ZERO bugs found.', 'pass');
+                logToConsole('Pushing verified production bundle to GCP Cloud Run...', 'info', 300);
+            }, 5800);
+
+            // Finish
+            setTimeout(() => {
+                document.getElementById('stage-deploy').className = 'pipeline-stage success';
+                pipelineProgress.style.width = '100%';
+                logToConsole('Production deployment complete. Server: ONLINE.', 'pass');
+                logToConsole('Telemetry assertion checks complete. Status: EXCELLENT.', 'pass');
+                
+                pipelineDeployBtn.disabled = false;
+                pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-check"></i> Deploy Success';
+                isPipelineRunning = false;
+                setAiState('dancing', 'All systems green! Telemetry optimal!');
+                
+                setTimeout(() => {
+                    pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-play"></i> Trigger Commit Build';
+                }, 3000);
+            }, 7200);
+        });
+
+
+        /* --- FEATURE 4: QA Bug Hunter Game Logic --- */
+        const certModal = document.getElementById('certModal');
+        const certRecipient = document.getElementById('certRecipient');
+        const certDate = document.getElementById('certDate');
+        let activeBugsCount = 0;
+        let gameActive = false;
+
+        function triggerBugGame() {
+            if (gameActive) {
+                setAiState('dancing', 'Bug Hunter already active! Go get them!');
+                return;
+            }
+            gameActive = true;
+            activeBugsCount = 4;
+            setAiState('working', 'QA Bug Hunter activated! Breach detected! 🐛');
+            
+            const BugIconClasses = ['fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug'];
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => {
+                    spawnBug(BugIconClasses[i], i);
+                }, i * 400);
+            }
+        }
+
+        function spawnBug(iconClass, index) {
+            const bug = document.createElement('i');
+            bug.className = `${iconClass} glitch-bug`;
+            bug.id = `bug-${index}`;
+            
+            const x = Math.random() * 80 + 10;
+            const y = Math.random() * 70 + 15;
+            
+            bug.style.left = `${x}vw`;
+            bug.style.top = `${y}vh`;
+            
+            document.body.appendChild(bug);
+
+            bug.addEventListener('click', (e) => {
+                e.stopPropagation();
+                squashBug(bug);
+            });
+        }
+
+        function squashBug(bug) {
+            const rect = bug.getBoundingClientRect();
+            createBugExplosion(rect.left + 15, rect.top + 15);
+            bug.remove();
+            
+            activeBugsCount--;
+            
+            if (activeBugsCount > 0) {
+                const cheerPhrases = [
+                    `Glitch squashed! ${activeBugsCount} remaining! 💥`,
+                    `Bug crushed! Trace eliminated! ⚡`,
+                    `Target secured! Keep hunting! 🚀`
+                ];
+                setAiState('working', cheerPhrases[Math.floor(Math.random() * cheerPhrases.length)]);
+            } else {
+                setAiState('dancing', 'Perimeter Secured! Initializing certificate...');
+                gameActive = false;
+                setTimeout(showCertificate, 1500);
+            }
+        }
+
+        function createBugExplosion(x, y) {
+            for (let i = 0; i < 10; i++) {
+                const p = document.createElement('div');
+                p.className = 'bug-particle';
+                p.style.left = `${x}px`;
+                p.style.top = `${y}px`;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 50 + 20;
+                const dx = Math.cos(angle) * dist;
+                const dy = Math.sin(angle) * dist;
+                
+                p.style.setProperty('--dx', `${dx}px`);
+                p.style.setProperty('--dy', `${dy}px`);
+                
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        function showCertificate() {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            certDate.textContent = `DATE: ${new Date().toLocaleDateString('en-US', options)}`;
+            certRecipient.textContent = "ELITE BUG SQUASHER";
+            
+            certModal.classList.add('active');
+            setAiState('dancing', 'Gold Telemetry Certificate Awarded! 🏆');
+        }
+
+        document.body.addEventListener('click', (e) => {
+            if (certModal.classList.contains('active') && !certModal.contains(e.target)) {
+                certModal.classList.remove('active');
+                setAiState('', 'Bug hunter system offline.');
+            }
+        });
+
+        // Certificate modal explicit close button
+        const certModalClose = document.getElementById('certModalClose');
+        if (certModalClose) {
+            certModalClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                certModal.classList.remove('active');
+                setAiState('', 'Bug hunter system offline.');
+            });
+        }
 
         // Theme Toggle Logic
         const themeToggle = document.getElementById('themeToggle');
