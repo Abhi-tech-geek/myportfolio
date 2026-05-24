@@ -1323,6 +1323,291 @@
                 font-size: 1.2rem;
             }
         }
+
+        /* --- AI Assistant 2.0 - Menu, Scanner and Diagnostics --- */
+        :root {
+            --ai-menu-bg: rgba(10, 10, 12, 0.85);
+            --modal-bg: rgba(10, 10, 12, 0.95);
+        }
+        :root[data-theme="light"] {
+            --ai-menu-bg: rgba(255, 255, 255, 0.9);
+            --modal-bg: rgba(255, 255, 255, 0.98);
+        }
+
+        .ai-menu {
+            position: absolute;
+            bottom: 110px;
+            right: 0px;
+            width: 220px;
+            background: var(--ai-menu-bg);
+            border: 1px solid var(--accent-1);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            opacity: 0;
+            transform: translateY(15px) scale(0.9);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2010;
+        }
+
+        .ai-menu.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .ai-menu-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent-1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .ai-menu-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            text-align: left;
+            width: 100%;
+        }
+
+        .ai-menu-btn i {
+            font-size: 0.9rem;
+            color: var(--accent-1);
+            transition: transform 0.2s ease;
+        }
+
+        .ai-menu-btn:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--accent-1);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+            transform: translateX(3px);
+        }
+
+        .ai-menu-btn:hover i {
+            transform: scale(1.15);
+        }
+
+        /* Fullscreen Laser Scanner Overlay */
+        .laser-scanner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            display: none;
+        }
+
+        .laser-scanner.active {
+            display: block;
+        }
+
+        .laser-beam {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, transparent, var(--accent-1), #3b82f6, var(--accent-3), #3b82f6, var(--accent-1), transparent);
+            box-shadow: 0 0 15px var(--accent-1), 0 0 30px #3b82f6, 0 0 45px var(--accent-3);
+            animation: laserSweep 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .laser-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(139, 92, 246, 0.04) 0%, transparent 100%);
+            animation: laserOverlaySweep 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes laserSweep {
+            0% { top: -2%; }
+            100% { top: 102%; }
+        }
+
+        @keyframes laserOverlaySweep {
+            0% { height: 0%; opacity: 0.8; }
+            100% { height: 100%; opacity: 0; }
+        }
+
+        /* Cyberpunk Diagnostics Modal */
+        .qa-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 90%;
+            max-width: 480px;
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            z-index: 10000;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(139, 92, 246, 0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .qa-modal.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+            border-color: var(--accent-1);
+        }
+
+        .qa-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .qa-modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+
+        .qa-modal-header h3 i {
+            color: var(--accent-1);
+        }
+
+        .qa-modal-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .qa-modal-close:hover {
+            color: var(--accent-3);
+        }
+
+        .qa-modal-body {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            color: var(--text-primary);
+            text-align: left;
+        }
+
+        .qa-log-line {
+            display: flex;
+            gap: 8px;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .qa-log-line.printed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .qa-tag-info {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .qa-tag-pass {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .qa-tag-warn {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .qa-status-box {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px dashed var(--accent-1);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .qa-status-box.printed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .qa-status-title {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .qa-status-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Pulsing Glow Highlight Class for Skills & Projects */
+        .telemetry-pulse {
+            animation: pulseGlow 1.5s infinite alternate ease-in-out !important;
+            border-color: var(--accent-1) !important;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 5px rgba(139, 92, 246, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
+            }
+        }
     </style>
 </head>
 
@@ -1536,7 +1821,7 @@
 
         <div class="projects-grid">
             <!-- AbhiMate -->
-            <div class="project-card flip-card reveal">
+            <div class="project-card flip-card reveal" id="project-abhimate">
                 <div class="flip-inner">
                     <div class="flip-front">
                         <i class="fa-solid fa-robot project-icon"></i>
@@ -1759,6 +2044,15 @@
     <!-- AI Assistant HTML -->
     <div class="ai-wrap">
         <div class="ai-speech" id="aiSpeech">System Online</div>
+
+        <!-- Companion Smart Menu -->
+        <div class="ai-menu" id="aiMenu">
+            <div class="ai-menu-title">Companion Protocol</div>
+            <button class="ai-menu-btn" data-action="scan"><i class="fa-solid fa-expand"></i> Scan Website (QA)</button>
+            <button class="ai-menu-btn" data-action="skills"><i class="fa-solid fa-code"></i> Skill Scan</button>
+            <button class="ai-menu-btn" data-action="project"><i class="fa-solid fa-robot"></i> Highlight Project</button>
+            <button class="ai-menu-btn" data-action="dance"><i class="fa-solid fa-music"></i> Vibe Matrix (Dance)</button>
+        </div>
         <div class="ai-robot-body" id="aiRobot">
             <div class="bot-antenna"></div>
             <div class="bot-head">
@@ -1816,7 +2110,13 @@
         // AI Assistant Logic
         const aiRobot = document.getElementById('aiRobot');
         const aiSpeech = document.getElementById('aiSpeech');
+        const aiMenu = document.getElementById('aiMenu');
+        const laserScanner = document.getElementById('laserScanner');
+        const qaModal = document.getElementById('qaModal');
+        const qaModalClose = document.getElementById('qaModalClose');
+        const qaModalBody = document.getElementById('qaModalBody');
         let aiMessageTimeout;
+        let isScriptedMove = false;
 
         function setAiState(state, message) {
             aiRobot.className = 'ai-robot-body ' + state;
@@ -1850,37 +2150,269 @@
         roamInterval = setInterval(pickNewTarget, 4000);
 
         function roamRobot() {
-            // Lerp towards target position for smooth organic drifting
-            botPos.x += (targetBotPos.x - botPos.x) * 0.005;
-            botPos.y += (targetBotPos.y - botPos.y) * 0.005;
-            aiWrap.style.transform = `translate(${botPos.x}px, ${botPos.y}px)`;
+            // Lerp towards target position for smooth organic drifting (only if not scripted)
+            if (!isScriptedMove) {
+                botPos.x += (targetBotPos.x - botPos.x) * 0.005;
+                botPos.y += (targetBotPos.y - botPos.y) * 0.005;
+                aiWrap.style.transform = `translate(${botPos.x}px, ${botPos.y}px)`;
+            }
             requestAnimationFrame(roamRobot);
         }
         roamRobot();
 
         // Pause roaming when hovered
-        aiRobot.addEventListener('mouseenter', () => clearInterval(roamInterval));
-        aiRobot.addEventListener('mouseleave', () => roamInterval = setInterval(pickNewTarget, 4000));
-
-        aiRobot.addEventListener('click', () => {
-            setAiState('dancing', 'Vibe Matrix Active! 🚀');
+        aiRobot.addEventListener('mouseenter', () => {
+            if (!isScriptedMove) clearInterval(roamInterval);
+        });
+        aiRobot.addEventListener('mouseleave', () => {
+            if (!isScriptedMove) {
+                clearInterval(roamInterval);
+                roamInterval = setInterval(pickNewTarget, 4000);
+            }
         });
 
+        // Toggle Smart Menu on click
+        aiRobot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isScriptedMove) return;
+            aiMenu.classList.toggle('active');
+            if (aiMenu.classList.contains('active')) {
+                setAiState('working', 'Select Protocol ⚡');
+            } else {
+                setAiState('', '');
+            }
+        });
+
+        // Close smart menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!aiWrap.contains(e.target) && !qaModal.contains(e.target)) {
+                aiMenu.classList.remove('active');
+            }
+        });
+
+        // Close QA Diagnostics Modal
+        qaModalClose.addEventListener('click', () => {
+            qaModal.classList.remove('active');
+            setAiState('', 'Diagnostics Closed.');
+        });
+
+        // Smart Menu Actions Trigger
+        aiMenu.addEventListener('click', (e) => {
+            const btn = e.target.closest('.ai-menu-btn');
+            if (!btn) return;
+            
+            const action = btn.dataset.action;
+            aiMenu.classList.remove('active');
+            
+            if (action === 'scan') {
+                triggerDiagnosticScan();
+            } else if (action === 'skills') {
+                triggerSkillTelemetry();
+            } else if (action === 'project') {
+                triggerProjectHighlight();
+            } else if (action === 'dance') {
+                triggerDanceVibe();
+            }
+        });
+
+        // Scripted Move Helpers
+        function runScriptedMove(targetX, targetY, callback) {
+            isScriptedMove = true;
+            clearInterval(roamInterval);
+            aiWrap.style.transition = 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            aiWrap.style.transform = `translate(${targetX}px, ${targetY}px)`;
+            
+            botPos.x = targetX;
+            botPos.y = targetY;
+            
+            setTimeout(callback, 1200);
+        }
+
+        function endScriptedMove() {
+            aiWrap.style.transition = 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            aiWrap.style.transform = `translate(0px, 0px)`;
+            botPos.x = 0;
+            botPos.y = 0;
+            targetBotPos.x = 0;
+            targetBotPos.y = 0;
+            
+            setTimeout(() => {
+                aiWrap.style.transition = '';
+                isScriptedMove = false;
+                roamInterval = setInterval(pickNewTarget, 4000);
+            }, 1200);
+        }
+
+        // Action 1: Full-Screen Laser Diagnostics Scan
+        function triggerDiagnosticScan() {
+            setAiState('working', 'Scanning sequence initialized...');
+            
+            // Glide robot to top-right corner
+            const targetY = -(window.innerHeight - 150);
+            const targetX = -50;
+            
+            runScriptedMove(targetX, targetY, () => {
+                setAiState('working', 'Full Page Laser Sweep Active!');
+                laserScanner.classList.add('active');
+                
+                // Sweep line mid-way sound/bubble
+                setTimeout(() => {
+                    setAiState('working', 'Analyzing DOM & Defect Telemetry...');
+                }, 1200);
+                
+                // Sweep completes
+                setTimeout(() => {
+                    laserScanner.classList.remove('active');
+                    setAiState('dancing', 'Scan Complete! compiling diagnostics...');
+                    
+                    setTimeout(() => {
+                        endScriptedMove();
+                        showDiagnosticsModal();
+                    }, 800);
+                }, 2500);
+            });
+        }
+
+        // Animated QA Terminal Logs injection
+        function showDiagnosticsModal() {
+            qaModalBody.innerHTML = '';
+            qaModal.classList.add('active');
+            
+            const logs = [
+                { text: "[INFO] Initializing QA Webdriver Core Automation...", type: "info" },
+                { text: "[INFO] Establishing telemetry socket over SSL/TLS...", type: "info" },
+                { text: "[PASS] UI Integrity Check: 0 rendering defects found.", type: "pass" },
+                { text: "[PASS] Page Load Performance: LCP 0.6s, FID 8ms (Peak).", type: "pass" },
+                { text: "[PASS] Interactive 3D Nodes: Vitals intact.", type: "pass" },
+                { text: "[WARN] Telemetry: Hyper-advanced code matrices detected in Abhinav's systems.", type: "warn" },
+                { text: "[PASS] Assertions: 48/48 test vectors GREEN. Zero bugs verified.", type: "pass" }
+            ];
+            
+            logs.forEach((log, index) => {
+                setTimeout(() => {
+                    const line = document.createElement('div');
+                    line.className = 'qa-log-line';
+                    
+                    let tagHtml = '';
+                    if (log.type === 'info') tagHtml = '<span class="qa-tag-info">[INFO]</span>';
+                    if (log.type === 'pass') tagHtml = '<span class="qa-tag-pass">[PASS]</span>';
+                    if (log.type === 'warn') tagHtml = '<span class="qa-tag-warn">[WARN]</span>';
+                    
+                    line.innerHTML = `${tagHtml} ${log.text.substring(7)}`;
+                    qaModalBody.appendChild(line);
+                    
+                    line.offsetHeight; // force reflow
+                    line.classList.add('printed');
+                }, index * 350);
+            });
+            
+            // Print certified status seal box at the end
+            setTimeout(() => {
+                const statusBox = document.createElement('div');
+                statusBox.className = 'qa-status-box';
+                statusBox.innerHTML = `
+                    <div class="qa-status-title">SYSTEM AUDIT INTEGRITY</div>
+                    <div class="qa-status-value">100% SECURE & OPTIMIZED</div>
+                `;
+                qaModalBody.appendChild(statusBox);
+                
+                statusBox.offsetHeight;
+                statusBox.classList.add('printed');
+                setAiState('dancing', 'System Audit: 100% Secure!');
+            }, logs.length * 350 + 200);
+        }
+
+        // Action 2: Skill Telemetry scan
+        function triggerSkillTelemetry() {
+            setAiState('working', 'Scanning core skill matrix...');
+            document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                setAiState('dancing', 'HTML, Selenium, Python at 100% load capacities!');
+                
+                // Highlight and pulse all skill cards
+                const skillCards = document.querySelectorAll('.skill-card .flip-front');
+                skillCards.forEach(card => card.classList.add('telemetry-pulse'));
+                
+                setTimeout(() => {
+                    skillCards.forEach(card => card.classList.remove('telemetry-pulse'));
+                    setAiState('', 'Skill telemetry verified.');
+                }, 3500);
+            }, 800);
+        }
+
+        // Action 3: Project Highlight
+        function triggerProjectHighlight() {
+            setAiState('working', 'Locating system featured projects...');
+            const projectsSection = document.getElementById('projects');
+            projectsSection.scrollIntoView({ behavior: 'smooth' });
+            
+            setTimeout(() => {
+                const abhimateCard = document.getElementById('project-abhimate');
+                if (abhimateCard) {
+                    setAiState('dancing', 'Target Acquired! AbhiMate: Multi-Agent QA Core.');
+                    
+                    // Programmatically flip the card to show logs
+                    abhimateCard.classList.add('telemetry-pulse');
+                    abhimateCard.classList.add('flipped');
+                    
+                    setTimeout(() => {
+                        abhimateCard.classList.remove('telemetry-pulse');
+                        abhimateCard.classList.remove('flipped');
+                        setAiState('', 'Project highlighted.');
+                    }, 5000);
+                }
+            }, 800);
+        }
+
+        // Action 4: Vibe Matrix (Dance Mode)
+        let vibeInterval;
+        function triggerDanceVibe() {
+            let cycles = 0;
+            const dancePhrases = [
+                "BEEP... BOOP... DANCE PROTOCOL! 🕺",
+                "Grooving through the codebase! ⚡",
+                "QA Automation has 100% groove! 🎸",
+                "Matrix Vitals: PURE VIBES! 🚀"
+            ];
+            
+            setAiState('dancing', dancePhrases[0]);
+            clearInterval(vibeInterval);
+            
+            vibeInterval = setInterval(() => {
+                cycles++;
+                if (cycles < dancePhrases.length) {
+                    setAiState('dancing', dancePhrases[cycles]);
+                } else {
+                    clearInterval(vibeInterval);
+                    setAiState('', 'Dance matrix synced successfully.');
+                }
+            }, 1200);
+        }
+
         document.querySelectorAll('.skill-card').forEach(card => {
-            card.addEventListener('mouseenter', () => setAiState('working', 'Scanning Skill Modules...'));
-            card.addEventListener('mouseleave', () => setAiState('', ''));
+            card.addEventListener('mouseenter', () => {
+                if (!isScriptedMove) setAiState('working', 'Scanning Skill Modules...');
+            });
+            card.addEventListener('mouseleave', () => {
+                if (!isScriptedMove) setAiState('', '');
+            });
         });
 
         document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('mouseenter', () => setAiState('dancing', 'Analyzing Systems! ⚡'));
-            card.addEventListener('mouseleave', () => setAiState('', ''));
+            card.addEventListener('mouseenter', () => {
+                if (!isScriptedMove) setAiState('dancing', 'Analyzing Systems! ⚡');
+            });
+            card.addEventListener('mouseleave', () => {
+                if (!isScriptedMove) setAiState('', '');
+            });
         });
 
         // Section Observer for AI Context
         const secOptions = { threshold: 0.2, rootMargin: "-10% 0px" };
         const secObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
+                if (entry.isIntersecting && !isScriptedMove) {
                     const id = entry.target.id;
                     let msg = '';
                     if (id === 'home') msg = 'Hello! I am your AI Companion.';
@@ -1928,6 +2460,23 @@
             }
         });
     </script>
+
+    <!-- Fullscreen Laser Scanner -->
+    <div class="laser-scanner" id="laserScanner">
+        <div class="laser-beam"></div>
+        <div class="laser-overlay"></div>
+    </div>
+
+    <!-- QA Diagnostics Modal -->
+    <div class="qa-modal" id="qaModal">
+        <div class="qa-modal-header">
+            <h3><i class="fa-solid fa-shield-halved"></i> Diagnostics Complete</h3>
+            <button class="qa-modal-close" id="qaModalClose" aria-label="Close Diagnostics">&times;</button>
+        </div>
+        <div class="qa-modal-body" id="qaModalBody">
+            <!-- Logs dynamically injected -->
+        </div>
+    </div>
 </body>
 
 </html>
