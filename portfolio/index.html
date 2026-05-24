@@ -2042,6 +2042,245 @@
             padding-top: 1rem;
         }
 
+        /* --- CERTIFICATIONS CAROUSEL STYLES --- */
+        #certifications {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certs-carousel-container {
+            position: relative;
+            max-width: 900px;
+            margin: 2rem auto 0;
+            padding: 0 4rem;
+        }
+
+        .certs-viewport {
+            overflow: hidden;
+            border-radius: 24px;
+            width: 100%;
+        }
+
+        .certs-track {
+            display: flex;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            width: 100%;
+        }
+
+        .cert-slide {
+            flex: 0 0 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .cert-carousel-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cert-carousel-card:hover {
+            border-color: var(--accent-1);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(139, 92, 246, 0.2);
+        }
+
+        .cert-carousel-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+
+        .cert-badge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .cert-carousel-card:hover .cert-badge {
+            transform: scale(1.1);
+            border-color: var(--accent-1);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .cert-org {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--accent-1);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            color: var(--text-primary);
+        }
+
+        .cert-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .cert-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cert-meta i {
+            color: var(--accent-2);
+        }
+
+        .cert-click-info {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .cert-carousel-card:hover .cert-click-info {
+            color: var(--text-primary);
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--accent-1);
+        }
+
+        /* Carousel Navigation Controls */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            background: var(--accent-1);
+            border-color: var(--accent-1);
+            color: white;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .carousel-btn.prev {
+            left: 0;
+        }
+
+        .carousel-btn.next {
+            right: 0;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: var(--accent-1);
+            transform: scale(1.3);
+            box-shadow: 0 0 8px var(--accent-1);
+        }
+
+        /* Responsive adjustments for nav button & carousel */
+        @media (max-width: 768px) {
+            .certs-carousel-container {
+                padding: 0 1rem 4rem;
+            }
+            .carousel-btn {
+                top: auto;
+                bottom: 0;
+                transform: none;
+            }
+            .carousel-btn.prev {
+                left: 30%;
+            }
+            .carousel-btn.next {
+                right: 30%;
+            }
+            .cert-carousel-card {
+                padding: 2rem 1.5rem;
+            }
+            .cert-name {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-resume-text {
+                display: none;
+            }
+            .nav-actions .btn-outline {
+                padding: 0.5rem;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                justify-content: center;
+            }
+            .nav-actions .btn-outline i {
+                margin: 0 !important;
+            }
+        }
+
 
     </style>
 </head>
@@ -2074,6 +2313,7 @@
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#projects">Projects</a></li>
+            <li><a href="#certifications">Certifications</a></li>
             <li><a href="#experience">Journey</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -2438,6 +2678,84 @@
         </div>
     </section>
 
+    <!-- Certifications Section -->
+    <section id="certifications" class="container">
+        <h2 class="section-title reveal">My <span>Certifications</span></h2>
+        
+        <div class="certs-carousel-container reveal">
+            <button class="carousel-btn prev" id="certPrevBtn" aria-label="Previous Certification">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="carousel-btn next" id="certNextBtn" aria-label="Next Certification">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            
+            <div class="certs-viewport">
+                <div class="certs-track" id="certsTrack">
+                    <!-- Slide 1: Google Cloud -->
+                    <div class="cert-slide">
+                        <div class="cert-carousel-card" onclick="openHoloCert('google-cloud')">
+                            <div class="cert-badge" style="background: rgba(66, 133, 244, 0.05); border-color: rgba(66, 133, 244, 0.3);">
+                                <i class="fa-brands fa-google" style="color: #4285F4;"></i>
+                            </div>
+                            <div class="cert-org">Google Cloud</div>
+                            <h3 class="cert-name">Build Search & Recommendation Applications with AI</h3>
+                            <div class="cert-meta">
+                                <span><i class="fa-regular fa-calendar"></i> May 2026</span>
+                                <span><i class="fa-solid fa-shield-halved"></i> Verified</span>
+                            </div>
+                            <div class="cert-click-info">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Click to view holographic seal
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2: Accenture -->
+                    <div class="cert-slide">
+                        <div class="cert-carousel-card" onclick="openHoloCert('accenture')">
+                            <div class="cert-badge" style="background: rgba(161, 0, 255, 0.05); border-color: rgba(161, 0, 255, 0.3);">
+                                <i class="fa-solid fa-chevron-right" style="color: #A100FF; transform: scaleX(1.5);"></i>
+                            </div>
+                            <div class="cert-org">Accenture</div>
+                            <h3 class="cert-name">Reinvention with Agentic AI Learning Program</h3>
+                            <div class="cert-meta">
+                                <span><i class="fa-regular fa-calendar"></i> April 2026</span>
+                                <span><i class="fa-solid fa-shield-halved"></i> Verified</span>
+                            </div>
+                            <div class="cert-click-info">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Click to view holographic seal
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3: India AI -->
+                    <div class="cert-slide">
+                        <div class="cert-carousel-card" onclick="openHoloCert('india-ai')">
+                            <div class="cert-badge" style="background: rgba(255, 153, 51, 0.05); border-color: rgba(255, 153, 51, 0.3);">
+                                <i class="fa-solid fa-microchip" style="background: linear-gradient(135deg, #FF9933, #128807); -webkit-background-clip: text; color: transparent;"></i>
+                            </div>
+                            <div class="cert-org">India AI</div>
+                            <h3 class="cert-name">India AI Impact Buildathon 2026</h3>
+                            <div class="cert-meta">
+                                <span><i class="fa-regular fa-calendar"></i> March 2026</span>
+                                <span><i class="fa-solid fa-trophy" style="color: #eab308;"></i> Awarded</span>
+                            </div>
+                            <div class="cert-click-info">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Click to view holographic seal
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="carousel-dots" id="certsDots">
+                <span class="carousel-dot active" data-index="0"></span>
+                <span class="carousel-dot" data-index="1"></span>
+                <span class="carousel-dot" data-index="2"></span>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact" class="container" style="padding-bottom: 8rem;">
         <h2 class="section-title reveal">Get In <span>Touch</span></h2>
@@ -2463,6 +2781,12 @@
                     <i class="fa-solid fa-location-dot"></i>
                     <span>Gurgaon, India</span>
                 </div>
+
+                <!-- Resume Download Card in Contact Section -->
+                <a href="AbhinavSaxena.pdf" download="Abhinav_Saxena_Resume.pdf" class="contact-card" style="border-color: var(--accent-1); background: rgba(139, 92, 246, 0.03); box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);">
+                    <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i>
+                    <span style="font-weight: 600;">Download Resume (PDF)</span>
+                </a>
             </div>
         </div>
     </section>
@@ -2555,6 +2879,7 @@
             <button class="ai-menu-btn" data-action="skills"><i class="fa-solid fa-code"></i> Skill Scan</button>
             <button class="ai-menu-btn" data-action="project"><i class="fa-solid fa-robot"></i> Highlight Project</button>
             <button class="ai-menu-btn" data-action="bug"><i class="fa-solid fa-bug"></i> QA Bug Hunter</button>
+            <button class="ai-menu-btn" data-action="resume"><i class="fa-solid fa-file-pdf"></i> Download Resume</button>
             <button class="ai-menu-btn" data-action="dance"><i class="fa-solid fa-music"></i> Vibe Matrix (Dance)</button>
         </div>
         <div class="ai-robot-body" id="aiRobot">
@@ -2607,6 +2932,24 @@
         <div class="cert-footer">
             <span id="certDate">DATE: 2026-05-24</span>
             <span>STATUS: SECURED</span>
+        </div>
+    </div>
+
+    <!-- Holographic Professional Credentials Modal -->
+    <div class="cert-modal" id="dynamicCertModal">
+        <button class="qa-modal-close" id="dynamicCertModalClose" style="position: absolute; top: 15px; right: 20px;" aria-label="Close Certificate">&times;</button>
+        <div class="cert-seal">
+            <i class="fa-solid fa-certificate cert-seal-star" id="dynCertSealStar"></i>
+            <i class="fa-solid fa-award cert-seal-icon" id="dynCertSealIcon"></i>
+        </div>
+        <div class="cert-org" id="dynCertOrg" style="font-size: 0.85rem; letter-spacing: 2px; color: var(--accent-1); margin-bottom: 0.5rem; font-weight: 700;">ORGANIZATION</div>
+        <h3 class="cert-title" id="dynCertTitle">Certificate Name</h3>
+        <p class="cert-subtitle" id="dynCertSubtitle">This official credential validates the successful completion and mastery of the program criteria.</p>
+        <div class="cert-recipient" style="font-size: 1.8rem; margin: 1.5rem 0 0.5rem;">Abhinav Saxena</div>
+        <p class="cert-text" id="dynCertBody">Specifically designed and validated in testing methodologies, artificial intelligence scaling, and telemetry architectures.</p>
+        <div class="cert-footer">
+            <span id="dynCertDate">DATE: 2026</span>
+            <span id="dynCertId">CREDENTIAL ID: VERIFIED-1029</span>
         </div>
     </div>
 
@@ -2765,6 +3108,8 @@
                 triggerProjectHighlight();
             } else if (action === 'bug') {
                 triggerBugGame();
+            } else if (action === 'resume') {
+                triggerResumeDownload();
             } else if (action === 'dance') {
                 triggerDanceVibe();
             }
@@ -2943,6 +3288,21 @@
                     setAiState('', 'Dance matrix synced successfully.');
                 }
             }, 1200);
+        }
+
+        // Action: Dynamic Resume Download from AI Companion menu
+        function triggerResumeDownload() {
+            setAiState('dancing', 'Downloading Abhinav\'s Resume PDF... ⚡');
+            
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = 'AbhinavSaxena.pdf';
+                link.download = 'Abhinav_Saxena_Resume.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setAiState('dancing', 'Resume Download Successful! 🏆');
+            }, 1000);
         }
 
         document.querySelectorAll('.skill-card').forEach(card => {
@@ -3316,6 +3676,151 @@
                 setAiState('', 'Bug hunter system offline.');
             });
         }
+
+        // --- CERTIFICATIONS CAROUSEL LOGIC ---
+        const certsTrack = document.getElementById('certsTrack');
+        const certPrevBtn = document.getElementById('certPrevBtn');
+        const certNextBtn = document.getElementById('certNextBtn');
+        const certDotsContainer = document.getElementById('certsDots');
+        const certSlides = document.querySelectorAll('.cert-slide');
+        let currentCertIndex = 0;
+        
+        function updateCertCarousel() {
+            certsTrack.style.transform = `translateX(-${currentCertIndex * 100}%)`;
+            
+            // Update dots
+            const dots = certDotsContainer.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, idx) => {
+                if (idx === currentCertIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        certPrevBtn.addEventListener('click', () => {
+            currentCertIndex = (currentCertIndex - 1 + certSlides.length) % certSlides.length;
+            updateCertCarousel();
+            if (!isScriptedMove) setAiState('working', 'Retrieving previous credential...');
+        });
+        
+        certNextBtn.addEventListener('click', () => {
+            currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+            updateCertCarousel();
+            if (!isScriptedMove) setAiState('working', 'Retrieving next credential...');
+        });
+        
+        certDotsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('carousel-dot')) {
+                currentCertIndex = parseInt(e.target.dataset.index);
+                updateCertCarousel();
+            }
+        });
+        
+        // Auto Play Carousel every 8s
+        let certsAutoPlay = setInterval(() => {
+            currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+            updateCertCarousel();
+        }, 8000);
+        
+        // Pause auto play on hover
+        const certsSection = document.getElementById('certifications');
+        if (certsSection) {
+            certsSection.addEventListener('mouseenter', () => clearInterval(certsAutoPlay));
+            certsSection.addEventListener('mouseleave', () => {
+                certsAutoPlay = setInterval(() => {
+                    currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+                    updateCertCarousel();
+                }, 8000);
+            });
+        }
+
+        // Dynamic Certificate Modal Logic
+        const dynamicCertModal = document.getElementById('dynamicCertModal');
+        const dynamicCertModalClose = document.getElementById('dynamicCertModalClose');
+        
+        const certDataStore = {
+            'google-cloud': {
+                org: 'Google Cloud',
+                title: 'Build Search & Recommendation Applications with AI',
+                subtitle: 'This credential confirms that Abhinav Saxena has demonstrated proficiency in designing, evaluating, and deploying search and recommendation models powered by Google Cloud GenAI.',
+                body: 'Covers Vertex AI, enterprise search architectures, agentic search retrieval, and vector search embeddings for production deployment.',
+                date: 'DATE: May 2026',
+                credId: 'CREDENTIAL ID: GCP-SRAI-26804',
+                sealColor: '#4285F4',
+                starColor: '#eab308',
+                accentColor: 'rgba(66, 133, 244, 0.25)',
+                aiResponse: 'Google Cloud Certified! Enterprise AI search capabilities verified! 🔍'
+            },
+            'accenture': {
+                org: 'Accenture',
+                title: 'Reinvention with Agentic AI Learning Program',
+                subtitle: 'This certificate validates mastery in orchestrating multi-agent networks, autonomous tool-use pipelines, and LLM-agent reasoning patterns.',
+                body: 'Comprehensive training in developing enterprise-grade agentic frameworks, multi-modal prompt tuning, and cognitive AI workflows.',
+                date: 'DATE: April 2026',
+                credId: 'CREDENTIAL ID: ACN-REAI-84021',
+                sealColor: '#A100FF',
+                starColor: '#a100ff',
+                accentColor: 'rgba(161, 0, 255, 0.25)',
+                aiResponse: 'Accenture Agentic AI Specialist! Multi-agent architecture approved! 🤖'
+            },
+            'india-ai': {
+                org: 'India AI (Digital India)',
+                title: 'India AI Impact Buildathon 2026',
+                subtitle: 'Awarded for developing high-impact AI solutions addressing critical national challenges, showcasing exceptional technical execution and innovation.',
+                body: 'Outstanding contribution in deploying localized AI models, ensuring software reliability, and robust QA testing frameworks.',
+                date: 'DATE: March 2026',
+                credId: 'CREDENTIAL ID: IND-AI-IMPACT-2026',
+                sealColor: '#FF9933',
+                starColor: '#128807',
+                accentColor: 'rgba(255, 153, 51, 0.25)',
+                aiResponse: 'India AI Impact Innovator! Exceptional nation-building tech execution! 🏆'
+            }
+        };
+
+        function openHoloCert(certId) {
+            const data = certDataStore[certId];
+            if (!data) return;
+            
+            document.getElementById('dynCertOrg').textContent = data.org;
+            document.getElementById('dynCertTitle').textContent = data.title;
+            document.getElementById('dynCertSubtitle').textContent = data.subtitle;
+            document.getElementById('dynCertBody').textContent = data.body;
+            document.getElementById('dynCertDate').textContent = data.date;
+            document.getElementById('dynCertId').textContent = data.credId;
+            
+            const sealStar = document.getElementById('dynCertSealStar');
+            const sealIcon = document.getElementById('dynCertSealIcon');
+            
+            sealStar.style.color = data.starColor;
+            sealIcon.style.color = '#000';
+            
+            dynamicCertModal.style.borderColor = data.sealColor;
+            dynamicCertModal.style.boxShadow = `0 25px 60px rgba(0,0,0,0.6), 0 0 40px ${data.accentColor}`;
+            
+            dynamicCertModal.classList.add('active');
+            
+            if (!isScriptedMove) {
+                setAiState('dancing', data.aiResponse);
+            }
+        }
+        
+        if (dynamicCertModalClose) {
+            dynamicCertModalClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dynamicCertModal.classList.remove('active');
+                if (!isScriptedMove) setAiState('', 'Credential telemetry closed.');
+            });
+        }
+        
+        // Close modal clicking outside
+        document.body.addEventListener('click', (e) => {
+            if (dynamicCertModal && dynamicCertModal.classList.contains('active') && !dynamicCertModal.contains(e.target) && !e.target.closest('.cert-carousel-card')) {
+                dynamicCertModal.classList.remove('active');
+                if (!isScriptedMove) setAiState('', '');
+            }
+        });
 
         // Theme Toggle Logic
         const themeToggle = document.getElementById('themeToggle');
