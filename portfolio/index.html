@@ -2527,6 +2527,189 @@
             filter: blur(0.3px);
         }
 
+        /* --- NAVBAR DROPDOWN STYLES --- */
+        .nav-dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            padding-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-trigger::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background: var(--gradient);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .dropdown-trigger:hover {
+            color: var(--text-primary);
+            text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+        }
+
+        .dropdown-trigger:hover::after {
+            width: 100%;
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
+        }
+
+        .dropdown-chevron {
+            font-size: 0.75rem;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            will-change: transform;
+        }
+
+        /* Desktop Dropdown Styles */
+        @media (min-width: 769px) {
+            .dropdown-menu-list {
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%) translateY(15px) scale(0.95);
+                background: rgba(10, 10, 12, 0.95);
+                border: 1px solid var(--border-color);
+                border-radius: 16px;
+                padding: 0.8rem 0.5rem;
+                min-width: 190px;
+                display: flex;
+                flex-direction: column;
+                gap: 0.4rem;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.15);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+                will-change: transform, opacity;
+                z-index: 1010;
+                list-style: none;
+            }
+
+            /* Transparent hover bridge to prevent hover loss across the gap */
+            .dropdown-menu-list::before {
+                content: '';
+                position: absolute;
+                top: -20px;
+                left: 0;
+                right: 0;
+                height: 20px;
+                background: transparent;
+            }
+
+            /* Light theme support */
+            :root[data-theme="light"] .dropdown-menu-list {
+                background: rgba(255, 255, 255, 0.95);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1), 0 0 20px rgba(139, 92, 246, 0.1);
+            }
+
+            .dropdown-menu-list li {
+                width: 100%;
+            }
+
+            .dropdown-menu-list a {
+                padding: 0.6rem 0.8rem;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: var(--text-secondary) !important;
+                font-size: 0.9rem !important;
+                width: 100%;
+                transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease, color 0.2s ease;
+                will-change: transform;
+                font-weight: 500;
+                text-shadow: none !important;
+            }
+
+            .dropdown-menu-list a::after {
+                display: none !important; /* Disable navbar line effect for dropdown */
+            }
+
+            .dropdown-menu-list a i {
+                font-size: 0.95rem;
+                color: var(--accent-1);
+                transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+                will-change: transform;
+            }
+
+            .dropdown-menu-list a:hover {
+                color: var(--text-primary) !important;
+                background: var(--bg-surface-hover);
+                transform: translateX(5px);
+            }
+
+            .dropdown-menu-list a:hover i {
+                transform: scale(1.15);
+            }
+
+            /* Hover states on desktop */
+            .nav-dropdown-wrapper:hover .dropdown-menu-list {
+                opacity: 1;
+                transform: translateX(-50%) translateY(8px) scale(1);
+                pointer-events: auto;
+            }
+
+            .nav-dropdown-wrapper:hover .dropdown-chevron {
+                transform: rotate(180deg);
+                color: var(--accent-1);
+            }
+        }
+
+        /* Mobile Menu Dropdown flattening */
+        @media (max-width: 768px) {
+            .nav-dropdown-wrapper {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Hide dropdown trigger button on mobile drawer since we show links flattened */
+            .dropdown-trigger {
+                display: none;
+            }
+
+            .dropdown-menu-list {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+                list-style: none;
+            }
+
+            .dropdown-menu-list li {
+                width: 100%;
+            }
+
+            .dropdown-menu-list a {
+                font-size: 0.95rem !important;
+                color: var(--text-secondary) !important;
+                font-weight: 500;
+                display: block;
+                width: 100%;
+                padding: 0 !important;
+            }
+            .dropdown-menu-list a i {
+                display: none; /* Hide icons in mobile drawer view to match other navbar links */
+            }
+        }
+
     </style>
 </head>
 
@@ -2556,11 +2739,20 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#certifications">Certifications</a></li>
             <li><a href="#experience">Journey</a></li>
-            <li><a href="#contact">Contact</a></li>
+            
+            <!-- More Dropdown wrapper -->
+            <li class="nav-dropdown-wrapper">
+                <a class="dropdown-trigger" id="dropdownTrigger">
+                    More <i class="fa-solid fa-chevron-down dropdown-chevron"></i>
+                </a>
+                <ul class="dropdown-menu-list" id="dropdownMenuList">
+                    <li><a href="#skills"><i class="fa-solid fa-code"></i> Skills</a></li>
+                    <li><a href="#projects"><i class="fa-solid fa-robot"></i> Projects</a></li>
+                    <li><a href="#certifications"><i class="fa-solid fa-certificate"></i> Certifications</a></li>
+                    <li><a href="#contact"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+                </ul>
+            </li>
         </ul>
 
         <div class="nav-actions">
