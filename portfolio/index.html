@@ -2486,6 +2486,43 @@
             }
         }
 
+        /* --- PROJECT TELEMETRY STYLES --- */
+        .proj-tele-card {
+            transition: all 0.3s ease;
+        }
+        .proj-tele-card:hover {
+            border-color: var(--accent-1) !important;
+            background: rgba(139, 92, 246, 0.08) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.15);
+        }
+
+        /* --- JOURNEY HIGHLIGHT SCROLL STYLES --- */
+        .timeline-content {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .timeline-dot {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timeline-item.active-focus .timeline-content {
+            border-color: var(--accent-1) !important;
+            box-shadow: 0 0 35px rgba(139, 92, 246, 0.25) !important;
+            background: rgba(139, 92, 246, 0.05) !important;
+            transform: scale(1.02);
+        }
+
+        .timeline-item.active-focus .timeline-dot {
+            border-color: var(--accent-3) !important;
+            box-shadow: 0 0 15px var(--accent-3);
+            background: var(--bg-color);
+        }
+
+        .timeline-item.soft-focus {
+            opacity: 0.45;
+            filter: blur(0.3px);
+        }
 
     </style>
 </head>
@@ -2710,15 +2747,31 @@
                         <p style="color: var(--text-secondary); font-size: 0.9rem;">Your AI-Powered Testing Sidekick</p>
                     </div>
                     <div class="flip-back">
-                        <p class="project-desc" style="font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">
-                            AbhiMate, an ultra-premium, production-grade Multi-Agent QA System. AbhiMate natively replaces tedious manual test construction by utilizing advanced LLMs to engineer, orchestrate, and physically execute resilient software automation scripts seamlessly from a dedicated Cyber-QA Dashboard.
+                        <p class="project-desc" style="font-size: 0.82rem; margin-bottom: 0.8rem; line-height: 1.4;">
+                            AbhiMate natively replaces tedious manual test construction by utilizing advanced multi-agent systems to orchestrate and execute Selenium web drivers dynamically.
                         </p>
-                        <div class="project-tags" style="justify-content: center; margin-bottom: 1rem;">
-                            <span class="project-tag">Python</span>
-                            <span class="project-tag">Groq API</span>
-                            <span class="project-tag">AI Testing</span>
+                        
+                        <!-- Telemetry Stats Panel -->
+                        <div class="proj-telemetry-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-1); font-weight: bold; font-size: 0.85rem;">3</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">QA Agents</div>
+                            </div>
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: #10b981; font-weight: bold; font-size: 0.85rem;">99.8%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Asserts</div>
+                            </div>
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-2); font-weight: bold; font-size: 0.85rem;">Vertex</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Engine</div>
+                            </div>
                         </div>
-                        <a href="https://github.com/Abhi-tech-geek/AbhiMate" target="_blank" class="project-link">
+
+                        <div class="project-tags" style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">Python</span>
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">AI Testing</span>
+                        </div>
+                        <a href="https://github.com/Abhi-tech-geek/AbhiMate" target="_blank" class="project-link" style="font-size: 0.9rem;">
                             View System Source <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -2734,16 +2787,31 @@
                         <p style="color: var(--text-secondary); font-size: 0.9rem;">The Intelligence Orchestrator</p>
                     </div>
                     <div class="flip-back">
-                        <p class="project-desc" style="font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">
-                            A premium Jarvis-like AI personal assistant powered by multi-agent architecture
+                        <p class="project-desc" style="font-size: 0.82rem; margin-bottom: 0.8rem; line-height: 1.4;">
+                            A premium Jarvis-like AI personal assistant powered by multi-agent architectural layers for complex automated cognitive logic reasoning.
                         </p>
-                        <div class="project-tags" style="justify-content: center; margin-bottom: 1rem;">
-                            <span class="project-tag">AI Agents</span>
-                            <span class="project-tag">LLM Architecture</span>
-                            <span class="project-tag">Neural Workflows</span>
+                        
+                        <!-- Telemetry Stats Panel -->
+                        <div class="proj-telemetry-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-1); font-weight: bold; font-size: 0.85rem;">0.8s</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Latency</div>
+                            </div>
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-3); font-weight: bold; font-size: 0.85rem;">Tooling</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Dynamic</div>
+                            </div>
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-2); font-weight: bold; font-size: 0.85rem;">Active</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Reasoning</div>
+                            </div>
                         </div>
-                        <a href="https://github.com/Abhi-tech-geek?tab=repositories" target="_blank"
-                            class="project-link">
+
+                        <div class="project-tags" style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">AI Agents</span>
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">LLMs</span>
+                        </div>
+                        <a href="https://github.com/Abhi-tech-geek?tab=repositories" target="_blank" class="project-link" style="font-size: 0.9rem;">
                             View Neural Logs <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -2759,15 +2827,31 @@
                         <p style="color: var(--text-secondary); font-size: 0.9rem;">Lightning-Fast Cloud Experiences</p>
                     </div>
                     <div class="flip-back">
-                        <p class="project-desc" style="font-size: 0.85rem; margin-bottom: 1rem; line-height: 1.5;">
-                            AI-powered travel discovery. Tell it your budget, vibe, and accessibility needs — get five verified destination "mystery cards", then dive into a full day-by-day plan with weather, stays, packing, routes, and a live concierge bot.
+                        <p class="project-desc" style="font-size: 0.82rem; margin-bottom: 0.8rem; line-height: 1.4;">
+                            AI-powered travel discovery engine with verified destination cards, dynamic pack routing logs, and integrated active chat support.
                         </p>
-                        <div class="project-tags" style="justify-content: center; margin-bottom: 1rem;">
-                            <span class="project-tag">React (Vite)</span>
-                            <span class="project-tag">Node.js</span>
-                            <span class="project-tag">GCP</span>
+                        
+                        <!-- Telemetry Stats Panel -->
+                        <div class="proj-telemetry-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: #10b981; font-weight: bold; font-size: 0.85rem;">GCP Run</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Hosting</div>
+                            </div>
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-1); font-weight: bold; font-size: 0.85rem;">Concierge</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Support</div>
+                            </div>
+                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-3); font-weight: bold; font-size: 0.85rem;">Mystery</div>
+                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Cards</div>
+                            </div>
                         </div>
-                        <a href="https://github.com/Abhi-tech-geek/AuraGo" target="_blank" class="project-link">
+
+                        <div class="project-tags" style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">React</span>
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">Node.js</span>
+                        </div>
+                        <a href="https://github.com/Abhi-tech-geek/AuraGo" target="_blank" class="project-link" style="font-size: 0.9rem;">
                             View Project Source <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -2960,7 +3044,7 @@
 
         <div class="timeline">
             <!-- Experience 1 -->
-            <div class="timeline-item reveal">
+            <div class="timeline-item reveal" id="journey-accenture">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
                     <span class="timeline-date">Present</span>
@@ -2981,7 +3065,7 @@
             </div>
 
             <!-- Education -->
-            <div class="timeline-item reveal">
+            <div class="timeline-item reveal" id="journey-lpu">
                 <div class="timeline-dot"></div>
                 <div class="timeline-content">
                     <span class="timeline-date">Graduated</span>
@@ -4271,6 +4355,43 @@
                 dynamicCertModal.classList.remove('active');
                 if (!isScriptedMove) setAiState('', '');
             }
+        });
+
+        // --- JOURNEY SECTION ACTIVE SCROLL GLOW LOGIC ---
+        const journeyItems = document.querySelectorAll('.timeline-item');
+        
+        const journeyOptions = {
+            threshold: 0.5,
+            rootMargin: "0px 0px -15% 0px"
+        };
+        
+        const journeyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Remove active, add soft-focus to all
+                    journeyItems.forEach(item => {
+                        item.classList.remove('active-focus');
+                        item.classList.add('soft-focus');
+                    });
+                    
+                    // Highlight the focused one
+                    entry.target.classList.add('active-focus');
+                    entry.target.classList.remove('soft-focus');
+                    
+                    // Dynamically interact with AI Companion
+                    if (typeof isScriptedMove !== 'undefined' && !isScriptedMove) {
+                        if (entry.target.id === 'journey-accenture') {
+                            setAiState('working', 'Checking Accenture logs: 2+ Years QA Telemetry verified! 🏢');
+                        } else if (entry.target.id === 'journey-lpu') {
+                            setAiState('dancing', 'BCA Engineering credentials verified at LPU! 🎓');
+                        }
+                    }
+                }
+            });
+        }, journeyOptions);
+        
+        journeyItems.forEach(item => {
+            journeyObserver.observe(item);
         });
 
         // Theme Toggle Logic
