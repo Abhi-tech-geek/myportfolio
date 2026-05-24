@@ -1870,6 +1870,211 @@
             }
         }
 
+        /* --- NEW CI/CD DASHBOARD STYLES --- */
+        .pipeline-simulator-screen {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            min-height: 230px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            margin-top: 2rem;
+            position: relative;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .sim-standby-view {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sim-stage-view {
+            width: 100%;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Commit Card Styles */
+        .commit-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .commit-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 4px;
+            color: var(--accent-1);
+        }
+
+        .branch-tag {
+            font-weight: bold;
+        }
+
+        /* Docker compile styling */
+        .build-loader-container {
+            width: 100%;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .build-progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .build-progress-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--gradient);
+            box-shadow: 0 0 10px var(--accent-1);
+            transition: width 0.1s linear;
+        }
+
+        .layer-block {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 6px;
+            font-size: 0.75rem;
+            text-align: center;
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        .layer-block.compiled {
+            opacity: 1;
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--accent-1);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+            border-style: solid;
+        }
+
+        /* Mock Browser Window Styling */
+        .mock-browser-window {
+            background: #141418;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .browser-address-bar {
+            background: #1c1c24;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .browser-dots-mini {
+            display: flex;
+            gap: 4px;
+        }
+
+        .b-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .b-dot:nth-child(1) { background: #ef4444; }
+        .b-dot:nth-child(2) { background: #eab308; }
+        .b-dot:nth-child(3) { background: #22c55e; }
+
+        .browser-url-input {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            flex-grow: 1;
+            font-family: monospace;
+            text-align: left;
+        }
+
+        .browser-page-render {
+            padding: 1rem;
+            min-height: 110px;
+            background: #0c0c0e;
+            font-family: monospace;
+            font-size: 0.75rem;
+        }
+
+        .live-assert-title {
+            color: var(--accent-2);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .assert-logs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .assert-log-line {
+            animation: slideInAssert 0.2s ease-out forwards;
+            opacity: 0;
+            transform: translateX(-5px);
+        }
+
+        @keyframes slideInAssert {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Deploy success view */
+        .deploy-success-card {
+            text-align: center;
+        }
+
+        .cloud-success-icon {
+            filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.4));
+        }
+
+        /* Responsive stats counters */
+        @media (max-width: 768px) {
+            .pipeline-stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .pipeline-stats-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
         /* --- FEATURE 4: Bug Squasher Game --- */
         .glitch-bug {
             position: fixed;
@@ -2574,15 +2779,23 @@
     <!-- CI/CD Pipeline Section -->
     <section id="pipeline" class="container">
         <h2 class="section-title reveal">Automated <span>CI/CD Pipeline</span></h2>
+        
+        <!-- Explanatory Intro Card -->
+        <p class="pipeline-intro reveal" style="text-align: center; color: var(--text-secondary); max-width: 750px; margin: -1.5rem auto 3rem; font-size: 1.1rem; line-height: 1.6;">
+            Experience a real-time simulation of a production-grade QA pipeline. Click the trigger button below to watch Abhinav's automated testing suite compile, assert, and deploy live code!
+        </p>
+
         <div class="pipeline-grid reveal">
+            <!-- Left Side: Interactive Dashboard -->
             <div class="pipeline-visual">
                 <div class="pipeline-header">
-                    <h3><i class="fa-solid fa-circle-notch"></i> QA Telemetry Dashboard</h3>
-                    <button class="btn btn-primary" id="pipelineDeployBtn" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;">
+                    <h3><i class="fa-solid fa-circle-notch" id="pipelineSpinner"></i> Pipeline Simulation Control</h3>
+                    <button class="btn btn-primary" id="pipelineDeployBtn" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; border-radius: 50px;">
                         <i class="fa-solid fa-play"></i> Trigger Commit Build
                     </button>
                 </div>
                 
+                <!-- Flow Nodes -->
                 <div class="pipeline-flow">
                     <div class="pipeline-connector-line"></div>
                     <div class="pipeline-connector-progress" id="pipelineProgress"></div>
@@ -2591,32 +2804,117 @@
                         <div class="pipeline-stage-node">
                             <i class="fa-brands fa-git-alt"></i>
                         </div>
-                        <span class="pipeline-stage-title">Git Push</span>
+                        <span class="pipeline-stage-title">1. Git Push</span>
                     </div>
                     
                     <div class="pipeline-stage" id="stage-build">
                         <div class="pipeline-stage-node">
                             <i class="fa-brands fa-docker"></i>
                         </div>
-                        <span class="pipeline-stage-title">Build compiles</span>
+                        <span class="pipeline-stage-title">2. Compile Container</span>
                     </div>
                     
                     <div class="pipeline-stage" id="stage-qa">
                         <div class="pipeline-stage-node">
                             <i class="fa-solid fa-vial"></i>
                         </div>
-                        <span class="pipeline-stage-title">QA Selenium Test</span>
+                        <span class="pipeline-stage-title">3. QA Automation</span>
                     </div>
                     
                     <div class="pipeline-stage" id="stage-deploy">
                         <div class="pipeline-stage-node">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                         </div>
-                        <span class="pipeline-stage-title">Deploy Cloud</span>
+                        <span class="pipeline-stage-title">4. Deploy Live</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Visual Simulator Screen -->
+                <div class="pipeline-simulator-screen" id="pipelineSimulatorScreen">
+                    <div class="sim-standby-view" id="simStandbyView">
+                        <i class="fa-solid fa-gauge-high" style="font-size: 3rem; color: var(--accent-2); opacity: 0.8; margin-bottom: 1rem; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
+                        <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Simulator Standby</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; max-width: 320px;">Trigger the commit build above to watch real-time automated browser testing assertions!</p>
+                    </div>
+
+                    <!-- Stage 1 View: Git Details -->
+                    <div class="sim-stage-view" id="simView-git" style="display: none;">
+                        <div class="commit-card">
+                            <div class="commit-header">
+                                <span class="branch-tag"><i class="fa-solid fa-code-branch"></i> main</span>
+                                <span class="commit-hash">sha1: 0f2b8a7c</span>
+                            </div>
+                            <h4 style="margin: 0.5rem 0 0.2rem; font-size: 1rem; text-align: left;">feat: optimized vector search api and assertions</h4>
+                            <div class="commit-meta" style="font-size: 0.75rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                                <span>Author: Abhinav Saxena</span>
+                                <span>Verified Commit ✔</span>
+                            </div>
+                        </div>
+                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
+                            <strong>What's happening?</strong> Code modifications are pushed to the central repository. The CI/CD engine automatically intercepts the changes to trigger defensive testing checks.
+                        </p>
+                    </div>
+
+                    <!-- Stage 2 View: Docker Layer Build -->
+                    <div class="sim-stage-view" id="simView-build" style="display: none;">
+                        <div class="build-loader-container">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                                <span>Compiling Docker Container Layers...</span>
+                                <span id="buildPercent">0%</span>
+                            </div>
+                            <div class="build-progress-bar">
+                                <div class="build-progress-fill" id="buildProgressFill"></div>
+                            </div>
+                            <div class="layer-pile" id="layerPile" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px;">
+                                <div class="layer-block" id="layer-1">base OS</div>
+                                <div class="layer-block" id="layer-2">npm package</div>
+                                <div class="layer-block" id="layer-3">selenium core</div>
+                                <div class="layer-block" id="layer-4">app files</div>
+                            </div>
+                        </div>
+                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
+                            <strong>What's happening?</strong> The server packages your code along with its exact dependencies (OS, Node.js, Selenium grid) into an isolated capsule (container) to guarantee identical runtimes.
+                        </p>
+                    </div>
+
+                    <!-- Stage 3 View: Selenium Live Mock Browser Assertions -->
+                    <div class="sim-stage-view" id="simView-qa" style="display: none; width: 100%;">
+                        <div class="mock-browser-window">
+                            <div class="browser-address-bar">
+                                <div class="browser-dots-mini">
+                                    <span class="b-dot"></span>
+                                    <span class="b-dot"></span>
+                                    <span class="b-dot"></span>
+                                </div>
+                                <div class="browser-url-input">https://abhinav-saxena.dev/portfolio</div>
+                            </div>
+                            <div class="browser-page-render">
+                                <div class="live-assert-title">Running Selenium Test Grid...</div>
+                                <div class="assert-logs-container" id="assertLogsContainer">
+                                    <!-- Dynamic Assertions Injected here -->
+                                </div>
+                            </div>
+                        </div>
+                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.8rem; text-align: left;">
+                            <strong>What's happening?</strong> <em>Abhinav's QA Automation Core:</em> Selenium builds a mock browser, clicks navbar items, triggers dark modes, and runs 148 assertions to ensure zero defects!
+                        </p>
+                    </div>
+
+                    <!-- Stage 4 View: Cloud Run Deploy -->
+                    <div class="sim-stage-view" id="simView-deploy" style="display: none;">
+                        <div class="deploy-success-card">
+                            <i class="fa-solid fa-cloud-arrow-up cloud-success-icon" style="font-size: 3rem; color: #10b981; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
+                            <h4 style="font-size: 1.1rem; color: #10b981; margin: 0.5rem 0 0.2rem;">ONLINE & LIVE</h4>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0px;">Endpoint: <strong>https://portfolio.abhinav-dev.run</strong></p>
+                        </div>
+                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
+                            <strong>What's happening?</strong> Having successfully completed 148 manual/automation checkpoints with zero failures, the container is deployed instantly onto Google Cloud/Accenture nodes!
+                        </p>
                     </div>
                 </div>
             </div>
             
+            <!-- Right Side: Developer Console Logs -->
             <div class="pipeline-console">
                 <div class="console-title-bar">
                     <div class="console-dots">
@@ -2629,6 +2927,29 @@
                 <div class="console-screen" id="pipelineConsoleScreen">
                     <div class="console-log visible" style="color: #64748b;">$ standby for commit build execution...</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Telemetry Stat counters -->
+        <div class="pipeline-stats-grid reveal" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem;">
+            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-assertions" style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-2);">0 / 148</div>
+                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Tests Asserted</div>
+            </div>
+            
+            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-defects" style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #ef4444;">0</div>
+                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Bugs Squashed</div>
+            </div>
+            
+            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-buildspeed" style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-1);">0.0s</div>
+                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Execution Speed</div>
+            </div>
+            
+            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-status" style="font-size: 1.4rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #64748b; padding: 0.4rem 0;">STANDBY</div>
+                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Pipeline Health</div>
             </div>
         </div>
     </section>
@@ -3447,14 +3768,44 @@
         const pipelineDeployBtn = document.getElementById('pipelineDeployBtn');
         const pipelineProgress = document.getElementById('pipelineProgress');
         const pipelineConsoleScreen = document.getElementById('pipelineConsoleScreen');
+        
+        // New interactive simulator elements
+        const simStandbyView = document.getElementById('simStandbyView');
+        const simViews = {
+            git: document.getElementById('simView-git'),
+            build: document.getElementById('simView-build'),
+            qa: document.getElementById('simView-qa'),
+            deploy: document.getElementById('simView-deploy')
+        };
+        const buildProgressFill = document.getElementById('buildProgressFill');
+        const buildPercent = document.getElementById('buildPercent');
+        const assertLogsContainer = document.getElementById('assertLogsContainer');
+        
+        // Stats elements
+        const statAssertions = document.getElementById('stat-assertions');
+        const statDefects = document.getElementById('stat-defects');
+        const statBuildSpeed = document.getElementById('stat-buildspeed');
+        const statStatus = document.getElementById('stat-status');
+        
         let isPipelineRunning = false;
 
         const stages = [
             { id: 'stage-git', percent: 25, name: "Git Push" },
-            { id: 'stage-build', percent: 55, name: "Build compiles" },
+            { id: 'stage-build', percent: 55, name: "Compile Container" },
             { id: 'stage-qa', percent: 85, name: "QA Selenium Test" },
-            { id: 'stage-deploy', percent: 100, name: "Deploy Cloud" }
+            { id: 'stage-deploy', percent: 100, name: "Deploy Live" }
         ];
+
+        function showSimulatorView(activeKey) {
+            simStandbyView.style.display = 'none';
+            Object.keys(simViews).forEach(key => {
+                if (key === activeKey) {
+                    simViews[key].style.display = 'block';
+                } else {
+                    simViews[key].style.display = 'none';
+                }
+            });
+        }
 
         function logToConsole(message, type = 'info', delay = 0) {
             setTimeout(() => {
@@ -3481,8 +3832,10 @@
             isPipelineRunning = true;
             pipelineDeployBtn.disabled = true;
             pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pipe Running...';
-            setAiState('working', 'CI/CD pipeline asserts active!');
+            document.getElementById('pipelineSpinner').className = 'fa-solid fa-circle-notch fa-spin';
+            setAiState('working', 'CI/CD pipeline simulation active! ⚡');
 
+            // Reset console and progress bar
             pipelineConsoleScreen.innerHTML = '';
             pipelineProgress.style.width = '0%';
             stages.forEach(s => {
@@ -3490,66 +3843,164 @@
                 node.className = 'pipeline-stage';
             });
 
+            // Reset Simulator HTML views
+            assertLogsContainer.innerHTML = '';
+            buildProgressFill.style.width = '0%';
+            buildPercent.textContent = '0%';
+            document.querySelectorAll('.layer-block').forEach(b => b.classList.remove('compiled'));
+
+            // Reset Telemetry Stats
+            statAssertions.textContent = '0 / 148';
+            statAssertions.style.color = 'var(--accent-2)';
+            statDefects.textContent = '0';
+            statDefects.style.color = '#ef4444';
+            statBuildSpeed.textContent = '0.0s';
+            statStatus.textContent = 'WORKING';
+            statStatus.style.color = 'var(--accent-1)';
+
+            // Start organic build timer counting up
+            let startTime = Date.now();
+            let timerInterval = setInterval(() => {
+                if (!isPipelineRunning) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+                let delta = ((Date.now() - startTime) / 1000).toFixed(1);
+                statBuildSpeed.textContent = `${delta}s`;
+            }, 100);
+
             logToConsole('Triggering automated pipeline build...', 'info', 0);
             
-            // Stage 1: Git Push
+            // --- STAGE 1: Git Push ---
             setTimeout(() => {
                 const stage = document.getElementById('stage-git');
                 stage.classList.add('active');
+                showSimulatorView('git');
+                
                 logToConsole('Code pushed: git commit verified (sha: 0f2b8a7c)', 'info');
                 logToConsole('Initiating Docker environment container build...', 'info', 300);
             }, 600);
 
-            // Stage 2: Docker Build
+            // --- STAGE 2: Compile Container ---
             setTimeout(() => {
                 document.getElementById('stage-git').className = 'pipeline-stage success';
                 document.getElementById('stage-build').classList.add('active');
                 pipelineProgress.style.width = '25%';
+                showSimulatorView('build');
+                
                 logToConsole('Docker Base Container Compiled successfully.', 'pass');
                 logToConsole('Resolving npm dependencies and running bundler check...', 'info', 300);
-            }, 1800);
 
-            // Stage 3: QA Test
+                // Animate Docker Layer compilations inside simulator
+                let percent = 0;
+                let dockerInterval = setInterval(() => {
+                    percent += 5;
+                    buildProgressFill.style.width = `${percent}%`;
+                    buildPercent.textContent = `${percent}%`;
+                    
+                    if (percent >= 25) document.getElementById('layer-1').classList.add('compiled');
+                    if (percent >= 50) document.getElementById('layer-2').classList.add('compiled');
+                    if (percent >= 75) document.getElementById('layer-3').classList.add('compiled');
+                    if (percent >= 100) {
+                        document.getElementById('layer-4').classList.add('compiled');
+                        clearInterval(dockerInterval);
+                    }
+                }, 100);
+            }, 2000);
+
+            // --- STAGE 3: QA Automation (Selenium Tests) ---
             setTimeout(() => {
                 document.getElementById('stage-build').className = 'pipeline-stage success';
                 document.getElementById('stage-qa').classList.add('active');
                 pipelineProgress.style.width = '55%';
+                showSimulatorView('qa');
+                
                 logToConsole('Bundle compilation successful. Web assets verified.', 'pass');
                 logToConsole('Launching Chrome headless driver via Selenium grid...', 'info', 300);
                 logToConsole('Running 148 automated Selenium UI and API assertions...', 'info', 600);
-            }, 3200);
+
+                // Mock dynamic browser assertions rendering in real-time
+                const mockAsserts = [
+                    "Browser launched successfully (Chrome headless v114)",
+                    "Navigate to: https://abhinav-saxena.dev/portfolio ... SUCCESS",
+                    "Assert nav-links DOM visibility ... [✔ PASS]",
+                    "Assert Light/Dark theme latency <= 50ms ... [✔ PASS (12ms)]",
+                    "Assert AI companion roaming protocol integrity ... [✔ PASS]",
+                    "Assert Certifications Carousel auto-play ... [✔ PASS]",
+                    "Assert contact card mailto validation ... [✔ PASS]",
+                    "148/148 assertions verified. Zero flaws remaining."
+                ];
+
+                mockAsserts.forEach((txt, idx) => {
+                    setTimeout(() => {
+                        const line = document.createElement('div');
+                        line.className = 'assert-log-line';
+                        
+                        let colorStyle = 'color: #38bdf8;';
+                        if (txt.includes('SUCCESS') || txt.includes('[✔ PASS]')) {
+                            colorStyle = 'color: #10b981; font-weight: bold;';
+                        } else if (txt.includes('Zero flaws')) {
+                            colorStyle = 'color: #ec4899; font-weight: bold; text-shadow: 0 0 5px rgba(236,72,153,0.5);';
+                        }
+                        
+                        line.innerHTML = `<span style="color: #64748b;">></span> <span style="${colorStyle}">${txt}</span>`;
+                        assertLogsContainer.appendChild(line);
+                        assertLogsContainer.scrollTop = assertLogsContainer.scrollHeight;
+                        
+                        // Increment dynamic stats
+                        let progressAsserts = Math.min(Math.round(((idx + 1) / mockAsserts.length) * 148), 148);
+                        statAssertions.textContent = `${progressAsserts} / 148`;
+                        if (progressAsserts === 148) {
+                            statAssertions.style.color = '#10b981';
+                            // Cohesive ties with Bug squasher
+                            statDefects.textContent = '4';
+                            statDefects.style.color = '#10b981';
+                        }
+                    }, idx * 600);
+                });
+            }, 4500);
 
             setTimeout(() => {
                 logToConsole('Assert: Check navigation link DOM binding... PASS', 'pass');
                 logToConsole('Assert: Check light/dark theme switch latency... PASS (12ms)', 'pass');
                 logToConsole('Assert: QA AI companion roaming vital check... PASS', 'pass');
-            }, 4400);
+            }, 6000);
 
-            // Stage 4: Deploy
+            // --- STAGE 4: Deploy Cloud ---
             setTimeout(() => {
                 document.getElementById('stage-qa').className = 'pipeline-stage success';
                 document.getElementById('stage-deploy').classList.add('active');
                 pipelineProgress.style.width = '85%';
+                showSimulatorView('deploy');
+                
                 logToConsole('All 148 automated Selenium assertions complete. ZERO bugs found.', 'pass');
                 logToConsole('Pushing verified production bundle to GCP Cloud Run...', 'info', 300);
-            }, 5800);
+            }, 9800);
 
-            // Finish
+            // --- FINISH PIPELINE ---
             setTimeout(() => {
                 document.getElementById('stage-deploy').className = 'pipeline-stage success';
                 pipelineProgress.style.width = '100%';
+                document.getElementById('pipelineSpinner').className = 'fa-solid fa-circle-notch';
+                
                 logToConsole('Production deployment complete. Server: ONLINE.', 'pass');
                 logToConsole('Telemetry assertion checks complete. Status: EXCELLENT.', 'pass');
                 
+                // Finalize Telemetry Stats
+                clearInterval(timerInterval);
+                statBuildSpeed.textContent = '11.2s';
+                statStatus.textContent = 'EXCELLENT';
+                statStatus.style.color = '#10b981';
+
                 pipelineDeployBtn.disabled = false;
                 pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-check"></i> Deploy Success';
                 isPipelineRunning = false;
-                setAiState('dancing', 'All systems green! Telemetry optimal!');
+                setAiState('dancing', 'All production pipelines 100% green! optimal deployment! 🚀');
                 
                 setTimeout(() => {
                     pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-play"></i> Trigger Commit Build';
-                }, 3000);
-            }, 7200);
+                }, 4000);
+            }, 11200);
         });
 
 
