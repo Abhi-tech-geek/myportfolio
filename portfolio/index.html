@@ -2041,6 +2041,8 @@
             border-top: 1px solid var(--border-color);
             padding-top: 1rem;
         }
+
+
     </style>
 </head>
 
@@ -3071,45 +3073,7 @@
         }
         animateParticles();
 
-        /* --- FEATURE 2: Trailing Custom Cursor & HUD Selector --- */
-        const cursor = document.getElementById('customCursor');
-        const cursorDot = document.getElementById('customCursorDot');
-        const cursorHud = document.getElementById('cursorHud');
-        let cursorX = 0, cursorY = 0;
-        let targetX = 0, targetY = 0;
-
-        window.addEventListener('mousemove', (e) => {
-            targetX = e.clientX;
-            targetY = e.clientY;
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-
-            if (!cursor.classList.contains('active')) {
-                cursor.classList.add('active');
-                cursorDot.classList.add('active');
-                document.body.classList.add('custom-cursor-active');
-            }
-            cursorDot.style.left = `${targetX}px`;
-            cursorDot.style.top = `${targetY}px`;
-        });
-
-        window.addEventListener('mouseleave', () => {
-            cursor.classList.remove('active');
-            cursorDot.classList.remove('active');
-            document.body.classList.remove('custom-cursor-active');
-            mouseX = null;
-            mouseY = null;
-        });
-
-        function updateCursor() {
-            cursorX += (targetX - cursorX) * 0.12;
-            cursorY += (targetY - cursorY) * 0.12;
-            cursor.style.left = `${cursorX}px`;
-            cursor.style.top = `${cursorY}px`;
-            requestAnimationFrame(updateCursor);
-        }
-        updateCursor();
-
+        /* --- FEATURE 2: Mouse Tracker for Canvas Engine --- */
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
@@ -3237,10 +3201,20 @@
         let gameActive = false;
 
         function triggerBugGame() {
-            if (gameActive) {
-                setAiState('dancing', 'Bug Hunter already active! Go get them!');
-                return;
+            // Clean up any existing bugs and containers to prevent state lock issues
+            let container = document.getElementById('bugContainer');
+            if (container) {
+                container.remove();
             }
+            
+            container = document.createElement('div');
+            container.id = 'bugContainer';
+            container.style.position = 'fixed';
+            container.style.inset = '0';
+            container.style.pointerEvents = 'none';
+            container.style.zIndex = '9998';
+            document.body.appendChild(container);
+            
             gameActive = true;
             activeBugsCount = 4;
             setAiState('working', 'QA Bug Hunter activated! Breach detected! 🐛');
@@ -3248,12 +3222,12 @@
             const BugIconClasses = ['fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug'];
             for (let i = 0; i < 4; i++) {
                 setTimeout(() => {
-                    spawnBug(BugIconClasses[i], i);
+                    spawnBug(BugIconClasses[i], i, container);
                 }, i * 400);
             }
         }
 
-        function spawnBug(iconClass, index) {
+        function spawnBug(iconClass, index, container) {
             const bug = document.createElement('i');
             bug.className = `${iconClass} glitch-bug`;
             bug.id = `bug-${index}`;
@@ -3264,7 +3238,7 @@
             bug.style.left = `${x}vw`;
             bug.style.top = `${y}vh`;
             
-            document.body.appendChild(bug);
+            container.appendChild(bug);
 
             bug.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -3289,6 +3263,10 @@
             } else {
                 setAiState('dancing', 'Perimeter Secured! Initializing certificate...');
                 gameActive = false;
+                const container = document.getElementById('bugContainer');
+                if (container) {
+                    container.remove();
+                }
                 setTimeout(showCertificate, 1500);
             }
         }
@@ -3367,6 +3345,8 @@
                 setAiState('dancing', 'Dark Mode Restored!');
             }
         });
+
+
     </script>
 
 </body>
