@@ -2451,15 +2451,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 1rem;
-            margin: 0 auto 2.5rem;
-            max-width: 600px;
-            padding: 6px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
+            gap: 1.5rem;
+            margin: 0 auto 3rem;
+            max-width: 650px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 50px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             overflow-x: auto;
             scrollbar-width: none; /* Hide scrollbar for Firefox */
         }
@@ -2471,41 +2471,68 @@
         .slice-tab {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 0.6rem 1.5rem;
+            gap: 10px;
+            padding: 0.7rem 1.8rem;
             border-radius: 50px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: var(--text-secondary);
-            background: transparent;
-            border: none;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             white-space: nowrap;
         }
         
         .slice-tab i {
-            font-size: 1rem;
+            font-size: 1.05rem;
             transition: transform 0.3s ease;
         }
         
         .slice-tab:hover {
             color: var(--text-primary);
-            background: var(--bg-surface-hover);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
         }
         
         .slice-tab:hover i {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
         
-        .slice-tab.active {
-            color: white !important;
-            background: var(--gradient);
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        /* Unique Active Neon Highlights matching standard theme variables */
+        .slice-tab.active.active-google {
+            background: rgba(66, 133, 244, 0.08);
+            color: #4285F4 !important;
+            border: 1px solid rgba(66, 133, 244, 0.4);
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.25);
+        }
+        .slice-tab.active.active-accenture {
+            background: rgba(161, 0, 255, 0.08);
+            color: #A100FF !important;
+            border: 1px solid rgba(161, 0, 255, 0.4);
+            box-shadow: 0 0 20px rgba(161, 0, 255, 0.25);
+        }
+        .slice-tab.active.active-india {
+            background: rgba(255, 153, 51, 0.08);
+            color: #FF9933 !important;
+            border: 1px solid rgba(255, 153, 51, 0.4);
+            box-shadow: 0 0 20px rgba(255, 153, 51, 0.25);
         }
         
-        :root[data-theme="light"] .slice-tab.active {
-            color: white !important;
+        /* Light Theme Variable Support */
+        :root[data-theme="light"] .certs-slices-selector {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        :root[data-theme="light"] .slice-tab {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--text-secondary);
+        }
+        :root[data-theme="light"] .slice-tab:hover {
+            background: rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 0, 0, 0.1);
         }
 
         /* Responsive adjustments for nav button & carousel */
@@ -2513,12 +2540,13 @@
             .certs-slices-selector {
                 max-width: 100%;
                 justify-content: flex-start;
-                border-radius: 16px;
+                border-radius: 20px;
                 padding: 6px 12px;
-                gap: 0.5rem;
+                gap: 0.6rem;
+                margin-bottom: 2rem;
             }
             .slice-tab {
-                padding: 0.5rem 1rem;
+                padding: 0.5rem 1.2rem;
                 font-size: 0.85rem;
             }
             .certs-carousel-container {
@@ -4518,12 +4546,17 @@
             // Update slices (tabs)
             const tabs = certSlicesSelector.querySelectorAll('.slice-tab');
             tabs.forEach((tab, idx) => {
+                tab.classList.remove('active', 'active-google', 'active-accenture', 'active-india');
                 if (idx === currentCertIndex) {
                     tab.classList.add('active');
-                    // Smoothly scroll tab into view on mobile if overflowed
-                    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                } else {
-                    tab.classList.remove('active');
+                    if (idx === 0) tab.classList.add('active-google');
+                    else if (idx === 1) tab.classList.add('active-accenture');
+                    else if (idx === 2) tab.classList.add('active-india');
+                    
+                    // Smoothly scroll tab into focus inside the horizontal slices bar
+                    const container = certSlicesSelector;
+                    const leftPos = tab.offsetLeft - (container.offsetWidth / 2) + (tab.offsetWidth / 2);
+                    container.scrollTo({ left: leftPos, behavior: 'smooth' });
                 }
             });
         }
