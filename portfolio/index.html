@@ -2446,8 +2446,81 @@
             box-shadow: 0 0 8px var(--accent-1);
         }
 
+        /* Slices (Tabs) Selector Style */
+        .certs-slices-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 0 auto 2.5rem;
+            max-width: 600px;
+            padding: 6px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow-x: auto;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        
+        .certs-slices-selector::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
+        }
+        
+        .slice-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            white-space: nowrap;
+        }
+        
+        .slice-tab i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .slice-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-surface-hover);
+        }
+        
+        .slice-tab:hover i {
+            transform: scale(1.1);
+        }
+        
+        .slice-tab.active {
+            color: white !important;
+            background: var(--gradient);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+        
+        :root[data-theme="light"] .slice-tab.active {
+            color: white !important;
+        }
+
         /* Responsive adjustments for nav button & carousel */
         @media (max-width: 768px) {
+            .certs-slices-selector {
+                max-width: 100%;
+                justify-content: flex-start;
+                border-radius: 16px;
+                padding: 6px 12px;
+                gap: 0.5rem;
+            }
+            .slice-tab {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
             .certs-carousel-container {
                 padding: 0 1rem 4rem;
             }
@@ -3281,6 +3354,19 @@
     <!-- Certifications Section -->
     <section id="certifications" class="container">
         <h2 class="section-title reveal">My <span>Certifications</span></h2>
+        
+        <!-- Slices/Tabs Selector -->
+        <div class="certs-slices-selector reveal" id="certsSlicesSelector">
+            <button class="slice-tab active" data-index="0">
+                <i class="fa-brands fa-google"></i> Google Cloud
+            </button>
+            <button class="slice-tab" data-index="1">
+                <i class="fa-solid fa-chevron-right"></i> Accenture
+            </button>
+            <button class="slice-tab" data-index="2">
+                <i class="fa-solid fa-microchip"></i> India AI
+            </button>
+        </div>
         
         <div class="certs-carousel-container reveal">
             <button class="carousel-btn prev" id="certPrevBtn" aria-label="Previous Certification">
@@ -4413,6 +4499,7 @@
         const certNextBtn = document.getElementById('certNextBtn');
         const certDotsContainer = document.getElementById('certsDots');
         const certSlides = document.querySelectorAll('.cert-slide');
+        const certSlicesSelector = document.getElementById('certsSlicesSelector');
         let currentCertIndex = 0;
         
         function updateCertCarousel() {
@@ -4425,6 +4512,18 @@
                     dot.classList.add('active');
                 } else {
                     dot.classList.remove('active');
+                }
+            });
+
+            // Update slices (tabs)
+            const tabs = certSlicesSelector.querySelectorAll('.slice-tab');
+            tabs.forEach((tab, idx) => {
+                if (idx === currentCertIndex) {
+                    tab.classList.add('active');
+                    // Smoothly scroll tab into view on mobile if overflowed
+                    tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                } else {
+                    tab.classList.remove('active');
                 }
             });
         }
@@ -4447,6 +4546,55 @@
                 updateCertCarousel();
             }
         });
+
+        // Click Handler for Slices (Tabs) Selector
+        certSlicesSelector.addEventListener('click', (e) => {
+            const tab = e.target.closest('.slice-tab');
+            if (tab) {
+                currentCertIndex = parseInt(tab.dataset.index);
+                updateCertCarousel();
+                if (!isScriptedMove) {
+                    const certNames = ["Google Cloud", "Accenture", "India AI"];
+                    setAiState('working', `Navigating to ${certNames[currentCertIndex]} credential...`);
+                }
+            }
+        });
+
+        // Mobile Swipe Gestures
+        const certsViewport = document.querySelector('.certs-viewport');
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isSwiping = false;
+        
+        certsViewport.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            isSwiping = true;
+        }, { passive: true });
+        
+        certsViewport.addEventListener('touchend', (e) => {
+            if (!isSwiping) return;
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipeGesture();
+            isSwiping = false;
+        }, { passive: true });
+        
+        function handleSwipeGesture() {
+            const diffX = touchEndX - touchStartX;
+            // Minimum swipe threshold of 50px
+            if (Math.abs(diffX) > 50) {
+                if (diffX < 0) {
+                    // Swipe Left -> Next Slide
+                    currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+                } else {
+                    // Swipe Right -> Previous Slide
+                    currentCertIndex = (currentCertIndex - 1 + certSlides.length) % certSlides.length;
+                }
+                updateCertCarousel();
+                if (!isScriptedMove) {
+                    setAiState('working', 'Swiping credential...');
+                }
+            }
+        }
         
         // Auto Play Carousel every 8s
         let certsAutoPlay = setInterval(() => {
