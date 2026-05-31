@@ -1151,7 +1151,7 @@
             z-index: 2000;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: flex-end;
             gap: 12px;
             pointer-events: none;
         }
@@ -1168,7 +1168,9 @@
             transform: translateY(10px) scale(0.9);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
-            white-space: nowrap;
+            max-width: 240px;
+            text-align: right;
+            white-space: normal;
         }
 
         .ai-speech.visible {
@@ -2811,10 +2813,52 @@
             }
         }
 
+        /* Scroll progress bar */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: var(--gradient);
+            box-shadow: 0 0 10px var(--accent-1);
+            z-index: 1100;
+            transition: width 0.1s linear;
+        }
+
+        /* Active nav link highlight (scroll-spy) */
+        .nav-links a.active {
+            color: var(--text-primary);
+        }
+        .nav-links a.active::after {
+            width: 100%;
+            box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
+        }
+
+        /* Respect reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+            .floating-thunder,
+            .floating-thunder-reverse,
+            .floating-icon,
+            .ambient-blob,
+            #matrixGridCanvas {
+                display: none !important;
+            }
+        }
+
     </style>
 </head>
 
 <body>
+
+    <!-- Scroll progress bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
 
     <!-- Ambient Background -->
     <div class="ambient-bg">
@@ -2840,16 +2884,16 @@
         <ul class="nav-links" id="navLinks">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
             <li><a href="#experience">Journey</a></li>
-            
+
             <!-- More Dropdown wrapper -->
             <li class="nav-dropdown-wrapper">
                 <a class="dropdown-trigger" id="dropdownTrigger">
                     More <i class="fa-solid fa-chevron-down dropdown-chevron"></i>
                 </a>
                 <ul class="dropdown-menu-list" id="dropdownMenuList">
-                    <li><a href="#skills"><i class="fa-solid fa-code"></i> Skills</a></li>
-                    <li><a href="#projects"><i class="fa-solid fa-robot"></i> Projects</a></li>
                     <li><a href="#certifications"><i class="fa-solid fa-certificate"></i> Certifications</a></li>
                     <li><a href="#contact"><i class="fa-solid fa-envelope"></i> Contact</a></li>
                 </ul>
@@ -2877,7 +2921,10 @@
                 software quality while constantly exploring new technologies.</p>
 
             <div class="hero-cta">
-                <a href="#about" class="btn btn-primary">Discover My Journey</a>
+                <a href="#projects" class="btn btn-primary">View My Work</a>
+                <a href="AbhinavSaxena.pdf" download="Abhinav_Saxena_Resume.pdf" class="btn btn-outline">
+                    <i class="fa-solid fa-file-pdf" style="margin-right: 8px;"></i> Download Resume
+                </a>
             </div>
         </div>
     </section>
@@ -3525,15 +3572,39 @@
 
     <!-- Scripts for interactivity -->
     <script>
-        // Navbar Scroll Effect
+        // Navbar Scroll Effect + Scroll Progress Bar + Active Nav (Scroll-Spy)
         const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
+        const scrollProgress = document.getElementById('scrollProgress');
+        const spySections = document.querySelectorAll('section[id]');
+        const spyLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+        function onScrollUpdate() {
+            // navbar bg
             if (window.scrollY > 50) {
                 navbar.classList.add('scrolled');
             } else {
                 navbar.classList.remove('scrolled');
             }
-        });
+
+            // progress bar
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+            scrollProgress.style.width = pct + '%';
+
+            // scroll-spy: find current section
+            let current = '';
+            spySections.forEach(sec => {
+                if (window.scrollY >= sec.offsetTop - 120) {
+                    current = sec.id;
+                }
+            });
+            spyLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+            });
+        }
+
+        window.addEventListener('scroll', onScrollUpdate, { passive: true });
+        onScrollUpdate();
 
         // Mobile Menu Toggle
         const mobileToggle = document.getElementById('mobileToggle');
