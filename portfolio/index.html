@@ -55,7 +55,7 @@
         :root[data-theme="light"] .floating-icon {
             color: var(--icon-color) !important;
         }
-        
+
         :root[data-theme="light"] .ambient-bg {
             background: var(--bg-color);
         }
@@ -165,15 +165,18 @@
                 opacity: 0;
                 filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
             }
+
             15% {
                 opacity: 0.5;
             }
+
             30% {
                 top: 30%;
                 transform: translate3d(0, 0, 100px) rotate(0deg);
                 filter: drop-shadow(0 0 25px var(--thunder-glow));
                 color: var(--thunder-flash);
             }
+
             50% {
                 top: 15%;
                 left: 50%;
@@ -181,15 +184,18 @@
                 filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
                 color: var(--accent-1);
             }
+
             70% {
                 top: 40%;
                 transform: translate3d(0, 0, 100px) rotate(25deg);
                 filter: drop-shadow(0 0 25px var(--thunder-glow));
                 color: var(--thunder-flash);
             }
+
             85% {
                 opacity: 0.5;
             }
+
             100% {
                 top: 70%;
                 left: 110%;
@@ -218,15 +224,18 @@
                 opacity: 0;
                 filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
             }
+
             15% {
                 opacity: 0.5;
             }
+
             30% {
                 top: 60%;
                 transform: translate3d(0, 0, 100px) rotate(0deg);
                 filter: drop-shadow(0 0 25px var(--thunder-glow));
                 color: var(--thunder-flash);
             }
+
             50% {
                 top: 80%;
                 left: 50%;
@@ -234,15 +243,18 @@
                 filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3));
                 color: var(--accent-1);
             }
+
             70% {
                 top: 50%;
                 transform: translate3d(0, 0, 100px) rotate(-25deg);
                 filter: drop-shadow(0 0 25px var(--thunder-glow));
                 color: var(--thunder-flash);
             }
+
             85% {
                 opacity: 0.5;
             }
+
             100% {
                 top: 30%;
                 left: -10%;
@@ -350,7 +362,7 @@
             background: var(--bg-surface);
             border: 1px solid var(--border-color);
         }
-        
+
         .theme-toggle:hover {
             color: var(--accent-1);
             transform: rotate(15deg);
@@ -495,8 +507,13 @@
         }
 
         @keyframes rotateTagline {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
 
         .hero h1 {
@@ -690,10 +707,12 @@
                 box-shadow: 0 0 5px rgba(139, 92, 246, 0.05);
                 border-color: rgba(255, 255, 255, 0.1);
             }
+
             50% {
                 box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
                 border-color: rgba(139, 92, 246, 0.4);
             }
+
             100% {
                 box-shadow: 0 0 5px rgba(139, 92, 246, 0.05);
                 border-color: rgba(255, 255, 255, 0.1);
@@ -1059,8 +1078,10 @@
             transform: rotateY(180deg);
             background: rgba(139, 92, 246, 0.03);
             overflow-y: auto;
-            scrollbar-width: none; /* Hide scrollbar for Chrome/Safari/Firefox */
+            scrollbar-width: none;
+            /* Hide scrollbar for Chrome/Safari/Firefox */
         }
+
         .flip-back::-webkit-scrollbar {
             display: none;
         }
@@ -1188,64 +1209,113 @@
             transition: all 0.3s ease;
             animation: aiFloatSide 4s infinite ease-in-out;
             pointer-events: auto;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
         }
 
         .bot-antenna {
-            width: 4px; height: 12px; background: var(--text-secondary);
+            width: 4px;
+            height: 12px;
+            background: var(--text-secondary);
             position: relative;
             border-radius: 2px 2px 0 0;
             z-index: 1;
         }
+
         .bot-antenna::after {
-            content: ''; position: absolute; top: -4px; left: -3px; width: 10px; height: 10px;
-            background: var(--accent-2); border-radius: 50%;
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -3px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-2);
+            border-radius: 50%;
             box-shadow: 0 0 10px var(--accent-2);
             animation: pulseAntenna 2s infinite;
         }
-        @keyframes pulseAntenna { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+        @keyframes pulseAntenna {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
 
         .bot-head {
-            width: 45px; height: 35px; background: var(--bg-color);
+            width: 45px;
+            height: 35px;
+            background: var(--bg-color);
             border: 2px solid var(--accent-1);
             border-radius: 12px 12px 6px 6px;
-            display: flex; justify-content: center; align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: all 0.3s ease;
             z-index: 2;
             box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.2);
         }
-        .bot-eyes { display: flex; gap: 10px; }
-        .bot-eye { 
-            width: 10px; height: 6px;
+
+        .bot-eyes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bot-eye {
+            width: 10px;
+            height: 6px;
             background: var(--accent-1);
             border-radius: 50px;
             box-shadow: 0 0 8px var(--accent-1);
             transition: all 0.2s ease;
             animation: blinkEyes 4s infinite;
         }
+
         @keyframes blinkEyes {
-            0%, 90%, 100% { height: 6px; }
-            95% { height: 0px; margin-top: 3px; }
+
+            0%,
+            90%,
+            100% {
+                height: 6px;
+            }
+
+            95% {
+                height: 0px;
+                margin-top: 3px;
+            }
         }
 
         .bot-torso {
-            width: 35px; height: 30px;
+            width: 35px;
+            height: 30px;
             background: var(--bg-color);
             border: 2px solid var(--accent-1);
             border-radius: 6px;
             margin-top: 2px;
             position: relative;
-            display: flex; justify-content: center; align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transition: all 0.3s ease;
             z-index: 2;
         }
+
         .bot-screen {
-            width: 15px; height: 8px; background: var(--accent-2); border-radius: 3px;
-            box-shadow: 0 0 5px var(--accent-2); opacity: 0.7;
+            width: 15px;
+            height: 8px;
+            background: var(--accent-2);
+            border-radius: 3px;
+            box-shadow: 0 0 5px var(--accent-2);
+            opacity: 0.7;
         }
 
         .bot-arm {
-            width: 8px; height: 25px;
+            width: 8px;
+            height: 25px;
             background: var(--bg-color);
             border: 2px solid var(--accent-1);
             border-radius: 4px;
@@ -1255,11 +1325,20 @@
             transition: all 0.3s ease;
             z-index: 1;
         }
-        .bot-arm.left { left: -14px; transform: rotate(15deg); }
-        .bot-arm.right { right: -14px; transform: rotate(-15deg); }
+
+        .bot-arm.left {
+            left: -14px;
+            transform: rotate(15deg);
+        }
+
+        .bot-arm.right {
+            right: -14px;
+            transform: rotate(-15deg);
+        }
 
         .bot-base {
-            width: 25px; height: 12px;
+            width: 25px;
+            height: 12px;
             background: var(--accent-1);
             border-radius: 0 0 12px 12px;
             margin-top: 2px;
@@ -1276,9 +1355,19 @@
         }
 
         @keyframes aiFloatSide {
-            0%, 100% { transform: translateY(0) rotate(0deg) scale(0.7); }
-            33% { transform: translateY(-8px) rotate(-3deg) scale(0.7); }
-            66% { transform: translateY(-4px) rotate(3deg) scale(0.7); }
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0deg) scale(0.7);
+            }
+
+            33% {
+                transform: translateY(-8px) rotate(-3deg) scale(0.7);
+            }
+
+            66% {
+                transform: translateY(-4px) rotate(3deg) scale(0.7);
+            }
         }
 
         /* AI Working State */
@@ -1286,15 +1375,66 @@
         .ai-robot-body.working .bot-torso {
             border-color: var(--accent-2);
         }
-        .ai-robot-body.working .bot-eye { background: var(--accent-2); box-shadow: 0 0 10px var(--accent-2); width: 12px; height: 4px; }
-        .ai-robot-body.working .bot-screen { background: var(--accent-3); animation: codeScreen 0.2s infinite; }
-        .ai-robot-body.working .bot-arm { border-color: var(--accent-2); animation: typeArms 0.15s infinite alternate; }
-        .ai-robot-body.working .bot-base { background: var(--accent-2); box-shadow: 0 0 15px var(--accent-2); }
-        .ai-robot-body.working .bot-head { animation: scanHead 0.5s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); }
 
-        @keyframes scanHead { 0% { transform: translateX(-4px) rotate(-5deg); } 100% { transform: translateX(4px) rotate(5deg); } }
-        @keyframes typeArms { 0% { transform: rotate(5deg); } 100% { transform: rotate(35deg); } }
-        @keyframes codeScreen { 0%, 100% { opacity: 0.5; width: 10px; } 50% { opacity: 1; width: 18px; } }
+        .ai-robot-body.working .bot-eye {
+            background: var(--accent-2);
+            box-shadow: 0 0 10px var(--accent-2);
+            width: 12px;
+            height: 4px;
+        }
+
+        .ai-robot-body.working .bot-screen {
+            background: var(--accent-3);
+            animation: codeScreen 0.2s infinite;
+        }
+
+        .ai-robot-body.working .bot-arm {
+            border-color: var(--accent-2);
+            animation: typeArms 0.15s infinite alternate;
+        }
+
+        .ai-robot-body.working .bot-base {
+            background: var(--accent-2);
+            box-shadow: 0 0 15px var(--accent-2);
+        }
+
+        .ai-robot-body.working .bot-head {
+            animation: scanHead 0.5s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes scanHead {
+            0% {
+                transform: translateX(-4px) rotate(-5deg);
+            }
+
+            100% {
+                transform: translateX(4px) rotate(5deg);
+            }
+        }
+
+        @keyframes typeArms {
+            0% {
+                transform: rotate(5deg);
+            }
+
+            100% {
+                transform: rotate(35deg);
+            }
+        }
+
+        @keyframes codeScreen {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                width: 10px;
+            }
+
+            50% {
+                opacity: 1;
+                width: 18px;
+            }
+        }
 
         /* AI Dancing State */
         .ai-robot-body.dancing .bot-head,
@@ -1302,23 +1442,81 @@
         .ai-robot-body.dancing .bot-arm {
             border-color: var(--accent-2);
         }
-        .ai-robot-body.dancing .bot-eye { background: var(--accent-2); box-shadow: 0 0 15px var(--accent-2); height: 10px; border-radius: 5px 5px 0 0; }
-        .ai-robot-body.dancing .bot-base { background: var(--accent-2); box-shadow: 0 0 20px var(--accent-2); }
-        .ai-robot-body.dancing .bot-arm.left { animation: danceLeft 0.4s infinite alternate; }
-        .ai-robot-body.dancing .bot-arm.right { animation: danceRight 0.4s infinite alternate; }
-        .ai-robot-body.dancing .bot-head { animation: danceHead 0.4s infinite alternate; }
-        .ai-robot-body.dancing .bot-torso { animation: danceTorso 0.4s infinite alternate; }
 
-        @keyframes danceLeft { 0% { transform: rotate(10deg) translateY(0); } 100% { transform: rotate(150deg) translateY(-5px); } }
-        @keyframes danceRight { 0% { transform: rotate(-10deg) translateY(0); } 100% { transform: rotate(-150deg) translateY(-5px); } }
-        @keyframes danceHead { 0% { transform: translateY(0) rotate(-10deg); } 100% { transform: translateY(-8px) rotate(10deg); } }
-        @keyframes danceTorso { 0% { transform: rotate(5deg); } 100% { transform: rotate(-5deg); } }
+        .ai-robot-body.dancing .bot-eye {
+            background: var(--accent-2);
+            box-shadow: 0 0 15px var(--accent-2);
+            height: 10px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .ai-robot-body.dancing .bot-base {
+            background: var(--accent-2);
+            box-shadow: 0 0 20px var(--accent-2);
+        }
+
+        .ai-robot-body.dancing .bot-arm.left {
+            animation: danceLeft 0.4s infinite alternate;
+        }
+
+        .ai-robot-body.dancing .bot-arm.right {
+            animation: danceRight 0.4s infinite alternate;
+        }
+
+        .ai-robot-body.dancing .bot-head {
+            animation: danceHead 0.4s infinite alternate;
+        }
+
+        .ai-robot-body.dancing .bot-torso {
+            animation: danceTorso 0.4s infinite alternate;
+        }
+
+        @keyframes danceLeft {
+            0% {
+                transform: rotate(10deg) translateY(0);
+            }
+
+            100% {
+                transform: rotate(150deg) translateY(-5px);
+            }
+        }
+
+        @keyframes danceRight {
+            0% {
+                transform: rotate(-10deg) translateY(0);
+            }
+
+            100% {
+                transform: rotate(-150deg) translateY(-5px);
+            }
+        }
+
+        @keyframes danceHead {
+            0% {
+                transform: translateY(0) rotate(-10deg);
+            }
+
+            100% {
+                transform: translateY(-8px) rotate(10deg);
+            }
+        }
+
+        @keyframes danceTorso {
+            0% {
+                transform: rotate(5deg);
+            }
+
+            100% {
+                transform: rotate(-5deg);
+            }
+        }
 
         @media (max-width: 768px) {
             .ai-wrap {
                 bottom: 20px;
                 right: 20px;
             }
+
             .ai-robot {
                 width: 45px;
                 height: 45px;
@@ -1331,6 +1529,7 @@
             --ai-menu-bg: rgba(10, 10, 12, 0.85);
             --modal-bg: rgba(10, 10, 12, 0.95);
         }
+
         :root[data-theme="light"] {
             --ai-menu-bg: rgba(255, 255, 255, 0.9);
             --modal-bg: rgba(255, 255, 255, 0.98);
@@ -1355,7 +1554,7 @@
             transform: translateY(15px) scale(0.9);
             pointer-events: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 2010;
+            z-index: 2020;
         }
 
         .ai-menu.active {
@@ -1460,13 +1659,25 @@
         }
 
         @keyframes laserSweep {
-            0% { top: -2%; }
-            100% { top: 102%; }
+            0% {
+                top: -2%;
+            }
+
+            100% {
+                top: 102%;
+            }
         }
 
         @keyframes laserOverlaySweep {
-            0% { height: 0%; opacity: 0.8; }
-            100% { height: 100%; opacity: 0; }
+            0% {
+                height: 0%;
+                opacity: 0.8;
+            }
+
+            100% {
+                height: 100%;
+                opacity: 0;
+            }
         }
 
         /* Cyberpunk Diagnostics Modal */
@@ -1616,6 +1827,7 @@
             0% {
                 box-shadow: 0 0 5px rgba(139, 92, 246, 0.2);
             }
+
             100% {
                 box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
             }
@@ -1691,8 +1903,13 @@
         }
 
         @keyframes spinGently {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .pipeline-flow {
@@ -1802,7 +2019,7 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
             min-height: 280px;
             max-height: 380px;
             overflow-y: auto;
@@ -1817,7 +2034,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding-bottom: 0.6rem;
             font-size: 0.75rem;
             color: #475569;
@@ -1835,9 +2052,18 @@
             height: 8px;
             border-radius: 50%;
         }
-        .console-dot.red { background: #ef4444; }
-        .console-dot.yellow { background: #eab308; }
-        .console-dot.green { background: #22c55e; }
+
+        .console-dot.red {
+            background: #ef4444;
+        }
+
+        .console-dot.yellow {
+            background: #eab308;
+        }
+
+        .console-dot.green {
+            background: #22c55e;
+        }
 
         .console-screen {
             display: flex;
@@ -1860,10 +2086,25 @@
             transform: translateX(0);
         }
 
-        .console-tag-info { color: #3b82f6; font-weight: bold; }
-        .console-tag-pass { color: #10b981; font-weight: bold; }
-        .console-tag-warn { color: #f59e0b; font-weight: bold; }
-        .console-tag-err { color: #ef4444; font-weight: bold; }
+        .console-tag-info {
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        .console-tag-pass {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .console-tag-warn {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .console-tag-err {
+            color: #ef4444;
+            font-weight: bold;
+        }
 
         @media (max-width: 900px) {
             .pipeline-grid {
@@ -1885,7 +2126,7 @@
             flex-direction: column;
             margin-top: 2rem;
             position: relative;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
         }
@@ -1903,18 +2144,25 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Commit Card Styles */
         .commit-card {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 1rem;
             font-family: 'Courier New', Courier, monospace;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .commit-header {
@@ -1939,7 +2187,7 @@
         .build-progress-bar {
             width: 100%;
             height: 10px;
-            background: rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.08);
             border-radius: 5px;
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -1954,7 +2202,7 @@
         }
 
         .layer-block {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255, 255, 255, 0.03);
             border: 1px dashed var(--border-color);
             border-radius: 8px;
             padding: 6px;
@@ -1980,7 +2228,7 @@
             border-radius: 12px;
             overflow: hidden;
             width: 100%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
 
         .browser-address-bar {
@@ -2003,12 +2251,21 @@
             border-radius: 50%;
             display: inline-block;
         }
-        .b-dot:nth-child(1) { background: #ef4444; }
-        .b-dot:nth-child(2) { background: #eab308; }
-        .b-dot:nth-child(3) { background: #22c55e; }
+
+        .b-dot:nth-child(1) {
+            background: #ef4444;
+        }
+
+        .b-dot:nth-child(2) {
+            background: #eab308;
+        }
+
+        .b-dot:nth-child(3) {
+            background: #22c55e;
+        }
 
         .browser-url-input {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: var(--text-secondary);
@@ -2029,7 +2286,7 @@
 
         .live-assert-title {
             color: var(--accent-2);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding-bottom: 4px;
             margin-bottom: 6px;
             font-weight: bold;
@@ -2052,7 +2309,10 @@
         }
 
         @keyframes slideInAssert {
-            to { opacity: 1; transform: translateX(0); }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         /* Deploy success view */
@@ -2071,6 +2331,7 @@
                 gap: 1rem !important;
             }
         }
+
         @media (max-width: 480px) {
             .pipeline-stats-grid {
                 grid-template-columns: 1fr !important;
@@ -2111,8 +2372,15 @@
         }
 
         @keyframes bugPulse {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(1.6); opacity: 0; }
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
         }
 
         .glitch-bug:hover {
@@ -2120,14 +2388,32 @@
         }
 
         @keyframes bugGlitch {
-            0% { transform: skew(0deg); filter: hue-rotate(0deg); }
-            50% { transform: skew(10deg); filter: hue-rotate(90deg) brightness(1.2); }
-            100% { transform: skew(-5deg); filter: hue-rotate(180deg); }
+            0% {
+                transform: skew(0deg);
+                filter: hue-rotate(0deg);
+            }
+
+            50% {
+                transform: skew(10deg);
+                filter: hue-rotate(90deg) brightness(1.2);
+            }
+
+            100% {
+                transform: skew(-5deg);
+                filter: hue-rotate(180deg);
+            }
         }
 
         @keyframes bugFloat {
-            0% { margin-top: 0px; margin-left: 0px; }
-            100% { margin-top: 15px; margin-left: 10px; }
+            0% {
+                margin-top: 0px;
+                margin-left: 0px;
+            }
+
+            100% {
+                margin-top: 15px;
+                margin-left: 10px;
+            }
         }
 
         .bug-particle {
@@ -2143,8 +2429,15 @@
         }
 
         @keyframes bugParticleFade {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(var(--dx), var(--dy)) scale(0);
+                opacity: 0;
+            }
         }
 
         .cert-modal {
@@ -2159,7 +2452,7 @@
             border-radius: 24px;
             padding: 3rem 2rem;
             z-index: 10002;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 40px rgba(139, 92, 246, 0.25);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(139, 92, 246, 0.25);
             opacity: 0;
             pointer-events: none;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2463,13 +2756,15 @@
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             overflow-x: auto;
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            scrollbar-width: none;
+            /* Hide scrollbar for Firefox */
         }
-        
+
         .certs-slices-selector::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for Chrome/Safari */
+            display: none;
+            /* Hide scrollbar for Chrome/Safari */
         }
-        
+
         .slice-tab {
             display: inline-flex;
             align-items: center;
@@ -2485,23 +2780,23 @@
             transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
             white-space: nowrap;
         }
-        
+
         .slice-tab i {
             font-size: 1.05rem;
             transition: transform 0.3s ease;
         }
-        
+
         .slice-tab:hover {
             color: var(--text-primary);
             background: rgba(255, 255, 255, 0.08);
             border-color: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
-        
+
         .slice-tab:hover i {
             transform: scale(1.15);
         }
-        
+
         /* Unique Active Neon Highlights matching standard theme variables */
         .slice-tab.active.active-google {
             background: rgba(66, 133, 244, 0.08);
@@ -2509,29 +2804,33 @@
             border: 1px solid rgba(66, 133, 244, 0.4);
             box-shadow: 0 0 20px rgba(66, 133, 244, 0.25);
         }
+
         .slice-tab.active.active-accenture {
             background: rgba(161, 0, 255, 0.08);
             color: #A100FF !important;
             border: 1px solid rgba(161, 0, 255, 0.4);
             box-shadow: 0 0 20px rgba(161, 0, 255, 0.25);
         }
+
         .slice-tab.active.active-india {
             background: rgba(255, 153, 51, 0.08);
             color: #FF9933 !important;
             border: 1px solid rgba(255, 153, 51, 0.4);
             box-shadow: 0 0 20px rgba(255, 153, 51, 0.25);
         }
-        
+
         /* Light Theme Variable Support */
         :root[data-theme="light"] .certs-slices-selector {
             background: rgba(0, 0, 0, 0.02);
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
+
         :root[data-theme="light"] .slice-tab {
             background: rgba(0, 0, 0, 0.02);
             border: 1px solid rgba(0, 0, 0, 0.05);
             color: var(--text-secondary);
         }
+
         :root[data-theme="light"] .slice-tab:hover {
             background: rgba(0, 0, 0, 0.06);
             border-color: rgba(0, 0, 0, 0.1);
@@ -2547,27 +2846,34 @@
                 gap: 0.6rem;
                 margin-bottom: 2rem;
             }
+
             .slice-tab {
                 padding: 0.5rem 1.2rem;
                 font-size: 0.85rem;
             }
+
             .certs-carousel-container {
                 padding: 0 1rem 4rem;
             }
+
             .carousel-btn {
                 top: auto;
                 bottom: 0;
                 transform: none;
             }
+
             .carousel-btn.prev {
                 left: 30%;
             }
+
             .carousel-btn.next {
                 right: 30%;
             }
+
             .cert-carousel-card {
                 padding: 2rem 1.5rem;
             }
+
             .cert-name {
                 font-size: 1.3rem;
             }
@@ -2577,6 +2883,7 @@
             .nav-resume-text {
                 display: none;
             }
+
             .nav-actions .btn-outline {
                 padding: 0.5rem;
                 width: 40px;
@@ -2584,6 +2891,7 @@
                 border-radius: 50%;
                 justify-content: center;
             }
+
             .nav-actions .btn-outline i {
                 margin: 0 !important;
             }
@@ -2594,6 +2902,7 @@
             transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
             will-change: transform;
         }
+
         .proj-tele-card:hover {
             border-color: var(--accent-1) !important;
             background: rgba(139, 92, 246, 0.08) !important;
@@ -2606,7 +2915,7 @@
             transition: border-color 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease, filter 0.4s ease;
             will-change: transform, opacity, filter;
         }
-        
+
         .timeline-dot {
             transition: border-color 0.4s ease, box-shadow 0.4s ease, background-color 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             will-change: transform;
@@ -2740,7 +3049,8 @@
             }
 
             .dropdown-menu-list a::after {
-                display: none !important; /* Disable navbar line effect for dropdown */
+                display: none !important;
+                /* Disable navbar line effect for dropdown */
             }
 
             .dropdown-menu-list a i {
@@ -2808,8 +3118,10 @@
                 width: 100%;
                 padding: 0 !important;
             }
+
             .dropdown-menu-list a i {
-                display: none; /* Hide icons in mobile drawer view to match other navbar links */
+                display: none;
+                /* Hide icons in mobile drawer view to match other navbar links */
             }
         }
 
@@ -2830,6 +3142,7 @@
         .nav-links a.active {
             color: var(--text-primary);
         }
+
         .nav-links a.active::after {
             width: 100%;
             box-shadow: 0 0 8px rgba(139, 92, 246, 0.8);
@@ -2843,6 +3156,7 @@
                 transition-duration: 0.001ms !important;
                 scroll-behavior: auto !important;
             }
+
             .floating-thunder,
             .floating-thunder-reverse,
             .floating-icon,
@@ -2851,7 +3165,6 @@
                 display: none !important;
             }
         }
-
     </style>
 </head>
 
@@ -2914,7 +3227,8 @@
     <section id="home" class="hero container">
         <div class="reveal">
             <div class="tagline">
-                <span><i class="fa-solid fa-bolt" style="margin-right: 8px;"></i> tech + learning mindset + vibe coder</span>
+                <span><i class="fa-solid fa-bolt" style="margin-right: 8px;"></i> tech + learning mindset + vibe
+                    coder</span>
             </div>
             <h1>Hi, I'm <span class="text-gradient">Abhinav Saxena</span></h1>
             <p>A passionate QA Tester & Automation Specialist based in Gurgaon. I build expertise in ensuring top-tier
@@ -3091,30 +3405,44 @@
                     </div>
                     <div class="flip-back">
                         <p class="project-desc" style="font-size: 0.82rem; margin-bottom: 0.8rem; line-height: 1.4;">
-                            AbhiMate natively replaces tedious manual test construction by utilizing advanced multi-agent systems to orchestrate and execute Selenium web drivers dynamically.
+                            AbhiMate natively replaces tedious manual test construction by utilizing advanced
+                            multi-agent systems to orchestrate and execute Selenium web drivers dynamically.
                         </p>
-                        
+
                         <!-- Telemetry Stats Panel -->
-                        <div class="proj-telemetry-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                        <div class="proj-telemetry-grid"
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
                                 <div style="color: var(--accent-1); font-weight: bold; font-size: 0.85rem;">3</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">QA Agents</div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    QA Agents</div>
                             </div>
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
                                 <div style="color: #10b981; font-weight: bold; font-size: 0.85rem;">99.8%</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Asserts</div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Asserts</div>
                             </div>
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
                                 <div style="color: var(--accent-2); font-weight: bold; font-size: 0.85rem;">Vertex</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Engine</div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Engine</div>
                             </div>
                         </div>
 
-                        <div class="project-tags" style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
+                        <div class="project-tags"
+                            style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
                             <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">Python</span>
-                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">AI Testing</span>
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">AI
+                                Testing</span>
                         </div>
-                        <a href="https://github.com/Abhi-tech-geek/AbhiMate" target="_blank" class="project-link" style="font-size: 0.9rem;">
+                        <a href="https://github.com/Abhi-tech-geek/AbhiMate" target="_blank" class="project-link"
+                            style="font-size: 0.9rem;">
                             View System Source <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -3131,30 +3459,45 @@
                     </div>
                     <div class="flip-back">
                         <p class="project-desc" style="font-size: 0.82rem; margin-bottom: 0.8rem; line-height: 1.4;">
-                            A premium Jarvis-like AI personal assistant powered by multi-agent architectural layers for complex automated cognitive logic reasoning.
+                            A premium Jarvis-like AI personal assistant powered by multi-agent architectural layers for
+                            complex automated cognitive logic reasoning.
                         </p>
-                        
+
                         <!-- Telemetry Stats Panel -->
-                        <div class="proj-telemetry-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                        <div class="proj-telemetry-grid"
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
                                 <div style="color: var(--accent-1); font-weight: bold; font-size: 0.85rem;">0.8s</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Latency</div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Latency</div>
                             </div>
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
-                                <div style="color: var(--accent-3); font-weight: bold; font-size: 0.85rem;">Tooling</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Dynamic</div>
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-3); font-weight: bold; font-size: 0.85rem;">Tooling
+                                </div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Dynamic</div>
                             </div>
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
                                 <div style="color: var(--accent-2); font-weight: bold; font-size: 0.85rem;">Active</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Reasoning</div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Reasoning</div>
                             </div>
                         </div>
 
-                        <div class="project-tags" style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
-                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">AI Agents</span>
+                        <div class="project-tags"
+                            style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
+                            <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">AI
+                                Agents</span>
                             <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">LLMs</span>
                         </div>
-                        <a href="https://github.com/Abhi-tech-geek?tab=repositories" target="_blank" class="project-link" style="font-size: 0.9rem;">
+                        <a href="https://github.com/Abhi-tech-geek?tab=repositories" target="_blank"
+                            class="project-link" style="font-size: 0.9rem;">
                             View Neural Logs <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -3171,30 +3514,45 @@
                     </div>
                     <div class="flip-back">
                         <p class="project-desc" style="font-size: 0.82rem; margin-bottom: 0.8rem; line-height: 1.4;">
-                            AI-powered travel discovery engine with verified destination cards, dynamic pack routing logs, and integrated active chat support.
+                            AI-powered travel discovery engine with verified destination cards, dynamic pack routing
+                            logs, and integrated active chat support.
                         </p>
-                        
+
                         <!-- Telemetry Stats Panel -->
-                        <div class="proj-telemetry-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                        <div class="proj-telemetry-grid"
+                            style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 1rem; font-family: monospace; font-size: 0.72rem;">
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
                                 <div style="color: #10b981; font-weight: bold; font-size: 0.85rem;">GCP Run</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Hosting</div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Hosting</div>
                             </div>
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
-                                <div style="color: var(--accent-1); font-weight: bold; font-size: 0.85rem;">Concierge</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Support</div>
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-1); font-weight: bold; font-size: 0.85rem;">Concierge
+                                </div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Support</div>
                             </div>
-                            <div class="proj-tele-card" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
-                                <div style="color: var(--accent-3); font-weight: bold; font-size: 0.85rem;">Mystery</div>
-                                <div style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">Cards</div>
+                            <div class="proj-tele-card"
+                                style="background: rgba(255,255,255,0.03); border: 1px dashed var(--border-color); padding: 6px 4px; border-radius: 8px;">
+                                <div style="color: var(--accent-3); font-weight: bold; font-size: 0.85rem;">Mystery
+                                </div>
+                                <div
+                                    style="color: var(--text-secondary); font-size: 0.6rem; text-transform: uppercase;">
+                                    Cards</div>
                             </div>
                         </div>
 
-                        <div class="project-tags" style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
+                        <div class="project-tags"
+                            style="justify-content: center; margin-bottom: 0.8rem; gap: 0.5rem; display: flex;">
                             <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">React</span>
                             <span class="project-tag" style="padding: 0.2rem 0.6rem; font-size: 0.75rem;">Node.js</span>
                         </div>
-                        <a href="https://github.com/Abhi-tech-geek/AuraGo" target="_blank" class="project-link" style="font-size: 0.9rem;">
+                        <a href="https://github.com/Abhi-tech-geek/AuraGo" target="_blank" class="project-link"
+                            style="font-size: 0.9rem;">
                             View Project Source <i class="fa-solid fa-arrow-right"></i>
                         </a>
                     </div>
@@ -3206,10 +3564,12 @@
     <!-- CI/CD Pipeline Section -->
     <section id="pipeline" class="container">
         <h2 class="section-title reveal">Automated <span>CI/CD Pipeline</span></h2>
-        
+
         <!-- Explanatory Intro Card -->
-        <p class="pipeline-intro reveal" style="text-align: center; color: var(--text-secondary); max-width: 750px; margin: -1.5rem auto 3rem; font-size: 1.1rem; line-height: 1.6;">
-            Experience a real-time simulation of a production-grade QA pipeline. Click the trigger button below to watch Abhinav's automated testing suite compile, assert, and deploy live code!
+        <p class="pipeline-intro reveal"
+            style="text-align: center; color: var(--text-secondary); max-width: 750px; margin: -1.5rem auto 3rem; font-size: 1.1rem; line-height: 1.6;">
+            Experience a real-time simulation of a production-grade QA pipeline. Click the trigger button below to watch
+            Abhinav's automated testing suite compile, assert, and deploy live code!
         </p>
 
         <div class="pipeline-grid reveal">
@@ -3217,37 +3577,38 @@
             <div class="pipeline-visual">
                 <div class="pipeline-header">
                     <h3><i class="fa-solid fa-circle-notch" id="pipelineSpinner"></i> Pipeline Simulation Control</h3>
-                    <button class="btn btn-primary" id="pipelineDeployBtn" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; border-radius: 50px;">
+                    <button class="btn btn-primary" id="pipelineDeployBtn"
+                        style="padding: 0.5rem 1.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; border-radius: 50px;">
                         <i class="fa-solid fa-play"></i> Trigger Commit Build
                     </button>
                 </div>
-                
+
                 <!-- Flow Nodes -->
                 <div class="pipeline-flow">
                     <div class="pipeline-connector-line"></div>
                     <div class="pipeline-connector-progress" id="pipelineProgress"></div>
-                    
+
                     <div class="pipeline-stage" id="stage-git">
                         <div class="pipeline-stage-node">
                             <i class="fa-brands fa-git-alt"></i>
                         </div>
                         <span class="pipeline-stage-title">1. Git Push</span>
                     </div>
-                    
+
                     <div class="pipeline-stage" id="stage-build">
                         <div class="pipeline-stage-node">
                             <i class="fa-brands fa-docker"></i>
                         </div>
                         <span class="pipeline-stage-title">2. Compile Container</span>
                     </div>
-                    
+
                     <div class="pipeline-stage" id="stage-qa">
                         <div class="pipeline-stage-node">
                             <i class="fa-solid fa-vial"></i>
                         </div>
                         <span class="pipeline-stage-title">3. QA Automation</span>
                     </div>
-                    
+
                     <div class="pipeline-stage" id="stage-deploy">
                         <div class="pipeline-stage-node">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -3259,9 +3620,11 @@
                 <!-- Interactive Visual Simulator Screen -->
                 <div class="pipeline-simulator-screen" id="pipelineSimulatorScreen">
                     <div class="sim-standby-view" id="simStandbyView">
-                        <i class="fa-solid fa-gauge-high" style="font-size: 3rem; color: var(--accent-2); opacity: 0.8; margin-bottom: 1rem; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
+                        <i class="fa-solid fa-gauge-high"
+                            style="font-size: 3rem; color: var(--accent-2); opacity: 0.8; margin-bottom: 1rem; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
                         <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Simulator Standby</h4>
-                        <p style="color: var(--text-secondary); font-size: 0.85rem; max-width: 320px;">Trigger the commit build above to watch real-time automated browser testing assertions!</p>
+                        <p style="color: var(--text-secondary); font-size: 0.85rem; max-width: 320px;">Trigger the
+                            commit build above to watch real-time automated browser testing assertions!</p>
                     </div>
 
                     <!-- Stage 1 View: Git Details -->
@@ -3271,36 +3634,45 @@
                                 <span class="branch-tag"><i class="fa-solid fa-code-branch"></i> main</span>
                                 <span class="commit-hash">sha1: 0f2b8a7c</span>
                             </div>
-                            <h4 style="margin: 0.5rem 0 0.2rem; font-size: 1rem; text-align: left;">feat: optimized vector search api and assertions</h4>
-                            <div class="commit-meta" style="font-size: 0.75rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
+                            <h4 style="margin: 0.5rem 0 0.2rem; font-size: 1rem; text-align: left;">feat: optimized
+                                vector search api and assertions</h4>
+                            <div class="commit-meta"
+                                style="font-size: 0.75rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
                                 <span>Author: Abhinav Saxena</span>
                                 <span>Verified Commit ✔</span>
                             </div>
                         </div>
-                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
-                            <strong>What's happening?</strong> Code modifications are pushed to the central repository. The CI/CD engine automatically intercepts the changes to trigger defensive testing checks.
+                        <p class="stage-explanation"
+                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
+                            <strong>What's happening?</strong> Code modifications are pushed to the central repository.
+                            The CI/CD engine automatically intercepts the changes to trigger defensive testing checks.
                         </p>
                     </div>
 
                     <!-- Stage 2 View: Docker Layer Build -->
                     <div class="sim-stage-view" id="simView-build" style="display: none;">
                         <div class="build-loader-container">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                            <div
+                                style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
                                 <span>Compiling Docker Container Layers...</span>
                                 <span id="buildPercent">0%</span>
                             </div>
                             <div class="build-progress-bar">
                                 <div class="build-progress-fill" id="buildProgressFill"></div>
                             </div>
-                            <div class="layer-pile" id="layerPile" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px;">
+                            <div class="layer-pile" id="layerPile"
+                                style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px;">
                                 <div class="layer-block" id="layer-1">base OS</div>
                                 <div class="layer-block" id="layer-2">npm package</div>
                                 <div class="layer-block" id="layer-3">selenium core</div>
                                 <div class="layer-block" id="layer-4">app files</div>
                             </div>
                         </div>
-                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
-                            <strong>What's happening?</strong> The server packages your code along with its exact dependencies (OS, Node.js, Selenium grid) into an isolated capsule (container) to guarantee identical runtimes.
+                        <p class="stage-explanation"
+                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
+                            <strong>What's happening?</strong> The server packages your code along with its exact
+                            dependencies (OS, Node.js, Selenium grid) into an isolated capsule (container) to guarantee
+                            identical runtimes.
                         </p>
                     </div>
 
@@ -3322,25 +3694,33 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.8rem; text-align: left;">
-                            <strong>What's happening?</strong> <em>Abhinav's QA Automation Core:</em> Selenium builds a mock browser, clicks navbar items, triggers dark modes, and runs 148 assertions to ensure zero defects!
+                        <p class="stage-explanation"
+                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.8rem; text-align: left;">
+                            <strong>What's happening?</strong> <em>Abhinav's QA Automation Core:</em> Selenium builds a
+                            mock browser, clicks navbar items, triggers dark modes, and runs 148 assertions to ensure
+                            zero defects!
                         </p>
                     </div>
 
                     <!-- Stage 4 View: Cloud Run Deploy -->
                     <div class="sim-stage-view" id="simView-deploy" style="display: none;">
                         <div class="deploy-success-card">
-                            <i class="fa-solid fa-cloud-arrow-up cloud-success-icon" style="font-size: 3rem; color: #10b981; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
+                            <i class="fa-solid fa-cloud-arrow-up cloud-success-icon"
+                                style="font-size: 3rem; color: #10b981; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
                             <h4 style="font-size: 1.1rem; color: #10b981; margin: 0.5rem 0 0.2rem;">ONLINE & LIVE</h4>
-                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0px;">Endpoint: <strong>https://portfolio.abhinav-dev.run</strong></p>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0px;">Endpoint:
+                                <strong>https://portfolio.abhinav-dev.run</strong></p>
                         </div>
-                        <p class="stage-explanation" style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
-                            <strong>What's happening?</strong> Having successfully completed 148 manual/automation checkpoints with zero failures, the container is deployed instantly onto Google Cloud/Accenture nodes!
+                        <p class="stage-explanation"
+                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
+                            <strong>What's happening?</strong> Having successfully completed 148 manual/automation
+                            checkpoints with zero failures, the container is deployed instantly onto Google
+                            Cloud/Accenture nodes!
                         </p>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Right Side: Developer Console Logs -->
             <div class="pipeline-console">
                 <div class="console-title-bar">
@@ -3352,31 +3732,53 @@
                     <span>Selenium Telemetry Console</span>
                 </div>
                 <div class="console-screen" id="pipelineConsoleScreen">
-                    <div class="console-log visible" style="color: #64748b;">$ standby for commit build execution...</div>
+                    <div class="console-log visible" style="color: #64748b;">$ standby for commit build execution...
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Telemetry Stat counters -->
-        <div class="pipeline-stats-grid reveal" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem;">
-            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-assertions" style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-2);">0 / 148</div>
-                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Tests Asserted</div>
+        <div class="pipeline-stats-grid reveal"
+            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem;">
+            <div class="stat-dial-card"
+                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-assertions"
+                    style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-2);">
+                    0 / 148</div>
+                <div class="stat-dial-lbl"
+                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
+                    Tests Asserted</div>
             </div>
-            
-            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-defects" style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #ef4444;">0</div>
-                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Bugs Squashed</div>
+
+            <div class="stat-dial-card"
+                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-defects"
+                    style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #ef4444;">0
+                </div>
+                <div class="stat-dial-lbl"
+                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
+                    Bugs Squashed</div>
             </div>
-            
-            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-buildspeed" style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-1);">0.0s</div>
-                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Execution Speed</div>
+
+            <div class="stat-dial-card"
+                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-buildspeed"
+                    style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-1);">
+                    0.0s</div>
+                <div class="stat-dial-lbl"
+                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
+                    Execution Speed</div>
             </div>
-            
-            <div class="stat-dial-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-status" style="font-size: 1.4rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #64748b; padding: 0.4rem 0;">STANDBY</div>
-                <div class="stat-dial-lbl" style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">Pipeline Health</div>
+
+            <div class="stat-dial-card"
+                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                <div class="stat-dial-val" id="stat-status"
+                    style="font-size: 1.4rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #64748b; padding: 0.4rem 0;">
+                    STANDBY</div>
+                <div class="stat-dial-lbl"
+                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
+                    Pipeline Health</div>
             </div>
         </div>
     </section>
@@ -3429,7 +3831,7 @@
     <!-- Certifications Section -->
     <section id="certifications" class="container">
         <h2 class="section-title reveal">My <span>Certifications</span></h2>
-        
+
         <!-- Slices/Tabs Selector -->
         <div class="certs-slices-selector reveal" id="certsSlicesSelector">
             <button class="slice-tab active" data-index="0">
@@ -3442,7 +3844,7 @@
                 <i class="fa-solid fa-microchip"></i> India AI
             </button>
         </div>
-        
+
         <div class="certs-carousel-container reveal">
             <button class="carousel-btn prev" id="certPrevBtn" aria-label="Previous Certification">
                 <i class="fa-solid fa-chevron-left"></i>
@@ -3450,13 +3852,14 @@
             <button class="carousel-btn next" id="certNextBtn" aria-label="Next Certification">
                 <i class="fa-solid fa-chevron-right"></i>
             </button>
-            
+
             <div class="certs-viewport">
                 <div class="certs-track" id="certsTrack">
                     <!-- Slide 1: Google Cloud -->
                     <div class="cert-slide">
                         <div class="cert-carousel-card" onclick="openHoloCert('google-cloud')">
-                            <div class="cert-badge" style="background: rgba(66, 133, 244, 0.05); border-color: rgba(66, 133, 244, 0.3);">
+                            <div class="cert-badge"
+                                style="background: rgba(66, 133, 244, 0.05); border-color: rgba(66, 133, 244, 0.3);">
                                 <i class="fa-brands fa-google" style="color: #4285F4;"></i>
                             </div>
                             <div class="cert-org">Google Cloud</div>
@@ -3470,12 +3873,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Slide 2: Accenture -->
                     <div class="cert-slide">
                         <div class="cert-carousel-card" onclick="openHoloCert('accenture')">
-                            <div class="cert-badge" style="background: rgba(161, 0, 255, 0.05); border-color: rgba(161, 0, 255, 0.3);">
-                                <i class="fa-solid fa-chevron-right" style="color: #A100FF; transform: scaleX(1.5);"></i>
+                            <div class="cert-badge"
+                                style="background: rgba(161, 0, 255, 0.05); border-color: rgba(161, 0, 255, 0.3);">
+                                <i class="fa-solid fa-chevron-right"
+                                    style="color: #A100FF; transform: scaleX(1.5);"></i>
                             </div>
                             <div class="cert-org">Accenture</div>
                             <h3 class="cert-name">Reinvention with Agentic AI Learning Program</h3>
@@ -3488,12 +3893,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Slide 3: India AI -->
                     <div class="cert-slide">
                         <div class="cert-carousel-card" onclick="openHoloCert('india-ai')">
-                            <div class="cert-badge" style="background: rgba(255, 153, 51, 0.05); border-color: rgba(255, 153, 51, 0.3);">
-                                <i class="fa-solid fa-microchip" style="background: linear-gradient(135deg, #FF9933, #128807); -webkit-background-clip: text; color: transparent;"></i>
+                            <div class="cert-badge"
+                                style="background: rgba(255, 153, 51, 0.05); border-color: rgba(255, 153, 51, 0.3);">
+                                <i class="fa-solid fa-microchip"
+                                    style="background: linear-gradient(135deg, #FF9933, #128807); -webkit-background-clip: text; color: transparent;"></i>
                             </div>
                             <div class="cert-org">India AI</div>
                             <h3 class="cert-name">India AI Impact Buildathon 2026</h3>
@@ -3508,7 +3915,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="carousel-dots" id="certsDots">
                 <span class="carousel-dot active" data-index="0"></span>
                 <span class="carousel-dot" data-index="1"></span>
@@ -3544,7 +3951,8 @@
                 </div>
 
                 <!-- Resume Download Card in Contact Section -->
-                <a href="AbhinavSaxena.pdf" download="Abhinav_Saxena_Resume.pdf" class="contact-card" style="border-color: var(--accent-1); background: rgba(139, 92, 246, 0.03); box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);">
+                <a href="AbhinavSaxena.pdf" download="Abhinav_Saxena_Resume.pdf" class="contact-card"
+                    style="border-color: var(--accent-1); background: rgba(139, 92, 246, 0.03); box-shadow: 0 0 15px rgba(139, 92, 246, 0.1);">
                     <i class="fa-solid fa-file-pdf" style="color: #ef4444;"></i>
                     <span style="font-weight: 600;">Download Resume (PDF)</span>
                 </a>
@@ -3662,23 +4070,26 @@
             <div class="ai-menu-title">Companion Protocol</div>
             <button class="ai-menu-btn" data-action="scan"><i class="fa-solid fa-expand"></i> Scan Website (QA)</button>
             <button class="ai-menu-btn" data-action="skills"><i class="fa-solid fa-code"></i> Skill Scan</button>
-            <button class="ai-menu-btn" data-action="project"><i class="fa-solid fa-robot"></i> Highlight Project</button>
+            <button class="ai-menu-btn" data-action="project"><i class="fa-solid fa-robot"></i> Highlight
+                Project</button>
             <button class="ai-menu-btn" data-action="bug"><i class="fa-solid fa-bug"></i> QA Bug Hunter</button>
-            <button class="ai-menu-btn" data-action="resume"><i class="fa-solid fa-file-pdf"></i> Download Resume</button>
-            <button class="ai-menu-btn" data-action="dance"><i class="fa-solid fa-music"></i> Vibe Matrix (Dance)</button>
+            <button class="ai-menu-btn" data-action="resume"><i class="fa-solid fa-file-pdf"></i> Download
+                Resume</button>
+            <button class="ai-menu-btn" data-action="dance"><i class="fa-solid fa-music"></i> Vibe Matrix
+                (Dance)</button>
         </div>
         <div class="ai-robot-body" id="aiRobot">
             <div class="bot-antenna"></div>
             <div class="bot-head">
-                 <div class="bot-eyes">
-                      <div class="bot-eye left"></div>
-                      <div class="bot-eye right"></div>
-                 </div>
+                <div class="bot-eyes">
+                    <div class="bot-eye left"></div>
+                    <div class="bot-eye right"></div>
+                </div>
             </div>
             <div class="bot-torso">
-                 <div class="bot-arm left"></div>
-                 <div class="bot-screen"></div>
-                 <div class="bot-arm right"></div>
+                <div class="bot-arm left"></div>
+                <div class="bot-screen"></div>
+                <div class="bot-arm right"></div>
             </div>
             <div class="bot-base"></div>
         </div>
@@ -3705,15 +4116,18 @@
 
     <!-- Holographic QA Elite Bug Hunter Certificate Modal -->
     <div class="cert-modal" id="certModal">
-        <button class="qa-modal-close" id="certModalClose" style="position: absolute; top: 15px; right: 20px;" aria-label="Close Certificate">&times;</button>
+        <button class="qa-modal-close" id="certModalClose" style="position: absolute; top: 15px; right: 20px;"
+            aria-label="Close Certificate">&times;</button>
         <div class="cert-seal">
             <i class="fa-solid fa-certificate cert-seal-star"></i>
             <i class="fa-solid fa-check cert-seal-icon"></i>
         </div>
         <h3 class="cert-title">Elite QA Bug Hunter</h3>
-        <p class="cert-subtitle">This digital telemetry seal certifies that the visitor has successfully debugged and verified Abhinav Saxena's portfolio nodes with zero residual glitches.</p>
+        <p class="cert-subtitle">This digital telemetry seal certifies that the visitor has successfully debugged and
+            verified Abhinav Saxena's portfolio nodes with zero residual glitches.</p>
         <div class="cert-recipient" id="certRecipient">GUEST DEBUGGER</div>
-        <p class="cert-text">Asserted & Verified by AbhiMate Multi-Agent Security Protocol. Standard of QA Automation Excellence.</p>
+        <p class="cert-text">Asserted & Verified by AbhiMate Multi-Agent Security Protocol. Standard of QA Automation
+            Excellence.</p>
         <div class="cert-footer">
             <span id="certDate">DATE: 2026-05-24</span>
             <span>STATUS: SECURED</span>
@@ -3722,16 +4136,21 @@
 
     <!-- Holographic Professional Credentials Modal -->
     <div class="cert-modal" id="dynamicCertModal">
-        <button class="qa-modal-close" id="dynamicCertModalClose" style="position: absolute; top: 15px; right: 20px;" aria-label="Close Certificate">&times;</button>
+        <button class="qa-modal-close" id="dynamicCertModalClose" style="position: absolute; top: 15px; right: 20px;"
+            aria-label="Close Certificate">&times;</button>
         <div class="cert-seal">
             <i class="fa-solid fa-certificate cert-seal-star" id="dynCertSealStar"></i>
             <i class="fa-solid fa-award cert-seal-icon" id="dynCertSealIcon"></i>
         </div>
-        <div class="cert-org" id="dynCertOrg" style="font-size: 0.85rem; letter-spacing: 2px; color: var(--accent-1); margin-bottom: 0.5rem; font-weight: 700;">ORGANIZATION</div>
+        <div class="cert-org" id="dynCertOrg"
+            style="font-size: 0.85rem; letter-spacing: 2px; color: var(--accent-1); margin-bottom: 0.5rem; font-weight: 700;">
+            ORGANIZATION</div>
         <h3 class="cert-title" id="dynCertTitle">Certificate Name</h3>
-        <p class="cert-subtitle" id="dynCertSubtitle">This official credential validates the successful completion and mastery of the program criteria.</p>
+        <p class="cert-subtitle" id="dynCertSubtitle">This official credential validates the successful completion and
+            mastery of the program criteria.</p>
         <div class="cert-recipient" style="font-size: 1.8rem; margin: 1.5rem 0 0.5rem;">Abhinav Saxena</div>
-        <p class="cert-text" id="dynCertBody">Specifically designed and validated in testing methodologies, artificial intelligence scaling, and telemetry architectures.</p>
+        <p class="cert-text" id="dynCertBody">Specifically designed and validated in testing methodologies, artificial
+            intelligence scaling, and telemetry architectures.</p>
         <div class="cert-footer">
             <span id="dynCertDate">DATE: 2026</span>
             <span id="dynCertId">CREDENTIAL ID: VERIFIED-1029</span>
@@ -3805,12 +4224,12 @@
         let botPos = { x: 0, y: 0 };
         let targetBotPos = { x: 0, y: 0 };
         let roamInterval;
-        
+
         function pickNewTarget() {
             // Keep bounds in a neat, premium bottom-right quadrant to stay within active view
             const limitX = Math.min(window.innerWidth - 150, 350);
             const limitY = Math.min(window.innerHeight - 200, 250);
-            targetBotPos.x = -(Math.random() * limitX); 
+            targetBotPos.x = -(Math.random() * limitX);
             targetBotPos.y = -(Math.random() * limitY);
         }
 
@@ -3881,10 +4300,10 @@
         aiMenu.addEventListener('click', (e) => {
             const btn = e.target.closest('.ai-menu-btn');
             if (!btn) return;
-            
+
             const action = btn.dataset.action;
             aiMenu.classList.remove('active');
-            
+
             if (action === 'scan') {
                 triggerDiagnosticScan();
             } else if (action === 'skills') {
@@ -3906,10 +4325,10 @@
             clearInterval(roamInterval);
             aiWrap.style.transition = 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
             aiWrap.style.transform = `translate(${targetX}px, ${targetY}px)`;
-            
+
             botPos.x = targetX;
             botPos.y = targetY;
-            
+
             setTimeout(callback, 1200);
         }
 
@@ -3920,7 +4339,7 @@
             botPos.y = 0;
             targetBotPos.x = 0;
             targetBotPos.y = 0;
-            
+
             setTimeout(() => {
                 aiWrap.style.transition = '';
                 isScriptedMove = false;
@@ -3931,25 +4350,25 @@
         // Action 1: Full-Screen Laser Diagnostics Scan
         function triggerDiagnosticScan() {
             setAiState('working', 'Scanning sequence initialized...');
-            
+
             // Glide robot to top-right corner
             const targetY = -(window.innerHeight - 150);
             const targetX = -50;
-            
+
             runScriptedMove(targetX, targetY, () => {
                 setAiState('working', 'Full Page Laser Sweep Active!');
                 laserScanner.classList.add('active');
-                
+
                 // Sweep line mid-way sound/bubble
                 setTimeout(() => {
                     setAiState('working', 'Analyzing DOM & Defect Telemetry...');
                 }, 1200);
-                
+
                 // Sweep completes
                 setTimeout(() => {
                     laserScanner.classList.remove('active');
                     setAiState('dancing', 'Scan Complete! compiling diagnostics...');
-                    
+
                     setTimeout(() => {
                         endScriptedMove();
                         showDiagnosticsModal();
@@ -3962,7 +4381,7 @@
         function showDiagnosticsModal() {
             qaModalBody.innerHTML = '';
             qaModal.classList.add('active');
-            
+
             const logs = [
                 { text: "[INFO] Initializing QA Webdriver Core Automation...", type: "info" },
                 { text: "[INFO] Establishing telemetry socket over SSL/TLS...", type: "info" },
@@ -3972,25 +4391,25 @@
                 { text: "[WARN] Telemetry: Hyper-advanced code matrices detected in Abhinav's systems.", type: "warn" },
                 { text: "[PASS] Assertions: 48/48 test vectors GREEN. Zero bugs verified.", type: "pass" }
             ];
-            
+
             logs.forEach((log, index) => {
                 setTimeout(() => {
                     const line = document.createElement('div');
                     line.className = 'qa-log-line';
-                    
+
                     let tagHtml = '';
                     if (log.type === 'info') tagHtml = '<span class="qa-tag-info">[INFO]</span>';
                     if (log.type === 'pass') tagHtml = '<span class="qa-tag-pass">[PASS]</span>';
                     if (log.type === 'warn') tagHtml = '<span class="qa-tag-warn">[WARN]</span>';
-                    
+
                     line.innerHTML = `${tagHtml} ${log.text.substring(7)}`;
                     qaModalBody.appendChild(line);
-                    
+
                     line.offsetHeight; // force reflow
                     line.classList.add('printed');
                 }, index * 350);
             });
-            
+
             // Print certified status seal box at the end
             setTimeout(() => {
                 const statusBox = document.createElement('div');
@@ -4000,7 +4419,7 @@
                     <div class="qa-status-value">100% SECURE & OPTIMIZED</div>
                 `;
                 qaModalBody.appendChild(statusBox);
-                
+
                 statusBox.offsetHeight;
                 statusBox.classList.add('printed');
                 setAiState('dancing', 'System Audit: 100% Secure!');
@@ -4011,14 +4430,14 @@
         function triggerSkillTelemetry() {
             setAiState('working', 'Scanning core skill matrix...');
             document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
-            
+
             setTimeout(() => {
                 setAiState('dancing', 'HTML, Selenium, Python at 100% load capacities!');
-                
+
                 // Highlight and pulse all skill cards
                 const skillCards = document.querySelectorAll('.skill-card .flip-front');
                 skillCards.forEach(card => card.classList.add('telemetry-pulse'));
-                
+
                 setTimeout(() => {
                     skillCards.forEach(card => card.classList.remove('telemetry-pulse'));
                     setAiState('', 'Skill telemetry verified.');
@@ -4031,16 +4450,16 @@
             setAiState('working', 'Locating system featured projects...');
             const projectsSection = document.getElementById('projects');
             projectsSection.scrollIntoView({ behavior: 'smooth' });
-            
+
             setTimeout(() => {
                 const abhimateCard = document.getElementById('project-abhimate');
                 if (abhimateCard) {
                     setAiState('dancing', 'Target Acquired! AbhiMate: Multi-Agent QA Core.');
-                    
+
                     // Programmatically flip the card to show logs
                     abhimateCard.classList.add('telemetry-pulse');
                     abhimateCard.classList.add('flipped');
-                    
+
                     setTimeout(() => {
                         abhimateCard.classList.remove('telemetry-pulse');
                         abhimateCard.classList.remove('flipped');
@@ -4060,10 +4479,10 @@
                 "QA Automation has 100% groove! 🎸",
                 "Matrix Vitals: PURE VIBES! 🚀"
             ];
-            
+
             setAiState('dancing', dancePhrases[0]);
             clearInterval(vibeInterval);
-            
+
             vibeInterval = setInterval(() => {
                 cycles++;
                 if (cycles < dancePhrases.length) {
@@ -4078,7 +4497,7 @@
         // Action: Dynamic Resume Download from AI Companion menu
         function triggerResumeDownload() {
             setAiState('dancing', 'Downloading Abhinav\'s Resume PDF... ⚡');
-            
+
             setTimeout(() => {
                 const link = document.createElement('a');
                 link.href = 'AbhinavSaxena.pdf';
@@ -4121,9 +4540,9 @@
                     if (id === 'projects') msg = 'Exploring deployed nodes...';
                     if (id === 'experience') msg = 'Reviewing logs timeline...';
                     if (id === 'contact') msg = 'Standing by for communication.';
-                    
+
                     if (aiRobot.className.trim() === 'ai-robot-body') {
-                         setAiState('', msg);
+                        setAiState('', msg);
                     }
                 }
             });
@@ -4232,7 +4651,7 @@
         const pipelineDeployBtn = document.getElementById('pipelineDeployBtn');
         const pipelineProgress = document.getElementById('pipelineProgress');
         const pipelineConsoleScreen = document.getElementById('pipelineConsoleScreen');
-        
+
         // New interactive simulator elements
         const simStandbyView = document.getElementById('simStandbyView');
         const simViews = {
@@ -4244,13 +4663,13 @@
         const buildProgressFill = document.getElementById('buildProgressFill');
         const buildPercent = document.getElementById('buildPercent');
         const assertLogsContainer = document.getElementById('assertLogsContainer');
-        
+
         // Stats elements
         const statAssertions = document.getElementById('stat-assertions');
         const statDefects = document.getElementById('stat-defects');
         const statBuildSpeed = document.getElementById('stat-buildspeed');
         const statStatus = document.getElementById('stat-status');
-        
+
         let isPipelineRunning = false;
 
         const stages = [
@@ -4275,7 +4694,7 @@
             setTimeout(() => {
                 const log = document.createElement('div');
                 log.className = 'console-log';
-                
+
                 let tag = '';
                 if (type === 'info') tag = '<span class="console-tag-info">[INFO]</span>';
                 if (type === 'pass') tag = '<span class="console-tag-pass">[PASS]</span>';
@@ -4284,8 +4703,8 @@
 
                 log.innerHTML = `${tag} ${message}`;
                 pipelineConsoleScreen.appendChild(log);
-                
-                log.offsetHeight; 
+
+                log.offsetHeight;
                 log.classList.add('visible');
                 pipelineConsoleScreen.scrollTop = pipelineConsoleScreen.scrollHeight;
             }, delay);
@@ -4334,13 +4753,13 @@
             }, 100);
 
             logToConsole('Triggering automated pipeline build...', 'info', 0);
-            
+
             // --- STAGE 1: Git Push ---
             setTimeout(() => {
                 const stage = document.getElementById('stage-git');
                 stage.classList.add('active');
                 showSimulatorView('git');
-                
+
                 logToConsole('Code pushed: git commit verified (sha: 0f2b8a7c)', 'info');
                 logToConsole('Initiating Docker environment container build...', 'info', 300);
             }, 600);
@@ -4351,7 +4770,7 @@
                 document.getElementById('stage-build').classList.add('active');
                 pipelineProgress.style.width = '25%';
                 showSimulatorView('build');
-                
+
                 logToConsole('Docker Base Container Compiled successfully.', 'pass');
                 logToConsole('Resolving npm dependencies and running bundler check...', 'info', 300);
 
@@ -4361,7 +4780,7 @@
                     percent += 5;
                     buildProgressFill.style.width = `${percent}%`;
                     buildPercent.textContent = `${percent}%`;
-                    
+
                     if (percent >= 25) document.getElementById('layer-1').classList.add('compiled');
                     if (percent >= 50) document.getElementById('layer-2').classList.add('compiled');
                     if (percent >= 75) document.getElementById('layer-3').classList.add('compiled');
@@ -4378,7 +4797,7 @@
                 document.getElementById('stage-qa').classList.add('active');
                 pipelineProgress.style.width = '55%';
                 showSimulatorView('qa');
-                
+
                 logToConsole('Bundle compilation successful. Web assets verified.', 'pass');
                 logToConsole('Launching Chrome headless driver via Selenium grid...', 'info', 300);
                 logToConsole('Running 148 automated Selenium UI and API assertions...', 'info', 600);
@@ -4399,18 +4818,18 @@
                     setTimeout(() => {
                         const line = document.createElement('div');
                         line.className = 'assert-log-line';
-                        
+
                         let colorStyle = 'color: #38bdf8;';
                         if (txt.includes('SUCCESS') || txt.includes('[✔ PASS]')) {
                             colorStyle = 'color: #10b981; font-weight: bold;';
                         } else if (txt.includes('Zero flaws')) {
                             colorStyle = 'color: #ec4899; font-weight: bold; text-shadow: 0 0 5px rgba(236,72,153,0.5);';
                         }
-                        
+
                         line.innerHTML = `<span style="color: #64748b;">></span> <span style="${colorStyle}">${txt}</span>`;
                         assertLogsContainer.appendChild(line);
                         assertLogsContainer.scrollTop = assertLogsContainer.scrollHeight;
-                        
+
                         // Increment dynamic stats
                         let progressAsserts = Math.min(Math.round(((idx + 1) / mockAsserts.length) * 148), 148);
                         statAssertions.textContent = `${progressAsserts} / 148`;
@@ -4436,7 +4855,7 @@
                 document.getElementById('stage-deploy').classList.add('active');
                 pipelineProgress.style.width = '85%';
                 showSimulatorView('deploy');
-                
+
                 logToConsole('All 148 automated Selenium assertions complete. ZERO bugs found.', 'pass');
                 logToConsole('Pushing verified production bundle to GCP Cloud Run...', 'info', 300);
             }, 9800);
@@ -4446,10 +4865,10 @@
                 document.getElementById('stage-deploy').className = 'pipeline-stage success';
                 pipelineProgress.style.width = '100%';
                 document.getElementById('pipelineSpinner').className = 'fa-solid fa-circle-notch';
-                
+
                 logToConsole('Production deployment complete. Server: ONLINE.', 'pass');
                 logToConsole('Telemetry assertion checks complete. Status: EXCELLENT.', 'pass');
-                
+
                 // Finalize Telemetry Stats
                 clearInterval(timerInterval);
                 statBuildSpeed.textContent = '11.2s';
@@ -4460,7 +4879,7 @@
                 pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-check"></i> Deploy Success';
                 isPipelineRunning = false;
                 setAiState('dancing', 'All production pipelines 100% green! optimal deployment! 🚀');
-                
+
                 setTimeout(() => {
                     pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-play"></i> Trigger Commit Build';
                 }, 4000);
@@ -4481,7 +4900,7 @@
             if (container) {
                 container.remove();
             }
-            
+
             container = document.createElement('div');
             container.id = 'bugContainer';
             container.style.position = 'fixed';
@@ -4489,11 +4908,11 @@
             container.style.pointerEvents = 'none';
             container.style.zIndex = '9998';
             document.body.appendChild(container);
-            
+
             gameActive = true;
             activeBugsCount = 4;
             setAiState('working', 'QA Bug Hunter activated! Breach detected! 🐛');
-            
+
             const BugIconClasses = ['fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug'];
             for (let i = 0; i < 4; i++) {
                 setTimeout(() => {
@@ -4506,13 +4925,13 @@
             const bug = document.createElement('i');
             bug.className = `${iconClass} glitch-bug`;
             bug.id = `bug-${index}`;
-            
+
             const x = Math.random() * 80 + 10;
             const y = Math.random() * 70 + 15;
-            
+
             bug.style.left = `${x}vw`;
             bug.style.top = `${y}vh`;
-            
+
             container.appendChild(bug);
 
             bug.addEventListener('click', (e) => {
@@ -4525,9 +4944,9 @@
             const rect = bug.getBoundingClientRect();
             createBugExplosion(rect.left + 15, rect.top + 15);
             bug.remove();
-            
+
             activeBugsCount--;
-            
+
             if (activeBugsCount > 0) {
                 const cheerPhrases = [
                     `Glitch squashed! ${activeBugsCount} remaining! 💥`,
@@ -4552,15 +4971,15 @@
                 p.className = 'bug-particle';
                 p.style.left = `${x}px`;
                 p.style.top = `${y}px`;
-                
+
                 const angle = Math.random() * Math.PI * 2;
                 const dist = Math.random() * 50 + 20;
                 const dx = Math.cos(angle) * dist;
                 const dy = Math.sin(angle) * dist;
-                
+
                 p.style.setProperty('--dx', `${dx}px`);
                 p.style.setProperty('--dy', `${dy}px`);
-                
+
                 document.body.appendChild(p);
                 setTimeout(() => p.remove(), 800);
             }
@@ -4570,7 +4989,7 @@
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             certDate.textContent = `DATE: ${new Date().toLocaleDateString('en-US', options)}`;
             certRecipient.textContent = "ELITE BUG SQUASHER";
-            
+
             certModal.classList.add('active');
             setAiState('dancing', 'Gold Telemetry Certificate Awarded! 🏆');
         }
@@ -4600,10 +5019,10 @@
         const certSlides = document.querySelectorAll('.cert-slide');
         const certSlicesSelector = document.getElementById('certsSlicesSelector');
         let currentCertIndex = 0;
-        
+
         function updateCertCarousel() {
             certsTrack.style.transform = `translateX(-${currentCertIndex * 100}%)`;
-            
+
             // Update dots
             const dots = certDotsContainer.querySelectorAll('.carousel-dot');
             dots.forEach((dot, idx) => {
@@ -4623,7 +5042,7 @@
                     if (idx === 0) tab.classList.add('active-google');
                     else if (idx === 1) tab.classList.add('active-accenture');
                     else if (idx === 2) tab.classList.add('active-india');
-                    
+
                     // Smoothly scroll tab into focus inside the horizontal slices bar
                     const container = certSlicesSelector;
                     const leftPos = tab.offsetLeft - (container.offsetWidth / 2) + (tab.offsetWidth / 2);
@@ -4631,19 +5050,19 @@
                 }
             });
         }
-        
+
         certPrevBtn.addEventListener('click', () => {
             currentCertIndex = (currentCertIndex - 1 + certSlides.length) % certSlides.length;
             updateCertCarousel();
             if (!isScriptedMove) setAiState('working', 'Retrieving previous credential...');
         });
-        
+
         certNextBtn.addEventListener('click', () => {
             currentCertIndex = (currentCertIndex + 1) % certSlides.length;
             updateCertCarousel();
             if (!isScriptedMove) setAiState('working', 'Retrieving next credential...');
         });
-        
+
         certDotsContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('carousel-dot')) {
                 currentCertIndex = parseInt(e.target.dataset.index);
@@ -4669,19 +5088,19 @@
         let touchStartX = 0;
         let touchEndX = 0;
         let isSwiping = false;
-        
+
         certsViewport.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
             isSwiping = true;
         }, { passive: true });
-        
+
         certsViewport.addEventListener('touchend', (e) => {
             if (!isSwiping) return;
             touchEndX = e.changedTouches[0].screenX;
             handleSwipeGesture();
             isSwiping = false;
         }, { passive: true });
-        
+
         function handleSwipeGesture() {
             const diffX = touchEndX - touchStartX;
             // Minimum swipe threshold of 50px
@@ -4699,13 +5118,13 @@
                 }
             }
         }
-        
+
         // Auto Play Carousel every 8s
         let certsAutoPlay = setInterval(() => {
             currentCertIndex = (currentCertIndex + 1) % certSlides.length;
             updateCertCarousel();
         }, 8000);
-        
+
         // Pause auto play on hover
         const certsSection = document.getElementById('certifications');
         if (certsSection) {
@@ -4721,7 +5140,7 @@
         // Dynamic Certificate Modal Logic
         const dynamicCertModal = document.getElementById('dynamicCertModal');
         const dynamicCertModalClose = document.getElementById('dynamicCertModalClose');
-        
+
         const certDataStore = {
             'google-cloud': {
                 org: 'Google Cloud',
@@ -4764,30 +5183,30 @@
         function openHoloCert(certId) {
             const data = certDataStore[certId];
             if (!data) return;
-            
+
             document.getElementById('dynCertOrg').textContent = data.org;
             document.getElementById('dynCertTitle').textContent = data.title;
             document.getElementById('dynCertSubtitle').textContent = data.subtitle;
             document.getElementById('dynCertBody').textContent = data.body;
             document.getElementById('dynCertDate').textContent = data.date;
             document.getElementById('dynCertId').textContent = data.credId;
-            
+
             const sealStar = document.getElementById('dynCertSealStar');
             const sealIcon = document.getElementById('dynCertSealIcon');
-            
+
             sealStar.style.color = data.starColor;
             sealIcon.style.color = '#000';
-            
+
             dynamicCertModal.style.borderColor = data.sealColor;
             dynamicCertModal.style.boxShadow = `0 25px 60px rgba(0,0,0,0.6), 0 0 40px ${data.accentColor}`;
-            
+
             dynamicCertModal.classList.add('active');
-            
+
             if (!isScriptedMove) {
                 setAiState('dancing', data.aiResponse);
             }
         }
-        
+
         if (dynamicCertModalClose) {
             dynamicCertModalClose.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -4795,7 +5214,7 @@
                 if (!isScriptedMove) setAiState('', 'Credential telemetry closed.');
             });
         }
-        
+
         // Close modal clicking outside
         document.body.addEventListener('click', (e) => {
             if (dynamicCertModal && dynamicCertModal.classList.contains('active') && !dynamicCertModal.contains(e.target) && !e.target.closest('.cert-carousel-card')) {
@@ -4806,12 +5225,12 @@
 
         // --- JOURNEY SECTION ACTIVE SCROLL GLOW LOGIC ---
         const journeyItems = document.querySelectorAll('.timeline-item');
-        
+
         const journeyOptions = {
             threshold: 0.5,
             rootMargin: "0px 0px -15% 0px"
         };
-        
+
         const journeyObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -4820,11 +5239,11 @@
                         item.classList.remove('active-focus');
                         item.classList.add('soft-focus');
                     });
-                    
+
                     // Highlight the focused one
                     entry.target.classList.add('active-focus');
                     entry.target.classList.remove('soft-focus');
-                    
+
                     // Dynamically interact with AI Companion
                     if (typeof isScriptedMove !== 'undefined' && !isScriptedMove) {
                         if (entry.target.id === 'journey-accenture') {
@@ -4836,7 +5255,7 @@
                 }
             });
         }, journeyOptions);
-        
+
         journeyItems.forEach(item => {
             journeyObserver.observe(item);
         });
@@ -4844,9 +5263,9 @@
         // Theme Toggle Logic
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
-        
+
         const savedTheme = localStorage.getItem('theme') || 'dark';
-        if(savedTheme === 'light') {
+        if (savedTheme === 'light') {
             document.documentElement.setAttribute('data-theme', 'light');
             themeIcon.className = 'fa-solid fa-moon';
         }
@@ -4857,11 +5276,11 @@
             if (currentTheme !== 'light') {
                 newTheme = 'light';
             }
-            
+
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
-            if(newTheme === 'light') {
+
+            if (newTheme === 'light') {
                 themeIcon.className = 'fa-solid fa-moon';
                 setAiState('working', 'Light Mode Engaged!');
             } else {
