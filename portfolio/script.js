@@ -1347,56 +1347,6 @@ themeToggle.addEventListener('click', () => {
 })();
 
 
-// ===== Section Dots Navigator (right side) =====
-(function () {
-    const sectionMap = [
-        ['home', 'Home'],
-        ['about', 'About'],
-        ['skills', 'Skills'],
-        ['projects', 'Projects'],
-        ['pipeline', 'Workflow'],
-        ['experience', 'Journey'],
-        ['certifications', 'Certifications'],
-        ['contact', 'Contact']
-    ];
-    const wrap = document.createElement('nav');
-    wrap.className = 'section-dots';
-    wrap.setAttribute('aria-label', 'Section navigation');
-    const dots = [];
-
-    sectionMap.forEach(function (pair) {
-        const sec = document.getElementById(pair[0]);
-        if (!sec) return;
-        const dot = document.createElement('button');
-        dot.className = 'section-dot';
-        dot.setAttribute('aria-label', 'Go to ' + pair[1]);
-        const label = document.createElement('span');
-        label.className = 'dot-label';
-        label.textContent = pair[1];
-        dot.appendChild(label);
-        dot.addEventListener('click', function () {
-            sec.scrollIntoView({ behavior: 'smooth' });
-        });
-        wrap.appendChild(dot);
-        dots.push([dot, sec]);
-    });
-
-    if (!dots.length) return;
-    document.body.appendChild(wrap);
-
-    function updateDots() {
-        let currentIdx = 0;
-        dots.forEach(function (pair, idx) {
-            if (window.scrollY >= pair[1].offsetTop - 150) currentIdx = idx;
-        });
-        dots.forEach(function (pair, idx) {
-            pair[0].classList.toggle('active', idx === currentIdx);
-        });
-    }
-
-    window.addEventListener('scroll', updateDots, { passive: true });
-    updateDots();
-})();
 
 // ===== Email Copy Button =====
 (function () {
@@ -1457,4 +1407,64 @@ themeToggle.addEventListener('click', () => {
         window.addEventListener('load', hide);
         setTimeout(hide, 2200);
     }
+})();
+
+// ===== Scroll Journey Line (fixed viewport — no full-page repaints) =====
+(function () {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const wrap = document.createElement('div');
+    wrap.className = 'journey-line';
+    wrap.setAttribute('aria-hidden', 'true');
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('viewBox', '0 0 44 800');
+    svg.setAttribute('preserveAspectRatio', 'none');
+    svg.style.cssText = 'width:100%;height:100%;display:block;';
+    const track = document.createElementNS(svgNS, 'path');
+    track.setAttribute('class', 'jl-track');
+    const draw = document.createElementNS(svgNS, 'path');
+    draw.setAttribute('class', 'jl-draw');
+    const tip = document.createElementNS(svgNS, 'circle');
+    tip.setAttribute('class', 'jl-tip');
+    tip.setAttribute('r', '4.5');
+    tip.setAttribute('opacity', '0');
+
+    const d = 'M 22 0 C 36 100 8 200 22 300 C 36 400 8 500 22 600 C 30 670 14 730 22 800';
+    track.setAttribute('d', d);
+    draw.setAttribute('d', d);
+    svg.appendChild(track);
+    svg.appendChild(draw);
+    svg.appendChild(tip);
+    wrap.appendChild(svg);
+    document.body.appendChild(wrap);
+
+    const len = draw.getTotalLength();
+    draw.style.strokeDasharray = len;
+    draw.style.strokeDashoffset = len;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        draw.style.strokeDashoffset = 0;
+        return;
+    }
+
+    let ticking = false;
+    function render() {
+        ticking = false;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        draw.style.strokeDashoffset = len * (1 - p);
+        const pt = draw.getPointAtLength(len * p);
+        tip.setAttribute('cx', pt.x);
+        tip.setAttribute('cy', pt.y);
+        tip.setAttribute('opacity', p > 0.01 && p < 0.99 ? '1' : '0');
+    }
+
+    function onScroll() {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(render);
+        }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    render();
 })();
