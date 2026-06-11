@@ -630,6 +630,7 @@ const wfStages = [
             if (idx === i) n.classList.add('active');
         });
         progress.style.width = (i / (wfStages.length - 1)) * 80 + '%';
+        elTitle.classList.remove('wf-done');
         elTitle.textContent = s.title;
         elDesc.textContent = s.desc;
         elTools.innerHTML = s.tools.map(function (t) {
@@ -663,6 +664,7 @@ const wfStages = [
             i++;
             if (i >= wfStages.length) {
                 stopPlay();
+                showComplete();
                 if (typeof setAiState === 'function') {
                     setAiState('dancing', 'Quality delivered, every release! ✅');
                 }
@@ -671,6 +673,32 @@ const wfStages = [
             select(i);
         }, 2600);
     });
+
+    function addChip(parent, text, done) {
+        const chip = document.createElement('span');
+        chip.className = done ? 'wf-chip wf-chip-done' : 'wf-chip';
+        chip.textContent = text;
+        parent.appendChild(chip);
+    }
+
+    function showComplete() {
+        nodes.forEach(function (n) {
+            n.classList.remove('active');
+            n.classList.add('success');
+        });
+        progress.style.width = '80%';
+        elTitle.textContent = 'Workflow Complete';
+        elTitle.classList.add('wf-done');
+        elDesc.textContent = 'Every stage cleared — requirements traced, defects closed, regression green. This is how quality ships on time, every sprint.';
+        elTools.textContent = '';
+        addChip(elTools, 'All Stages Passed', true);
+        addChip(elTools, 'Zero Open Defects', true);
+        elDeliv.textContent = '';
+        const icon = document.createElement('i');
+        icon.className = 'fa-solid fa-circle-check';
+        elDeliv.appendChild(icon);
+        elDeliv.appendChild(document.createTextNode(' Status: PRODUCTION READY'));
+    }
 
     select(0);
 })();
@@ -1318,77 +1346,54 @@ themeToggle.addEventListener('click', () => {
     });
 })();
 
-// ===== Full-Page Scroll Thread =====
+
+// ===== Section Dots Navigator (right side) =====
 (function () {
-    const svgNS = 'http://www.w3.org/2000/svg';
-    const wrap = document.createElement('div');
-    wrap.className = 'page-thread';
-    const svg = document.createElementNS(svgNS, 'svg');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.style.cssText = 'width:100%;height:100%;overflow:visible;';
-    const track = document.createElementNS(svgNS, 'path');
-    track.setAttribute('class', 'pt-track');
-    const draw = document.createElementNS(svgNS, 'path');
-    draw.setAttribute('class', 'pt-draw');
-    const tip = document.createElementNS(svgNS, 'circle');
-    tip.setAttribute('class', 'pt-tip');
-    tip.setAttribute('r', '5');
-    tip.setAttribute('opacity', '0');
-    svg.appendChild(track);
-    svg.appendChild(draw);
-    svg.appendChild(tip);
-    wrap.appendChild(svg);
+    const sectionMap = [
+        ['home', 'Home'],
+        ['about', 'About'],
+        ['skills', 'Skills'],
+        ['projects', 'Projects'],
+        ['pipeline', 'Workflow'],
+        ['experience', 'Journey'],
+        ['certifications', 'Certifications'],
+        ['contact', 'Contact']
+    ];
+    const wrap = document.createElement('nav');
+    wrap.className = 'section-dots';
+    wrap.setAttribute('aria-label', 'Section navigation');
+    const dots = [];
+
+    sectionMap.forEach(function (pair) {
+        const sec = document.getElementById(pair[0]);
+        if (!sec) return;
+        const dot = document.createElement('button');
+        dot.className = 'section-dot';
+        dot.setAttribute('aria-label', 'Go to ' + pair[1]);
+        const label = document.createElement('span');
+        label.className = 'dot-label';
+        label.textContent = pair[1];
+        dot.appendChild(label);
+        dot.addEventListener('click', function () {
+            sec.scrollIntoView({ behavior: 'smooth' });
+        });
+        wrap.appendChild(dot);
+        dots.push([dot, sec]);
+    });
+
+    if (!dots.length) return;
     document.body.appendChild(wrap);
 
-    let len = 0;
-
-    function build() {
-        const h = document.body.scrollHeight;
-        const cx = 24, amp = 16, seg = 620;
-        let d = 'M ' + cx + ' 0';
-        let y = 0, dir = 1;
-        while (y < h) {
-            const ny = Math.min(y + seg, h);
-            d += ' C ' + (cx + amp * dir) + ' ' + (y + (ny - y) * 0.3) +
-                 ' ' + (cx + amp * dir) + ' ' + (y + (ny - y) * 0.7) +
-                 ' ' + cx + ' ' + ny;
-            y = ny;
-            dir *= -1;
-        }
-        track.setAttribute('d', d);
-        draw.setAttribute('d', d);
-        len = draw.getTotalLength();
-        draw.style.strokeDasharray = len;
-        draw.style.strokeDashoffset = len;
+    function updateDots() {
+        let currentIdx = 0;
+        dots.forEach(function (pair, idx) {
+            if (window.scrollY >= pair[1].offsetTop - 150) currentIdx = idx;
+        });
+        dots.forEach(function (pair, idx) {
+            pair[0].classList.toggle('active', idx === currentIdx);
+        });
     }
 
-    function update() {
-        if (!len) return;
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-        draw.style.strokeDashoffset = len * (1 - p);
-        const pt = draw.getPointAtLength(len * p);
-        tip.setAttribute('cx', pt.x);
-        tip.setAttribute('cy', pt.y);
-        tip.setAttribute('opacity', p > 0.005 && p < 0.995 ? '1' : '0');
-    }
-
-    build();
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        draw.style.strokeDashoffset = 0;
-        return;
-    }
-
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    if (window.ResizeObserver) {
-        let t;
-        new ResizeObserver(function () {
-            clearTimeout(t);
-            t = setTimeout(function () { build(); update(); }, 200);
-        }).observe(document.body);
-    } else {
-        window.addEventListener('resize', function () { build(); update(); });
-    }
+    window.addEventListener('scroll', updateDots, { passive: true });
+    updateDots();
 })();
