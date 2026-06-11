@@ -1418,14 +1418,12 @@ themeToggle.addEventListener('click', () => {
         card.querySelectorAll('.ring-fill').forEach(function (ring) {
             if (running.get(ring)) cancelAnimationFrame(running.get(ring));
             const pct = parseInt(ring.dataset.pct, 10);
-            const num = ring.parentElement.querySelector('.ring-num');
             const dur = 1200;
             const start = performance.now();
             function frame(now) {
                 const p = Math.min((now - start) / dur, 1);
                 const eased = 1 - Math.pow(1 - p, 3);
                 ring.style.strokeDashoffset = CIRC * (1 - (pct / 100) * eased);
-                num.textContent = Math.round(pct * eased) + '%';
                 if (p < 1) running.set(ring, requestAnimationFrame(frame));
             }
             running.set(ring, requestAnimationFrame(frame));
@@ -1453,4 +1451,79 @@ themeToggle.addEventListener('click', () => {
         svg.appendChild(path);
         title.appendChild(svg);
     });
+})();
+
+// ===== Full-Page Scroll Thread =====
+(function () {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const wrap = document.createElement('div');
+    wrap.className = 'page-thread';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.cssText = 'width:100%;height:100%;overflow:visible;';
+    const track = document.createElementNS(svgNS, 'path');
+    track.setAttribute('class', 'pt-track');
+    const draw = document.createElementNS(svgNS, 'path');
+    draw.setAttribute('class', 'pt-draw');
+    const tip = document.createElementNS(svgNS, 'circle');
+    tip.setAttribute('class', 'pt-tip');
+    tip.setAttribute('r', '5');
+    tip.setAttribute('opacity', '0');
+    svg.appendChild(track);
+    svg.appendChild(draw);
+    svg.appendChild(tip);
+    wrap.appendChild(svg);
+    document.body.appendChild(wrap);
+
+    let len = 0;
+
+    function build() {
+        const h = document.body.scrollHeight;
+        const cx = 24, amp = 16, seg = 620;
+        let d = 'M ' + cx + ' 0';
+        let y = 0, dir = 1;
+        while (y < h) {
+            const ny = Math.min(y + seg, h);
+            d += ' C ' + (cx + amp * dir) + ' ' + (y + (ny - y) * 0.3) +
+                 ' ' + (cx + amp * dir) + ' ' + (y + (ny - y) * 0.7) +
+                 ' ' + cx + ' ' + ny;
+            y = ny;
+            dir *= -1;
+        }
+        track.setAttribute('d', d);
+        draw.setAttribute('d', d);
+        len = draw.getTotalLength();
+        draw.style.strokeDasharray = len;
+        draw.style.strokeDashoffset = len;
+    }
+
+    function update() {
+        if (!len) return;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        draw.style.strokeDashoffset = len * (1 - p);
+        const pt = draw.getPointAtLength(len * p);
+        tip.setAttribute('cx', pt.x);
+        tip.setAttribute('cy', pt.y);
+        tip.setAttribute('opacity', p > 0.005 && p < 0.995 ? '1' : '0');
+    }
+
+    build();
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        draw.style.strokeDashoffset = 0;
+        return;
+    }
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    if (window.ResizeObserver) {
+        let t;
+        new ResizeObserver(function () {
+            clearTimeout(t);
+            t = setTimeout(function () { build(); update(); }, 200);
+        }).observe(document.body);
+    } else {
+        window.addEventListener('resize', function () { build(); update(); });
+    }
 })();

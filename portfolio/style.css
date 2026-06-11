@@ -3312,8 +3312,10 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 .ring-num {
     fill: var(--text-primary);
     font-family: 'Outfit', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 /* --- Section Title Flourish (drawn underline) --- */
@@ -3358,4 +3360,43 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     0%, 100% { transform: translateY(0); opacity: 1; }
     70% { transform: translateY(14px); opacity: 0; }
     85% { transform: translateY(0); opacity: 0; }
+}
+
+/* --- Full-Page Scroll Thread --- */
+.page-thread {
+    position: absolute;
+    top: 0;
+    left: clamp(10px, 2vw, 36px);
+    width: 48px;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.pt-track {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 1.5;
+    opacity: 0.5;
+}
+
+.pt-draw {
+    fill: none;
+    stroke: url(#ringGrad);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.7;
+    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.35));
+}
+
+.pt-tip {
+    fill: #fff;
+    filter: drop-shadow(0 0 6px var(--accent-1));
+    transition: opacity 0.3s ease;
+}
+
+@media (max-width: 1100px) {
+    .page-thread {
+        display: none;
+    }
 }
