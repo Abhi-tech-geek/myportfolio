@@ -3325,28 +3325,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     stroke-dashoffset: 0;
 }
 
-/* --- Hero Scroll Cue --- */
-.scroll-cue {
-    display: inline-block;
-    margin-top: 3.5rem;
-    color: var(--text-secondary);
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.scroll-cue:hover {
-    color: var(--accent-1);
-    transform: translateY(3px);
-}
-
-.scroll-cue-dot {
-    animation: scrollDot 2s infinite ease-in-out;
-}
-
-@keyframes scrollDot {
-    0%, 100% { transform: translateY(0); opacity: 1; }
-    70% { transform: translateY(14px); opacity: 0; }
-    85% { transform: translateY(0); opacity: 0; }
-}
 
 
 /* --- My Testing Workflow (stage details panel) --- */
