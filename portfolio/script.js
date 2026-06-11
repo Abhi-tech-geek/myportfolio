@@ -1285,3 +1285,74 @@ themeToggle.addEventListener('click', () => {
 
     nums.forEach(n => counterObserver.observe(n));
 })();
+
+// ===== Scroll-Drawn Timeline SVG Path =====
+(function () {
+    const timeline = document.querySelector('.timeline');
+    if (!timeline) return;
+
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(svgNS, 'svg');
+    svg.setAttribute('class', 'timeline-path-svg');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.innerHTML =
+        '<defs><linearGradient id="tlGrad" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="#8b5cf6"/>' +
+        '<stop offset="55%" stop-color="#3b82f6"/>' +
+        '<stop offset="100%" stop-color="#ec4899"/>' +
+        '</linearGradient></defs>' +
+        '<path class="tl-track"/><path class="tl-draw"/>' +
+        '<circle class="timeline-path-tip" r="6" opacity="0"/>';
+    timeline.appendChild(svg);
+    timeline.classList.add('has-path');
+
+    const track = svg.querySelector('.tl-track');
+    const draw = svg.querySelector('.tl-draw');
+    const tip = svg.querySelector('.timeline-path-tip');
+    let pathLen = 0;
+
+    function buildPath() {
+        const h = timeline.offsetHeight;
+        const cx = window.innerWidth <= 768 ? 1 : 21;
+        const amp = 13;
+        const seg = 170;
+        let d = 'M ' + cx + ' 0';
+        let y = 0, dir = 1;
+        while (y < h) {
+            const ny = Math.min(y + seg, h);
+            d += ' Q ' + (cx + amp * dir) + ' ' + (y + (ny - y) / 2) + ' ' + cx + ' ' + ny;
+            y = ny;
+            dir *= -1;
+        }
+        track.setAttribute('d', d);
+        draw.setAttribute('d', d);
+        pathLen = draw.getTotalLength();
+        draw.style.strokeDasharray = pathLen;
+        draw.style.strokeDashoffset = pathLen;
+    }
+
+    function updateDraw() {
+        if (!pathLen) return;
+        const rect = timeline.getBoundingClientRect();
+        const vh = window.innerHeight;
+        const total = rect.height + vh * 0.45;
+        const passed = (vh * 0.85) - rect.top;
+        const p = Math.max(0, Math.min(1, passed / total));
+        draw.style.strokeDashoffset = pathLen * (1 - p);
+        const pt = draw.getPointAtLength(pathLen * p);
+        tip.setAttribute('cx', pt.x);
+        tip.setAttribute('cy', pt.y);
+        tip.setAttribute('opacity', p > 0.01 && p < 0.99 ? '1' : '0');
+    }
+
+    buildPath();
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        draw.style.strokeDashoffset = 0;
+        return;
+    }
+
+    window.addEventListener('scroll', updateDraw, { passive: true });
+    window.addEventListener('resize', function () { buildPath(); updateDraw(); });
+    updateDraw();
+})();

@@ -3216,3 +3216,39 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     margin-top: 4px;
     display: block;
 }
+
+/* --- Scroll-Drawn Timeline SVG Path --- */
+.timeline.has-path::before {
+    display: none;
+}
+
+.timeline-path-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 42px;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.timeline-path-svg .tl-track {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 2;
+}
+
+.timeline-path-svg .tl-draw {
+    fill: none;
+    stroke: url(#tlGrad);
+    stroke-width: 3;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.5));
+}
+
+.timeline-path-tip {
+    fill: #fff;
+    filter: drop-shadow(0 0 8px var(--accent-1));
+    transition: opacity 0.3s ease;
+}
