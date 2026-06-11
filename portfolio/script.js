@@ -1213,3 +1213,75 @@ themeToggle.addEventListener('click', () => {
 });
 
 
+
+// ===== Hero Typewriter =====
+(function () {
+    const el = document.getElementById('typewriterText');
+    if (!el) return;
+    const roles = ['QA Tester', 'Automation Engineer', 'AI Builder', 'Accessibility Advocate'];
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        el.textContent = roles[0];
+        return;
+    }
+    let roleIdx = 0, charIdx = roles[0].length, deleting = true;
+    function tick() {
+        const word = roles[roleIdx];
+        if (deleting) {
+            charIdx--;
+            el.textContent = word.slice(0, charIdx);
+            if (charIdx === 0) {
+                deleting = false;
+                roleIdx = (roleIdx + 1) % roles.length;
+                setTimeout(tick, 350);
+                return;
+            }
+            setTimeout(tick, 45);
+        } else {
+            charIdx++;
+            el.textContent = roles[roleIdx].slice(0, charIdx);
+            if (charIdx === roles[roleIdx].length) {
+                deleting = true;
+                setTimeout(tick, 2200);
+                return;
+            }
+            setTimeout(tick, 90);
+        }
+    }
+    setTimeout(tick, 2200);
+})();
+
+// ===== Animated Stats Counters =====
+(function () {
+    const nums = document.querySelectorAll('.stat-num[data-count]');
+    if (!nums.length) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function animate(el) {
+        const target = parseInt(el.dataset.count, 10);
+        const suffix = el.dataset.suffix || '';
+        if (reduced) {
+            el.textContent = target + suffix;
+            return;
+        }
+        const duration = 1400;
+        const start = performance.now();
+        function frame(now) {
+            const p = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(target * eased) + suffix;
+            if (p < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+    }
+
+    const counterObserver = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animate(entry.target);
+                obs.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    nums.forEach(n => counterObserver.observe(n));
+})();
