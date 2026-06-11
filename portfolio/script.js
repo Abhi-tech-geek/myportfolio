@@ -570,245 +570,110 @@ window.addEventListener('mouseleave', () => {
     mouseY = null;
 });
 
-/* --- FEATURE 3: CI/CD Pipeline Controller --- */
-const pipelineDeployBtn = document.getElementById('pipelineDeployBtn');
-const pipelineProgress = document.getElementById('pipelineProgress');
-const pipelineConsoleScreen = document.getElementById('pipelineConsoleScreen');
-
-// New interactive simulator elements
-const simStandbyView = document.getElementById('simStandbyView');
-const simViews = {
-    git: document.getElementById('simView-git'),
-    build: document.getElementById('simView-build'),
-    qa: document.getElementById('simView-qa'),
-    deploy: document.getElementById('simView-deploy')
-};
-const buildProgressFill = document.getElementById('buildProgressFill');
-const buildPercent = document.getElementById('buildPercent');
-const assertLogsContainer = document.getElementById('assertLogsContainer');
-
-// Stats elements
-const statAssertions = document.getElementById('stat-assertions');
-const statDefects = document.getElementById('stat-defects');
-const statBuildSpeed = document.getElementById('stat-buildspeed');
-const statStatus = document.getElementById('stat-status');
-
-let isPipelineRunning = false;
-
-const stages = [
-    { id: 'stage-git', percent: 25, name: "Git Push" },
-    { id: 'stage-build', percent: 55, name: "Compile Container" },
-    { id: 'stage-qa', percent: 85, name: "QA Selenium Test" },
-    { id: 'stage-deploy', percent: 100, name: "Deploy Live" }
+/* --- FEATURE 3: My Testing Workflow Controller --- */
+const wfStages = [
+    {
+        title: '01 · Requirement Analysis',
+        desc: 'I study requirements and user stories, map out testable scenarios, and flag ambiguities with the team early — before a single test is written.',
+        tools: ['Jira', 'Confluence', 'BRD/User Stories'],
+        deliverable: 'Test scenarios + clarification log'
+    },
+    {
+        title: '02 · Test Design',
+        desc: 'I write detailed test cases covering happy paths, edge cases and business rules — each one traceable back to its requirement.',
+        tools: ['ALM', 'Excel/Sheets', 'RTM'],
+        deliverable: 'Test cases + traceability matrix'
+    },
+    {
+        title: '03 · Test Execution',
+        desc: 'I run functional, integration and end-to-end cycles on every build, capturing evidence for each result — pass or fail.',
+        tools: ['ALM', 'Chrome DevTools', 'Postman'],
+        deliverable: 'Execution report with evidence'
+    },
+    {
+        title: '04 · Defect Reporting',
+        desc: 'Every defect gets clear repro steps, severity, screenshots and logs — then tracked through its full lifecycle until verified closed.',
+        tools: ['Jira', 'Bug Lifecycle', 'Severity Triage'],
+        deliverable: 'Actionable bug reports'
+    },
+    {
+        title: '05 · Automation',
+        desc: 'Stable, repetitive flows get automated with Selenium and Python — cutting regression turnaround time drastically for the whole team.',
+        tools: ['Selenium', 'Python', 'TestNG', 'Robot Framework'],
+        deliverable: 'Reusable automation suite'
+    },
+    {
+        title: '06 · Regression & Sign-off',
+        desc: 'Before release I run the automated regression pack and validate data integrity with SQL — then give the final quality sign-off.',
+        tools: ['Selenium Suite', 'SQL', 'Release Checklist'],
+        deliverable: 'Release quality sign-off'
+    }
 ];
 
-function showSimulatorView(activeKey) {
-    simStandbyView.style.display = 'none';
-    Object.keys(simViews).forEach(key => {
-        if (key === activeKey) {
-            simViews[key].style.display = 'block';
-        } else {
-            simViews[key].style.display = 'none';
-        }
-    });
-}
+(function () {
+    const nodes = Array.from(document.querySelectorAll('#pipeline .pipeline-stage'));
+    const progress = document.getElementById('workflowProgress');
+    const playBtn = document.getElementById('workflowPlayBtn');
+    const elTitle = document.getElementById('wfTitle');
+    const elDesc = document.getElementById('wfDesc');
+    const elTools = document.getElementById('wfTools');
+    const elDeliv = document.getElementById('wfDeliverable');
+    if (!nodes.length || !elTitle) return;
 
-function logToConsole(message, type = 'info', delay = 0) {
-    setTimeout(() => {
-        const log = document.createElement('div');
-        log.className = 'console-log';
+    let playTimer = null;
 
-        let tag = '';
-        if (type === 'info') tag = '<span class="console-tag-info">[INFO]</span>';
-        if (type === 'pass') tag = '<span class="console-tag-pass">[PASS]</span>';
-        if (type === 'warn') tag = '<span class="console-tag-warn">[WARN]</span>';
-        if (type === 'err') tag = '<span class="console-tag-err">[ERR]</span>';
-
-        log.innerHTML = `${tag} ${message}`;
-        pipelineConsoleScreen.appendChild(log);
-
-        log.offsetHeight;
-        log.classList.add('visible');
-        pipelineConsoleScreen.scrollTop = pipelineConsoleScreen.scrollHeight;
-    }, delay);
-}
-
-pipelineDeployBtn.addEventListener('click', () => {
-    if (isPipelineRunning) return;
-    isPipelineRunning = true;
-    pipelineDeployBtn.disabled = true;
-    pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pipe Running...';
-    document.getElementById('pipelineSpinner').className = 'fa-solid fa-circle-notch fa-spin';
-    setAiState('working', 'CI/CD pipeline simulation active! ⚡');
-
-    // Reset console and progress bar
-    pipelineConsoleScreen.innerHTML = '';
-    pipelineProgress.style.width = '0%';
-    stages.forEach(s => {
-        const node = document.getElementById(s.id);
-        node.className = 'pipeline-stage';
-    });
-
-    // Reset Simulator HTML views
-    assertLogsContainer.innerHTML = '';
-    buildProgressFill.style.width = '0%';
-    buildPercent.textContent = '0%';
-    document.querySelectorAll('.layer-block').forEach(b => b.classList.remove('compiled'));
-
-    // Reset Telemetry Stats
-    statAssertions.textContent = '0 / 148';
-    statAssertions.style.color = 'var(--accent-2)';
-    statDefects.textContent = '0';
-    statDefects.style.color = '#ef4444';
-    statBuildSpeed.textContent = '0.0s';
-    statStatus.textContent = 'WORKING';
-    statStatus.style.color = 'var(--accent-1)';
-
-    // Start organic build timer counting up
-    let startTime = Date.now();
-    let timerInterval = setInterval(() => {
-        if (!isPipelineRunning) {
-            clearInterval(timerInterval);
-            return;
-        }
-        let delta = ((Date.now() - startTime) / 1000).toFixed(1);
-        statBuildSpeed.textContent = `${delta}s`;
-    }, 100);
-
-    logToConsole('Triggering automated pipeline build...', 'info', 0);
-
-    // --- STAGE 1: Git Push ---
-    setTimeout(() => {
-        const stage = document.getElementById('stage-git');
-        stage.classList.add('active');
-        showSimulatorView('git');
-
-        logToConsole('Code pushed: git commit verified (sha: 0f2b8a7c)', 'info');
-        logToConsole('Initiating Docker environment container build...', 'info', 300);
-    }, 600);
-
-    // --- STAGE 2: Compile Container ---
-    setTimeout(() => {
-        document.getElementById('stage-git').className = 'pipeline-stage success';
-        document.getElementById('stage-build').classList.add('active');
-        pipelineProgress.style.width = '25%';
-        showSimulatorView('build');
-
-        logToConsole('Docker Base Container Compiled successfully.', 'pass');
-        logToConsole('Resolving npm dependencies and running bundler check...', 'info', 300);
-
-        // Animate Docker Layer compilations inside simulator
-        let percent = 0;
-        let dockerInterval = setInterval(() => {
-            percent += 5;
-            buildProgressFill.style.width = `${percent}%`;
-            buildPercent.textContent = `${percent}%`;
-
-            if (percent >= 25) document.getElementById('layer-1').classList.add('compiled');
-            if (percent >= 50) document.getElementById('layer-2').classList.add('compiled');
-            if (percent >= 75) document.getElementById('layer-3').classList.add('compiled');
-            if (percent >= 100) {
-                document.getElementById('layer-4').classList.add('compiled');
-                clearInterval(dockerInterval);
-            }
-        }, 100);
-    }, 2000);
-
-    // --- STAGE 3: QA Automation (Selenium Tests) ---
-    setTimeout(() => {
-        document.getElementById('stage-build').className = 'pipeline-stage success';
-        document.getElementById('stage-qa').classList.add('active');
-        pipelineProgress.style.width = '55%';
-        showSimulatorView('qa');
-
-        logToConsole('Bundle compilation successful. Web assets verified.', 'pass');
-        logToConsole('Launching Chrome headless driver via Selenium grid...', 'info', 300);
-        logToConsole('Running 148 automated Selenium UI and API assertions...', 'info', 600);
-
-        // Mock dynamic browser assertions rendering in real-time
-        const mockAsserts = [
-            "Browser launched successfully (Chrome headless v114)",
-            "Navigate to: https://abhinav-saxena.dev/portfolio ... SUCCESS",
-            "Assert nav-links DOM visibility ... [✔ PASS]",
-            "Assert Light/Dark theme latency <= 50ms ... [✔ PASS (12ms)]",
-            "Assert AI companion roaming protocol integrity ... [✔ PASS]",
-            "Assert Certifications Carousel auto-play ... [✔ PASS]",
-            "Assert contact card mailto validation ... [✔ PASS]",
-            "148/148 assertions verified. Zero flaws remaining."
-        ];
-
-        mockAsserts.forEach((txt, idx) => {
-            setTimeout(() => {
-                const line = document.createElement('div');
-                line.className = 'assert-log-line';
-
-                let colorStyle = 'color: #38bdf8;';
-                if (txt.includes('SUCCESS') || txt.includes('[✔ PASS]')) {
-                    colorStyle = 'color: #10b981; font-weight: bold;';
-                } else if (txt.includes('Zero flaws')) {
-                    colorStyle = 'color: #ec4899; font-weight: bold; text-shadow: 0 0 5px rgba(236,72,153,0.5);';
-                }
-
-                line.innerHTML = `<span style="color: #64748b;">></span> <span style="${colorStyle}">${txt}</span>`;
-                assertLogsContainer.appendChild(line);
-                assertLogsContainer.scrollTop = assertLogsContainer.scrollHeight;
-
-                // Increment dynamic stats
-                let progressAsserts = Math.min(Math.round(((idx + 1) / mockAsserts.length) * 148), 148);
-                statAssertions.textContent = `${progressAsserts} / 148`;
-                if (progressAsserts === 148) {
-                    statAssertions.style.color = '#10b981';
-                    // Cohesive ties with Bug squasher
-                    statDefects.textContent = '4';
-                    statDefects.style.color = '#10b981';
-                }
-            }, idx * 600);
+    function select(i) {
+        const s = wfStages[i];
+        nodes.forEach(function (n, idx) {
+            n.classList.remove('active', 'success');
+            if (idx < i) n.classList.add('success');
+            if (idx === i) n.classList.add('active');
         });
-    }, 4500);
+        progress.style.width = (i / (wfStages.length - 1)) * 80 + '%';
+        elTitle.textContent = s.title;
+        elDesc.textContent = s.desc;
+        elTools.innerHTML = s.tools.map(function (t) {
+            return '<span class="wf-chip">' + t + '</span>';
+        }).join('');
+        elDeliv.innerHTML = '<i class="fa-solid fa-arrow-right"></i> Deliverable: ' + s.deliverable;
+    }
 
-    setTimeout(() => {
-        logToConsole('Assert: Check navigation link DOM binding... PASS', 'pass');
-        logToConsole('Assert: Check light/dark theme switch latency... PASS (12ms)', 'pass');
-        logToConsole('Assert: QA AI companion roaming vital check... PASS', 'pass');
-    }, 6000);
+    function stopPlay() {
+        if (playTimer) { clearInterval(playTimer); playTimer = null; }
+        playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Walk Through';
+    }
 
-    // --- STAGE 4: Deploy Cloud ---
-    setTimeout(() => {
-        document.getElementById('stage-qa').className = 'pipeline-stage success';
-        document.getElementById('stage-deploy').classList.add('active');
-        pipelineProgress.style.width = '85%';
-        showSimulatorView('deploy');
+    nodes.forEach(function (n) {
+        n.style.cursor = 'pointer';
+        n.addEventListener('click', function () {
+            stopPlay();
+            select(parseInt(n.dataset.stage, 10));
+        });
+    });
 
-        logToConsole('All 148 automated Selenium assertions complete. ZERO bugs found.', 'pass');
-        logToConsole('Pushing verified production bundle to GCP Cloud Run...', 'info', 300);
-    }, 9800);
+    playBtn.addEventListener('click', function () {
+        if (playTimer) { stopPlay(); return; }
+        let i = 0;
+        select(i);
+        playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause';
+        if (typeof setAiState === 'function') {
+            setAiState('working', 'Walking through my QA process! 🔍');
+        }
+        playTimer = setInterval(function () {
+            i++;
+            if (i >= wfStages.length) {
+                stopPlay();
+                if (typeof setAiState === 'function') {
+                    setAiState('dancing', 'Quality delivered, every release! ✅');
+                }
+                return;
+            }
+            select(i);
+        }, 2600);
+    });
 
-    // --- FINISH PIPELINE ---
-    setTimeout(() => {
-        document.getElementById('stage-deploy').className = 'pipeline-stage success';
-        pipelineProgress.style.width = '100%';
-        document.getElementById('pipelineSpinner').className = 'fa-solid fa-circle-notch';
-
-        logToConsole('Production deployment complete. Server: ONLINE.', 'pass');
-        logToConsole('Telemetry assertion checks complete. Status: EXCELLENT.', 'pass');
-
-        // Finalize Telemetry Stats
-        clearInterval(timerInterval);
-        statBuildSpeed.textContent = '11.2s';
-        statStatus.textContent = 'EXCELLENT';
-        statStatus.style.color = '#10b981';
-
-        pipelineDeployBtn.disabled = false;
-        pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-check"></i> Deploy Success';
-        isPipelineRunning = false;
-        setAiState('dancing', 'All production pipelines 100% green! optimal deployment! 🚀');
-
-        setTimeout(() => {
-            pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-play"></i> Trigger Commit Build';
-        }, 4000);
-    }, 11200);
-});
-
+    select(0);
+})();
 
 /* --- FEATURE 4: QA Bug Hunter Game Logic --- */
 const certModal = document.getElementById('certModal');

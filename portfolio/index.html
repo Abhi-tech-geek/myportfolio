@@ -572,165 +572,62 @@
 
     <!-- CI/CD Pipeline Section -->
     <section id="pipeline" class="container">
-        <h2 class="section-title reveal">Automated <span>CI/CD Pipeline</span></h2>
+        <h2 class="section-title reveal">My Testing <span>Workflow</span></h2>
 
-        <!-- Explanatory Intro Card -->
         <p class="pipeline-intro reveal"
             style="text-align: center; color: var(--text-secondary); max-width: 750px; margin: -1.5rem auto 3rem; font-size: 1.1rem; line-height: 1.6;">
-            Experience a real-time simulation of a production-grade QA pipeline. Click the trigger button below to watch
-            Abhinav's automated testing suite compile, assert, and deploy live code!
+            This is the exact process I follow on every project at Accenture — from reading requirements to release
+            sign-off. Click any stage to see what I do and the tools I use.
         </p>
 
         <div class="pipeline-grid reveal">
-            <!-- Left Side: Interactive Dashboard -->
+            <!-- Left Side: Workflow Stages -->
             <div class="pipeline-visual">
                 <div class="pipeline-header">
-                    <h3><i class="fa-solid fa-circle-notch" id="pipelineSpinner"></i> Pipeline Simulation Control</h3>
-                    <button class="btn btn-primary" id="pipelineDeployBtn"
+                    <h3><i class="fa-solid fa-diagram-project"></i> QA Process</h3>
+                    <button class="btn btn-primary" id="workflowPlayBtn"
                         style="padding: 0.5rem 1.5rem; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; border-radius: 50px;">
-                        <i class="fa-solid fa-play"></i> Trigger Commit Build
+                        <i class="fa-solid fa-play"></i> Walk Through
                     </button>
                 </div>
 
-                <!-- Flow Nodes -->
                 <div class="pipeline-flow">
                     <div class="pipeline-connector-line"></div>
-                    <div class="pipeline-connector-progress" id="pipelineProgress"></div>
+                    <div class="pipeline-connector-progress" id="workflowProgress"></div>
 
-                    <div class="pipeline-stage" id="stage-git">
-                        <div class="pipeline-stage-node">
-                            <i class="fa-brands fa-git-alt"></i>
-                        </div>
-                        <span class="pipeline-stage-title">1. Git Push</span>
+                    <div class="pipeline-stage" data-stage="0">
+                        <div class="pipeline-stage-node"><i class="fa-solid fa-magnifying-glass"></i></div>
+                        <span class="pipeline-stage-title">Analyse</span>
                     </div>
-
-                    <div class="pipeline-stage" id="stage-build">
-                        <div class="pipeline-stage-node">
-                            <i class="fa-brands fa-docker"></i>
-                        </div>
-                        <span class="pipeline-stage-title">2. Compile Container</span>
+                    <div class="pipeline-stage" data-stage="1">
+                        <div class="pipeline-stage-node"><i class="fa-solid fa-pen-ruler"></i></div>
+                        <span class="pipeline-stage-title">Design</span>
                     </div>
-
-                    <div class="pipeline-stage" id="stage-qa">
-                        <div class="pipeline-stage-node">
-                            <i class="fa-solid fa-vial"></i>
-                        </div>
-                        <span class="pipeline-stage-title">3. QA Automation</span>
+                    <div class="pipeline-stage" data-stage="2">
+                        <div class="pipeline-stage-node"><i class="fa-solid fa-vial"></i></div>
+                        <span class="pipeline-stage-title">Execute</span>
                     </div>
-
-                    <div class="pipeline-stage" id="stage-deploy">
-                        <div class="pipeline-stage-node">
-                            <i class="fa-solid fa-cloud-arrow-up"></i>
-                        </div>
-                        <span class="pipeline-stage-title">4. Deploy Live</span>
+                    <div class="pipeline-stage" data-stage="3">
+                        <div class="pipeline-stage-node"><i class="fa-solid fa-bug"></i></div>
+                        <span class="pipeline-stage-title">Report</span>
+                    </div>
+                    <div class="pipeline-stage" data-stage="4">
+                        <div class="pipeline-stage-node"><i class="fa-solid fa-robot"></i></div>
+                        <span class="pipeline-stage-title">Automate</span>
+                    </div>
+                    <div class="pipeline-stage" data-stage="5">
+                        <div class="pipeline-stage-node"><i class="fa-solid fa-shield-halved"></i></div>
+                        <span class="pipeline-stage-title">Sign-off</span>
                     </div>
                 </div>
 
-                <!-- Interactive Visual Simulator Screen -->
-                <div class="pipeline-simulator-screen" id="pipelineSimulatorScreen">
-                    <div class="sim-standby-view" id="simStandbyView">
-                        <i class="fa-solid fa-gauge-high"
-                            style="font-size: 3rem; color: var(--accent-2); opacity: 0.8; margin-bottom: 1rem; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
-                        <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Simulator Standby</h4>
-                        <p style="color: var(--text-secondary); font-size: 0.85rem; max-width: 320px;">Trigger the
-                            commit build above to watch real-time automated browser testing assertions!</p>
-                    </div>
-
-                    <!-- Stage 1 View: Git Details -->
-                    <div class="sim-stage-view" id="simView-git" style="display: none;">
-                        <div class="commit-card">
-                            <div class="commit-header">
-                                <span class="branch-tag"><i class="fa-solid fa-code-branch"></i> main</span>
-                                <span class="commit-hash">sha1: 0f2b8a7c</span>
-                            </div>
-                            <h4 style="margin: 0.5rem 0 0.2rem; font-size: 1rem; text-align: left;">feat: optimized
-                                vector search api and assertions</h4>
-                            <div class="commit-meta"
-                                style="font-size: 0.75rem; color: var(--text-secondary); display: flex; justify-content: space-between;">
-                                <span>Author: Abhinav Saxena</span>
-                                <span>Verified Commit ✔</span>
-                            </div>
-                        </div>
-                        <p class="stage-explanation"
-                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
-                            <strong>What's happening?</strong> Code modifications are pushed to the central repository.
-                            The CI/CD engine automatically intercepts the changes to trigger defensive testing checks.
-                        </p>
-                    </div>
-
-                    <!-- Stage 2 View: Docker Layer Build -->
-                    <div class="sim-stage-view" id="simView-build" style="display: none;">
-                        <div class="build-loader-container">
-                            <div
-                                style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
-                                <span>Compiling Docker Container Layers...</span>
-                                <span id="buildPercent">0%</span>
-                            </div>
-                            <div class="build-progress-bar">
-                                <div class="build-progress-fill" id="buildProgressFill"></div>
-                            </div>
-                            <div class="layer-pile" id="layerPile"
-                                style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px;">
-                                <div class="layer-block" id="layer-1">base OS</div>
-                                <div class="layer-block" id="layer-2">npm package</div>
-                                <div class="layer-block" id="layer-3">selenium core</div>
-                                <div class="layer-block" id="layer-4">app files</div>
-                            </div>
-                        </div>
-                        <p class="stage-explanation"
-                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
-                            <strong>What's happening?</strong> The server packages your code along with its exact
-                            dependencies (OS, Node.js, Selenium grid) into an isolated capsule (container) to guarantee
-                            identical runtimes.
-                        </p>
-                    </div>
-
-                    <!-- Stage 3 View: Selenium Live Mock Browser Assertions -->
-                    <div class="sim-stage-view" id="simView-qa" style="display: none; width: 100%;">
-                        <div class="mock-browser-window">
-                            <div class="browser-address-bar">
-                                <div class="browser-dots-mini">
-                                    <span class="b-dot"></span>
-                                    <span class="b-dot"></span>
-                                    <span class="b-dot"></span>
-                                </div>
-                                <div class="browser-url-input">https://abhinav-saxena.dev/portfolio</div>
-                            </div>
-                            <div class="browser-page-render">
-                                <div class="live-assert-title">Running Selenium Test Grid...</div>
-                                <div class="assert-logs-container" id="assertLogsContainer">
-                                    <!-- Dynamic Assertions Injected here -->
-                                </div>
-                            </div>
-                        </div>
-                        <p class="stage-explanation"
-                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.8rem; text-align: left;">
-                            <strong>What's happening?</strong> <em>Abhinav's QA Automation Core:</em> Selenium builds a
-                            mock browser, clicks navbar items, triggers dark modes, and runs 148 assertions to ensure
-                            zero defects!
-                        </p>
-                    </div>
-
-                    <!-- Stage 4 View: Cloud Run Deploy -->
-                    <div class="sim-stage-view" id="simView-deploy" style="display: none;">
-                        <div class="deploy-success-card">
-                            <i class="fa-solid fa-cloud-arrow-up cloud-success-icon"
-                                style="font-size: 3rem; color: #10b981; animation: pulseGlow 1.5s infinite alternate ease-in-out;"></i>
-                            <h4 style="font-size: 1.1rem; color: #10b981; margin: 0.5rem 0 0.2rem;">ONLINE & LIVE</h4>
-                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0px;">Endpoint:
-                                <strong>https://portfolio.abhinav-dev.run</strong></p>
-                        </div>
-                        <p class="stage-explanation"
-                            style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1rem; text-align: left;">
-                            <strong>What's happening?</strong> Having successfully completed 148 manual/automation
-                            checkpoints with zero failures, the container is deployed instantly onto Google
-                            Cloud/Accenture nodes!
-                        </p>
-                    </div>
-                </div>
+                <p style="color: var(--text-secondary); font-size: 0.85rem; text-align: center; margin-top: 1rem;">
+                    <i class="fa-solid fa-hand-pointer" style="color: var(--accent-1);"></i>
+                    Click a stage — details appear in the panel
+                </p>
             </div>
 
-            <!-- Right Side: Developer Console Logs -->
+            <!-- Right Side: Stage Details Panel -->
             <div class="pipeline-console">
                 <div class="console-title-bar">
                     <div class="console-dots">
@@ -738,56 +635,14 @@
                         <span class="console-dot yellow"></span>
                         <span class="console-dot green"></span>
                     </div>
-                    <span>Selenium Telemetry Console</span>
+                    <span>my-qa-process.log</span>
                 </div>
-                <div class="console-screen" id="pipelineConsoleScreen">
-                    <div class="console-log visible" style="color: #64748b;">$ standby for commit build execution...
-                    </div>
+                <div class="workflow-detail" id="workflowDetail">
+                    <h4 id="wfTitle"></h4>
+                    <p class="wf-desc" id="wfDesc"></p>
+                    <div class="wf-tools" id="wfTools"></div>
+                    <div class="wf-deliverable" id="wfDeliverable"></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Telemetry Stat counters -->
-        <div class="pipeline-stats-grid reveal"
-            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem;">
-            <div class="stat-dial-card"
-                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-assertions"
-                    style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-2);">
-                    0 / 148</div>
-                <div class="stat-dial-lbl"
-                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
-                    Tests Asserted</div>
-            </div>
-
-            <div class="stat-dial-card"
-                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-defects"
-                    style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #ef4444;">0
-                </div>
-                <div class="stat-dial-lbl"
-                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
-                    Bugs Squashed</div>
-            </div>
-
-            <div class="stat-dial-card"
-                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-buildspeed"
-                    style="font-size: 2rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--accent-1);">
-                    0.0s</div>
-                <div class="stat-dial-lbl"
-                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
-                    Execution Speed</div>
-            </div>
-
-            <div class="stat-dial-card"
-                style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem 1rem; text-align: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-                <div class="stat-dial-val" id="stat-status"
-                    style="font-size: 1.4rem; font-weight: 800; font-family: 'Outfit', sans-serif; color: #64748b; padding: 0.4rem 0;">
-                    STANDBY</div>
-                <div class="stat-dial-lbl"
-                    style="font-size: 0.8rem; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; font-weight: 700; letter-spacing: 1px;">
-                    Pipeline Health</div>
             </div>
         </div>
     </section>

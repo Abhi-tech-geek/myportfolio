@@ -3400,3 +3400,67 @@ body:not(.touch-device) .flip-card:hover .flip-back {
         display: none;
     }
 }
+
+/* --- My Testing Workflow (stage details panel) --- */
+.workflow-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    padding-top: 0.5rem;
+}
+
+.workflow-detail h4 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 0.5px;
+}
+
+.wf-desc {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    font-family: 'Inter', sans-serif;
+}
+
+.wf-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.wf-chip {
+    background: rgba(139, 92, 246, 0.12);
+    color: #a78bfa;
+    padding: 3px 12px;
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+}
+
+.wf-deliverable {
+    border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    padding-top: 12px;
+    font-size: 0.8rem;
+    color: #10b981;
+}
+
+.wf-deliverable i {
+    margin-right: 6px;
+}
+
+@media (max-width: 640px) {
+    .pipeline-flow {
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        justify-content: center;
+    }
+
+    .pipeline-connector-line,
+    .pipeline-connector-progress {
+        display: none;
+    }
+}
