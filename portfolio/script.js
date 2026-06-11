@@ -1437,3 +1437,20 @@ themeToggle.addEventListener('click', () => {
         card.addEventListener('click', function () { animateCard(card); });
     });
 })();
+
+// ===== Section Title Flourish (drawn underline on reveal) =====
+(function () {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    document.querySelectorAll('.section-title').forEach(function (title) {
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('class', 'title-flourish');
+        svg.setAttribute('viewBox', '0 0 140 14');
+        svg.setAttribute('width', '140');
+        svg.setAttribute('height', '14');
+        svg.setAttribute('aria-hidden', 'true');
+        const path = document.createElementNS(svgNS, 'path');
+        path.setAttribute('d', 'M 4 8 Q 40 2 70 8 Q 100 14 136 8');
+        svg.appendChild(path);
+        title.appendChild(svg);
+    });
+})();

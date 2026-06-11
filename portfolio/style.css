@@ -315,7 +315,7 @@ nav.scrolled {
 
 .nav-links a:hover {
     color: var(--text-primary);
-    text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+    text-shadow: 0 0 6px rgba(139, 92, 246, 0.35);
 }
 
 .nav-links a:hover::after {
@@ -373,12 +373,12 @@ nav.scrolled {
 .btn-primary {
     background: var(--gradient);
     color: white;
-    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.15);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 25px rgba(139, 92, 246, 0.4);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
 }
 
 .btn-outline {
@@ -423,7 +423,6 @@ nav.scrolled {
 .section-title span {
     color: var(--accent-1);
     display: inline-block;
-    animation: titlePulse 5s infinite ease-in-out;
 }
 
 /* Hero Section */
@@ -452,7 +451,7 @@ nav.scrolled {
     position: relative;
     overflow: hidden;
     z-index: 1;
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.08);
 }
 
 .tagline span {
@@ -710,7 +709,7 @@ nav.scrolled {
     border-color: var(--accent-1);
     background: var(--bg-surface-hover);
     animation-play-state: paused;
-    box-shadow: 0 0 25px rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 16px rgba(139, 92, 246, 0.25);
 }
 
 .timeline-date {
@@ -2950,7 +2949,7 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 
 .dropdown-trigger:hover {
     color: var(--text-primary);
-    text-shadow: 0 0 8px rgba(139, 92, 246, 0.6);
+    text-shadow: 0 0 6px rgba(139, 92, 246, 0.35);
 }
 
 .dropdown-trigger:hover::after {
@@ -3315,4 +3314,48 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     font-family: 'Outfit', sans-serif;
     font-size: 20px;
     font-weight: 700;
+}
+
+/* --- Section Title Flourish (drawn underline) --- */
+.title-flourish {
+    display: block;
+    margin: 10px auto 0;
+    overflow: visible;
+}
+
+.title-flourish path {
+    fill: none;
+    stroke: url(#sigGrad);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-dasharray: 150;
+    stroke-dashoffset: 150;
+    transition: stroke-dashoffset 1.1s ease 0.25s;
+}
+
+.section-title.active .title-flourish path {
+    stroke-dashoffset: 0;
+}
+
+/* --- Hero Scroll Cue --- */
+.scroll-cue {
+    display: inline-block;
+    margin-top: 3.5rem;
+    color: var(--text-secondary);
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.scroll-cue:hover {
+    color: var(--accent-1);
+    transform: translateY(3px);
+}
+
+.scroll-cue-dot {
+    animation: scrollDot 2s infinite ease-in-out;
+}
+
+@keyframes scrollDot {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    70% { transform: translateY(14px); opacity: 0; }
+    85% { transform: translateY(0); opacity: 0; }
 }
