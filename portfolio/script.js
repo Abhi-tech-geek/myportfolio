@@ -1356,3 +1356,84 @@ themeToggle.addEventListener('click', () => {
     window.addEventListener('resize', function () { buildPath(); updateDraw(); });
     updateDraw();
 })();
+
+// ===== Hero Signature Draw =====
+(function () {
+    const fill = document.querySelector('.sig-fill');
+    const stroke = document.querySelector('.sig-stroke');
+    if (!fill || !stroke) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    fill.style.opacity = '0';
+    stroke.style.opacity = '1';
+
+    const ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    ready.then(function () {
+        const dash = 600;
+        stroke.style.strokeDasharray = dash;
+        stroke.style.strokeDashoffset = dash;
+        const dur = 2400;
+        const start = performance.now();
+        function frame(now) {
+            const p = Math.min((now - start) / dur, 1);
+            stroke.style.strokeDashoffset = dash * (1 - p);
+            if (p < 1) {
+                requestAnimationFrame(frame);
+            } else {
+                fill.style.transition = 'opacity 0.9s ease';
+                fill.style.opacity = '1';
+                stroke.style.transition = 'opacity 0.9s ease';
+                stroke.style.opacity = '0';
+            }
+        }
+        requestAnimationFrame(frame);
+    });
+})();
+
+// ===== Skill Rings (animate on card flip) =====
+(function () {
+    const CIRC = 263.9;
+    const rings = document.querySelectorAll('.ring-fill');
+    if (!rings.length) return;
+
+    function setFinal(ring) {
+        const pct = parseInt(ring.dataset.pct, 10);
+        ring.style.strokeDasharray = CIRC;
+        ring.style.strokeDashoffset = CIRC * (1 - pct / 100);
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        rings.forEach(setFinal);
+        return;
+    }
+
+    rings.forEach(function (r) {
+        r.style.strokeDasharray = CIRC;
+        r.style.strokeDashoffset = CIRC;
+    });
+
+    const running = new WeakMap();
+
+    function animateCard(card) {
+        card.querySelectorAll('.ring-fill').forEach(function (ring) {
+            if (running.get(ring)) cancelAnimationFrame(running.get(ring));
+            const pct = parseInt(ring.dataset.pct, 10);
+            const num = ring.parentElement.querySelector('.ring-num');
+            const dur = 1200;
+            const start = performance.now();
+            function frame(now) {
+                const p = Math.min((now - start) / dur, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                ring.style.strokeDashoffset = CIRC * (1 - (pct / 100) * eased);
+                num.textContent = Math.round(pct * eased) + '%';
+                if (p < 1) running.set(ring, requestAnimationFrame(frame));
+            }
+            running.set(ring, requestAnimationFrame(frame));
+        });
+    }
+
+    document.querySelectorAll('.skill-card.flip-card').forEach(function (card) {
+        card.addEventListener('mouseenter', function () { animateCard(card); });
+        card.addEventListener('click', function () { animateCard(card); });
+    });
+})();

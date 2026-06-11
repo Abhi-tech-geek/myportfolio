@@ -35,7 +35,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;800&family=Caveat:wght@700&display=swap"
         rel="stylesheet">
 
     <!-- Font Awesome -->
@@ -45,6 +45,21 @@
 </head>
 
 <body>
+
+    <!-- Shared SVG gradients -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <defs>
+            <linearGradient id="sigGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="#ec4899" />
+            </linearGradient>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="55%" stop-color="#3b82f6" />
+                <stop offset="100%" stop-color="#ec4899" />
+            </linearGradient>
+        </defs>
+    </svg>
 
     <!-- Scroll progress bar -->
     <div class="scroll-progress" id="scrollProgress"></div>
@@ -106,7 +121,15 @@
                 <span><i class="fa-solid fa-bolt" style="margin-right: 8px;"></i> tech + learning mindset + vibe
                     coder</span>
             </div>
-            <h1>Hi, I'm <span class="text-gradient">Abhinav Saxena</span></h1>
+            <h1>Hi, I'm
+                <span class="sr-only">Abhinav Saxena</span>
+                <svg class="sig-svg" viewBox="0 0 540 100" aria-hidden="true">
+                    <text class="sig-fill" x="270" y="74" text-anchor="middle" textLength="520"
+                        lengthAdjust="spacingAndGlyphs">Abhinav Saxena</text>
+                    <text class="sig-stroke" x="270" y="74" text-anchor="middle" textLength="520"
+                        lengthAdjust="spacingAndGlyphs">Abhinav Saxena</text>
+                </svg>
+            </h1>
             <div class="hero-roles" aria-label="Roles">
                 <span id="typewriterText">QA Tester</span><span class="type-cursor" aria-hidden="true"></span>
             </div>
@@ -200,8 +223,12 @@
                     <div class="flip-back">
                         <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Executing
                             precision test vectors and edge-case protocols to ensure zero-defect product quality.</p>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" style="width: 95%;"></div>
+                        <div class="skill-ring">
+                            <svg viewBox="0 0 100 100" role="img" aria-label="Proficiency 95 percent">
+                                <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+                                <circle class="ring-fill" data-pct="95" cx="50" cy="50" r="42" transform="rotate(-90 50 50)"></circle>
+                                <text class="ring-num" x="50" y="57" text-anchor="middle">95%</text>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -216,8 +243,12 @@
                     <div class="flip-back">
                         <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Proficient in
                             Selenium, TestNG, Robot Framework, and deep Python integrations.</p>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" style="width: 85%;"></div>
+                        <div class="skill-ring">
+                            <svg viewBox="0 0 100 100" role="img" aria-label="Proficiency 85 percent">
+                                <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+                                <circle class="ring-fill" data-pct="85" cx="50" cy="50" r="42" transform="rotate(-90 50 50)"></circle>
+                                <text class="ring-num" x="50" y="57" text-anchor="middle">85%</text>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -232,8 +263,12 @@
                     <div class="flip-back">
                         <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Expertise in
                             algorithmic bug tracking and lifecycle management using Jira & ALM.</p>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" style="width: 90%;"></div>
+                        <div class="skill-ring">
+                            <svg viewBox="0 0 100 100" role="img" aria-label="Proficiency 90 percent">
+                                <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+                                <circle class="ring-fill" data-pct="90" cx="50" cy="50" r="42" transform="rotate(-90 50 50)"></circle>
+                                <text class="ring-num" x="50" y="57" text-anchor="middle">90%</text>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -248,8 +283,12 @@
                     <div class="flip-back">
                         <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Skilled in
                             crafting complex SQL telemetry queries for strict backend validation.</p>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" style="width: 80%;"></div>
+                        <div class="skill-ring">
+                            <svg viewBox="0 0 100 100" role="img" aria-label="Proficiency 80 percent">
+                                <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+                                <circle class="ring-fill" data-pct="80" cx="50" cy="50" r="42" transform="rotate(-90 50 50)"></circle>
+                                <text class="ring-num" x="50" y="57" text-anchor="middle">80%</text>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -264,8 +303,12 @@
                     <div class="flip-back">
                         <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Foundational
                             skills in React.js, Node.js, and scaling modern JS architectures.</p>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" style="width: 70%;"></div>
+                        <div class="skill-ring">
+                            <svg viewBox="0 0 100 100" role="img" aria-label="Proficiency 70 percent">
+                                <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+                                <circle class="ring-fill" data-pct="70" cx="50" cy="50" r="42" transform="rotate(-90 50 50)"></circle>
+                                <text class="ring-num" x="50" y="57" text-anchor="middle">70%</text>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -280,8 +323,12 @@
                     <div class="flip-back">
                         <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">Bridge testing
                             and design expectations using Figma for pixel-perfect deployments.</p>
-                        <div class="skill-bar-container">
-                            <div class="skill-bar" style="width: 75%;"></div>
+                        <div class="skill-ring">
+                            <svg viewBox="0 0 100 100" role="img" aria-label="Proficiency 75 percent">
+                                <circle class="ring-track" cx="50" cy="50" r="42"></circle>
+                                <circle class="ring-fill" data-pct="75" cx="50" cy="50" r="42" transform="rotate(-90 50 50)"></circle>
+                                <text class="ring-num" x="50" y="57" text-anchor="middle">75%</text>
+                            </svg>
                         </div>
                     </div>
                 </div>
