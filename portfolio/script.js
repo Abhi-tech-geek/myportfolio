@@ -1,0 +1,1215 @@
+// ===== Core interactivity =====
+// Navbar Scroll Effect + Scroll Progress Bar + Active Nav (Scroll-Spy)
+const navbar = document.getElementById('navbar');
+const scrollProgress = document.getElementById('scrollProgress');
+const spySections = document.querySelectorAll('section[id]');
+const spyLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+function onScrollUpdate() {
+    // navbar bg
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+
+    // progress bar
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+    scrollProgress.style.width = pct + '%';
+
+    // scroll-spy: find current section
+    let current = '';
+    spySections.forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 120) {
+            current = sec.id;
+        }
+    });
+    spyLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+}
+
+window.addEventListener('scroll', onScrollUpdate, { passive: true });
+onScrollUpdate();
+
+// Mobile Menu Toggle
+const mobileToggle = document.getElementById('mobileToggle');
+const navLinks = document.getElementById('navLinks');
+
+mobileToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    const icon = mobileToggle.querySelector('i');
+    if (navLinks.classList.contains('active')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+    } else {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+    }
+});
+
+// Close mobile menu on link click
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        mobileToggle.querySelector('i').classList.add('fa-bars');
+        mobileToggle.querySelector('i').classList.remove('fa-xmark');
+    });
+});
+
+// Scroll Reveal Animation via Intersection Observer
+const revealOptions = {
+    threshold: 0.15,
+    rootMargin: "0px 0px -50px 0px"
+};
+
+const revealObserver = new IntersectionObserver(function (entries, observer) {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) {
+            return;
+        }
+        entry.target.classList.add("active");
+        // Stop observing once revealed
+        observer.unobserve(entry.target);
+    });
+}, revealOptions);
+
+document.querySelectorAll('.reveal').forEach(el => {
+    revealObserver.observe(el);
+});
+
+// ===== Footer year =====
+document.getElementById('footerYear').textContent = new Date().getFullYear();
+
+// ===== Tilt, AI assistant, pipeline, features =====
+// Custom Mouse Glow Effect for Project Cards
+const cards = document.querySelectorAll('.project-card');
+cards.forEach(card => {
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    });
+});
+
+// Detect touch devices to perfectly split Hover vs Tap logic
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0) {
+    document.body.classList.add('touch-device');
+}
+
+// Mobile touch support for 3D flip cards
+document.querySelectorAll('.flip-card').forEach(card => {
+    card.addEventListener('click', function (e) {
+        // Prevent intercepting clicks on internal links
+        if (e.target.closest('a')) return;
+
+        const isFlipped = this.classList.contains('flipped');
+        // Remove flipped class from all cards
+        document.querySelectorAll('.flip-card').forEach(c => c.classList.remove('flipped'));
+
+        // Toggle current card
+        if (!isFlipped) {
+            this.classList.add('flipped');
+        }
+    });
+});
+
+// AI Assistant Logic
+const aiRobot = document.getElementById('aiRobot');
+const aiSpeech = document.getElementById('aiSpeech');
+const aiMenu = document.getElementById('aiMenu');
+const laserScanner = document.getElementById('laserScanner');
+const qaModal = document.getElementById('qaModal');
+const qaModalClose = document.getElementById('qaModalClose');
+const qaModalBody = document.getElementById('qaModalBody');
+let aiMessageTimeout;
+let isScriptedMove = false;
+
+function setAiState(state, message) {
+    aiRobot.className = 'ai-robot-body ' + state;
+    if (message) {
+        aiSpeech.textContent = message;
+        aiSpeech.classList.add('visible');
+        clearTimeout(aiMessageTimeout);
+        aiMessageTimeout = setTimeout(() => {
+            aiSpeech.classList.remove('visible');
+        }, 3500);
+    } else {
+        aiSpeech.classList.remove('visible');
+    }
+}
+
+// AI Organic Roaming Mechanic
+const aiWrap = document.querySelector('.ai-wrap');
+let botPos = { x: 0, y: 0 };
+let targetBotPos = { x: 0, y: 0 };
+let roamInterval;
+
+function pickNewTarget() {
+    // Keep bounds in a neat, premium bottom-right quadrant to stay within active view
+    const limitX = Math.min(window.innerWidth - 150, 350);
+    const limitY = Math.min(window.innerHeight - 200, 250);
+    targetBotPos.x = -(Math.random() * limitX);
+    targetBotPos.y = -(Math.random() * limitY);
+}
+
+pickNewTarget();
+roamInterval = setInterval(pickNewTarget, 4000);
+
+function roamRobot() {
+    const isMenuOpen = aiMenu.classList.contains('active');
+    // Lerp towards target position for smooth organic drifting (only if not scripted and menu is closed)
+    if (!isScriptedMove && !isMenuOpen) {
+        botPos.x += (targetBotPos.x - botPos.x) * 0.005;
+        botPos.y += (targetBotPos.y - botPos.y) * 0.005;
+        aiWrap.style.transform = `translate(${botPos.x}px, ${botPos.y}px)`;
+    }
+    requestAnimationFrame(roamRobot);
+}
+roamRobot();
+
+// Pause roaming when hovered
+aiRobot.addEventListener('mouseenter', () => {
+    if (!isScriptedMove) clearInterval(roamInterval);
+});
+aiRobot.addEventListener('mouseleave', () => {
+    if (!isScriptedMove) {
+        clearInterval(roamInterval);
+        roamInterval = setInterval(pickNewTarget, 4000);
+    }
+});
+
+// Toggle Smart Menu on click (robust selector for whole body + head + torso)
+const robotElements = [aiRobot, document.querySelector('.bot-head'), document.querySelector('.bot-torso')];
+robotElements.forEach(el => {
+    if (el) {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isScriptedMove) return;
+            aiMenu.classList.toggle('active');
+            if (aiMenu.classList.contains('active')) {
+                // Dynamically check position to prevent menu clipping at the top
+                const rect = aiRobot.getBoundingClientRect();
+                if (rect.top < 280) {
+                    aiMenu.classList.add('menu-bottom');
+                } else {
+                    aiMenu.classList.remove('menu-bottom');
+                }
+                setAiState('working', 'Select Protocol ⚡');
+            } else {
+                setAiState('', '');
+            }
+        });
+    }
+});
+
+// Close smart menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!aiWrap.contains(e.target) && !qaModal.contains(e.target)) {
+        aiMenu.classList.remove('active');
+    }
+});
+
+// Close QA Diagnostics Modal
+qaModalClose.addEventListener('click', () => {
+    qaModal.classList.remove('active');
+    setAiState('', 'Diagnostics Closed.');
+});
+
+// Smart Menu Actions Trigger
+aiMenu.addEventListener('click', (e) => {
+    const btn = e.target.closest('.ai-menu-btn');
+    if (!btn) return;
+
+    const action = btn.dataset.action;
+    aiMenu.classList.remove('active');
+
+    if (action === 'scan') {
+        triggerDiagnosticScan();
+    } else if (action === 'skills') {
+        triggerSkillTelemetry();
+    } else if (action === 'project') {
+        triggerProjectHighlight();
+    } else if (action === 'bug') {
+        triggerBugGame();
+    } else if (action === 'resume') {
+        triggerResumeDownload();
+    } else if (action === 'dance') {
+        triggerDanceVibe();
+    }
+});
+
+// Scripted Move Helpers
+function runScriptedMove(targetX, targetY, callback) {
+    isScriptedMove = true;
+    clearInterval(roamInterval);
+    aiWrap.style.transition = 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+    aiWrap.style.transform = `translate(${targetX}px, ${targetY}px)`;
+
+    botPos.x = targetX;
+    botPos.y = targetY;
+
+    setTimeout(callback, 1200);
+}
+
+function endScriptedMove() {
+    aiWrap.style.transition = 'transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+    aiWrap.style.transform = `translate(0px, 0px)`;
+    botPos.x = 0;
+    botPos.y = 0;
+    targetBotPos.x = 0;
+    targetBotPos.y = 0;
+
+    setTimeout(() => {
+        aiWrap.style.transition = '';
+        isScriptedMove = false;
+        roamInterval = setInterval(pickNewTarget, 4000);
+    }, 1200);
+}
+
+// Action 1: Full-Screen Laser Diagnostics Scan
+function triggerDiagnosticScan() {
+    setAiState('working', 'Scanning sequence initialized...');
+
+    // Glide robot to top-right corner
+    const targetY = -(window.innerHeight - 150);
+    const targetX = -50;
+
+    runScriptedMove(targetX, targetY, () => {
+        setAiState('working', 'Full Page Laser Sweep Active!');
+        laserScanner.classList.add('active');
+
+        // Sweep line mid-way sound/bubble
+        setTimeout(() => {
+            setAiState('working', 'Analyzing DOM & Defect Telemetry...');
+        }, 1200);
+
+        // Sweep completes
+        setTimeout(() => {
+            laserScanner.classList.remove('active');
+            setAiState('dancing', 'Scan Complete! compiling diagnostics...');
+
+            setTimeout(() => {
+                endScriptedMove();
+                showDiagnosticsModal();
+            }, 800);
+        }, 2500);
+    });
+}
+
+// Animated QA Terminal Logs injection
+function showDiagnosticsModal() {
+    qaModalBody.innerHTML = '';
+    qaModal.classList.add('active');
+
+    const logs = [
+        { text: "[INFO] Initializing QA Webdriver Core Automation...", type: "info" },
+        { text: "[INFO] Establishing telemetry socket over SSL/TLS...", type: "info" },
+        { text: "[PASS] UI Integrity Check: 0 rendering defects found.", type: "pass" },
+        { text: "[PASS] Page Load Performance: LCP 0.6s, FID 8ms (Peak).", type: "pass" },
+        { text: "[PASS] Interactive 3D Nodes: Vitals intact.", type: "pass" },
+        { text: "[WARN] Telemetry: Hyper-advanced code matrices detected in Abhinav's systems.", type: "warn" },
+        { text: "[PASS] Assertions: 48/48 test vectors GREEN. Zero bugs verified.", type: "pass" }
+    ];
+
+    logs.forEach((log, index) => {
+        setTimeout(() => {
+            const line = document.createElement('div');
+            line.className = 'qa-log-line';
+
+            let tagHtml = '';
+            if (log.type === 'info') tagHtml = '<span class="qa-tag-info">[INFO]</span>';
+            if (log.type === 'pass') tagHtml = '<span class="qa-tag-pass">[PASS]</span>';
+            if (log.type === 'warn') tagHtml = '<span class="qa-tag-warn">[WARN]</span>';
+
+            line.innerHTML = `${tagHtml} ${log.text.substring(7)}`;
+            qaModalBody.appendChild(line);
+
+            line.offsetHeight; // force reflow
+            line.classList.add('printed');
+        }, index * 350);
+    });
+
+    // Print certified status seal box at the end
+    setTimeout(() => {
+        const statusBox = document.createElement('div');
+        statusBox.className = 'qa-status-box';
+        statusBox.innerHTML = `
+            <div class="qa-status-title">SYSTEM AUDIT INTEGRITY</div>
+            <div class="qa-status-value">100% SECURE & OPTIMIZED</div>
+        `;
+        qaModalBody.appendChild(statusBox);
+
+        statusBox.offsetHeight;
+        statusBox.classList.add('printed');
+        setAiState('dancing', 'System Audit: 100% Secure!');
+    }, logs.length * 350 + 200);
+}
+
+// Action 2: Skill Telemetry scan
+function triggerSkillTelemetry() {
+    setAiState('working', 'Scanning core skill matrix...');
+    document.getElementById('skills').scrollIntoView({ behavior: 'smooth' });
+
+    setTimeout(() => {
+        setAiState('dancing', 'HTML, Selenium, Python at 100% load capacities!');
+
+        // Highlight and pulse all skill cards
+        const skillCards = document.querySelectorAll('.skill-card .flip-front');
+        skillCards.forEach(card => card.classList.add('telemetry-pulse'));
+
+        setTimeout(() => {
+            skillCards.forEach(card => card.classList.remove('telemetry-pulse'));
+            setAiState('', 'Skill telemetry verified.');
+        }, 3500);
+    }, 800);
+}
+
+// Action 3: Project Highlight
+function triggerProjectHighlight() {
+    setAiState('working', 'Locating system featured projects...');
+    const projectsSection = document.getElementById('projects');
+    projectsSection.scrollIntoView({ behavior: 'smooth' });
+
+    setTimeout(() => {
+        const abhimateCard = document.getElementById('project-abhimate');
+        if (abhimateCard) {
+            setAiState('dancing', 'Target Acquired! AbhiMate: Multi-Agent QA Core.');
+
+            // Programmatically flip the card to show logs
+            abhimateCard.classList.add('telemetry-pulse');
+            abhimateCard.classList.add('flipped');
+
+            setTimeout(() => {
+                abhimateCard.classList.remove('telemetry-pulse');
+                abhimateCard.classList.remove('flipped');
+                setAiState('', 'Project highlighted.');
+            }, 5000);
+        }
+    }, 800);
+}
+
+// Action 4: Vibe Matrix (Dance Mode)
+let vibeInterval;
+function triggerDanceVibe() {
+    let cycles = 0;
+    const dancePhrases = [
+        "BEEP... BOOP... DANCE PROTOCOL! 🕺",
+        "Grooving through the codebase! ⚡",
+        "QA Automation has 100% groove! 🎸",
+        "Matrix Vitals: PURE VIBES! 🚀"
+    ];
+
+    setAiState('dancing', dancePhrases[0]);
+    clearInterval(vibeInterval);
+
+    vibeInterval = setInterval(() => {
+        cycles++;
+        if (cycles < dancePhrases.length) {
+            setAiState('dancing', dancePhrases[cycles]);
+        } else {
+            clearInterval(vibeInterval);
+            setAiState('', 'Dance matrix synced successfully.');
+        }
+    }, 1200);
+}
+
+// Action: Dynamic Resume Download from AI Companion menu
+function triggerResumeDownload() {
+    setAiState('dancing', 'Downloading Abhinav\'s Resume PDF... ⚡');
+
+    setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = 'AbhinavSaxena.pdf';
+        link.download = 'Abhinav_Saxena_Resume.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setAiState('dancing', 'Resume Download Successful! 🏆');
+    }, 1000);
+}
+
+document.querySelectorAll('.skill-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        if (!isScriptedMove) setAiState('working', 'Scanning Skill Modules...');
+    });
+    card.addEventListener('mouseleave', () => {
+        if (!isScriptedMove) setAiState('', '');
+    });
+});
+
+document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+        if (!isScriptedMove) setAiState('dancing', 'Analyzing Systems! ⚡');
+    });
+    card.addEventListener('mouseleave', () => {
+        if (!isScriptedMove) setAiState('', '');
+    });
+});
+
+// Section Observer for AI Context
+const secOptions = { threshold: 0.2, rootMargin: "-10% 0px" };
+const secObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && !isScriptedMove) {
+            const id = entry.target.id;
+            let msg = '';
+            if (id === 'home') msg = 'Click me for protocols! 🤖';
+            if (id === 'about') msg = 'Running Background Check...';
+            if (id === 'skills') msg = 'Hover items to test me!';
+            if (id === 'projects') msg = 'Exploring deployed nodes...';
+            if (id === 'experience') msg = 'Reviewing logs timeline...';
+            if (id === 'contact') msg = 'Standing by for communication.';
+
+            if (aiRobot.className.trim() === 'ai-robot-body') {
+                setAiState('', msg);
+            }
+        }
+    });
+}, secOptions);
+
+document.querySelectorAll('section').forEach(sec => secObserver.observe(sec));
+
+/* --- FEATURE 1: Interactive Canvas Engine --- */
+const canvas = document.getElementById('matrixGridCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+const maxParticles = 65;
+let mouseX = null;
+let mouseY = null;
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 0.4 - 0.2;
+        this.speedY = Math.random() * 0.4 - 0.2;
+    }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x > canvas.width) this.x = 0;
+        else if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        else if (this.y < 0) this.y = canvas.height;
+
+        // Mouse magnetic effect
+        if (mouseX !== null && mouseY !== null) {
+            const dx = mouseX - this.x;
+            const dy = mouseY - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+                const force = (120 - dist) / 120;
+                this.x -= (dx / dist) * force * 1.5;
+                this.y -= (dy / dist) * force * 1.5;
+            }
+        }
+    }
+    draw() {
+        ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(139, 92, 246, 0.4)' : 'rgba(139, 92, 246, 0.3)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function initParticles() {
+    particles = [];
+    for (let i = 0; i < maxParticles; i++) {
+        particles.push(new Particle());
+    }
+}
+initParticles();
+
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+
+    // Draw connecting lines
+    ctx.strokeStyle = document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(139, 92, 246, 0.04)' : 'rgba(139, 92, 246, 0.06)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
+    }
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* --- FEATURE 2: Mouse Tracker for Canvas Engine --- */
+window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+window.addEventListener('mouseleave', () => {
+    mouseX = null;
+    mouseY = null;
+});
+
+/* --- FEATURE 3: CI/CD Pipeline Controller --- */
+const pipelineDeployBtn = document.getElementById('pipelineDeployBtn');
+const pipelineProgress = document.getElementById('pipelineProgress');
+const pipelineConsoleScreen = document.getElementById('pipelineConsoleScreen');
+
+// New interactive simulator elements
+const simStandbyView = document.getElementById('simStandbyView');
+const simViews = {
+    git: document.getElementById('simView-git'),
+    build: document.getElementById('simView-build'),
+    qa: document.getElementById('simView-qa'),
+    deploy: document.getElementById('simView-deploy')
+};
+const buildProgressFill = document.getElementById('buildProgressFill');
+const buildPercent = document.getElementById('buildPercent');
+const assertLogsContainer = document.getElementById('assertLogsContainer');
+
+// Stats elements
+const statAssertions = document.getElementById('stat-assertions');
+const statDefects = document.getElementById('stat-defects');
+const statBuildSpeed = document.getElementById('stat-buildspeed');
+const statStatus = document.getElementById('stat-status');
+
+let isPipelineRunning = false;
+
+const stages = [
+    { id: 'stage-git', percent: 25, name: "Git Push" },
+    { id: 'stage-build', percent: 55, name: "Compile Container" },
+    { id: 'stage-qa', percent: 85, name: "QA Selenium Test" },
+    { id: 'stage-deploy', percent: 100, name: "Deploy Live" }
+];
+
+function showSimulatorView(activeKey) {
+    simStandbyView.style.display = 'none';
+    Object.keys(simViews).forEach(key => {
+        if (key === activeKey) {
+            simViews[key].style.display = 'block';
+        } else {
+            simViews[key].style.display = 'none';
+        }
+    });
+}
+
+function logToConsole(message, type = 'info', delay = 0) {
+    setTimeout(() => {
+        const log = document.createElement('div');
+        log.className = 'console-log';
+
+        let tag = '';
+        if (type === 'info') tag = '<span class="console-tag-info">[INFO]</span>';
+        if (type === 'pass') tag = '<span class="console-tag-pass">[PASS]</span>';
+        if (type === 'warn') tag = '<span class="console-tag-warn">[WARN]</span>';
+        if (type === 'err') tag = '<span class="console-tag-err">[ERR]</span>';
+
+        log.innerHTML = `${tag} ${message}`;
+        pipelineConsoleScreen.appendChild(log);
+
+        log.offsetHeight;
+        log.classList.add('visible');
+        pipelineConsoleScreen.scrollTop = pipelineConsoleScreen.scrollHeight;
+    }, delay);
+}
+
+pipelineDeployBtn.addEventListener('click', () => {
+    if (isPipelineRunning) return;
+    isPipelineRunning = true;
+    pipelineDeployBtn.disabled = true;
+    pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pipe Running...';
+    document.getElementById('pipelineSpinner').className = 'fa-solid fa-circle-notch fa-spin';
+    setAiState('working', 'CI/CD pipeline simulation active! ⚡');
+
+    // Reset console and progress bar
+    pipelineConsoleScreen.innerHTML = '';
+    pipelineProgress.style.width = '0%';
+    stages.forEach(s => {
+        const node = document.getElementById(s.id);
+        node.className = 'pipeline-stage';
+    });
+
+    // Reset Simulator HTML views
+    assertLogsContainer.innerHTML = '';
+    buildProgressFill.style.width = '0%';
+    buildPercent.textContent = '0%';
+    document.querySelectorAll('.layer-block').forEach(b => b.classList.remove('compiled'));
+
+    // Reset Telemetry Stats
+    statAssertions.textContent = '0 / 148';
+    statAssertions.style.color = 'var(--accent-2)';
+    statDefects.textContent = '0';
+    statDefects.style.color = '#ef4444';
+    statBuildSpeed.textContent = '0.0s';
+    statStatus.textContent = 'WORKING';
+    statStatus.style.color = 'var(--accent-1)';
+
+    // Start organic build timer counting up
+    let startTime = Date.now();
+    let timerInterval = setInterval(() => {
+        if (!isPipelineRunning) {
+            clearInterval(timerInterval);
+            return;
+        }
+        let delta = ((Date.now() - startTime) / 1000).toFixed(1);
+        statBuildSpeed.textContent = `${delta}s`;
+    }, 100);
+
+    logToConsole('Triggering automated pipeline build...', 'info', 0);
+
+    // --- STAGE 1: Git Push ---
+    setTimeout(() => {
+        const stage = document.getElementById('stage-git');
+        stage.classList.add('active');
+        showSimulatorView('git');
+
+        logToConsole('Code pushed: git commit verified (sha: 0f2b8a7c)', 'info');
+        logToConsole('Initiating Docker environment container build...', 'info', 300);
+    }, 600);
+
+    // --- STAGE 2: Compile Container ---
+    setTimeout(() => {
+        document.getElementById('stage-git').className = 'pipeline-stage success';
+        document.getElementById('stage-build').classList.add('active');
+        pipelineProgress.style.width = '25%';
+        showSimulatorView('build');
+
+        logToConsole('Docker Base Container Compiled successfully.', 'pass');
+        logToConsole('Resolving npm dependencies and running bundler check...', 'info', 300);
+
+        // Animate Docker Layer compilations inside simulator
+        let percent = 0;
+        let dockerInterval = setInterval(() => {
+            percent += 5;
+            buildProgressFill.style.width = `${percent}%`;
+            buildPercent.textContent = `${percent}%`;
+
+            if (percent >= 25) document.getElementById('layer-1').classList.add('compiled');
+            if (percent >= 50) document.getElementById('layer-2').classList.add('compiled');
+            if (percent >= 75) document.getElementById('layer-3').classList.add('compiled');
+            if (percent >= 100) {
+                document.getElementById('layer-4').classList.add('compiled');
+                clearInterval(dockerInterval);
+            }
+        }, 100);
+    }, 2000);
+
+    // --- STAGE 3: QA Automation (Selenium Tests) ---
+    setTimeout(() => {
+        document.getElementById('stage-build').className = 'pipeline-stage success';
+        document.getElementById('stage-qa').classList.add('active');
+        pipelineProgress.style.width = '55%';
+        showSimulatorView('qa');
+
+        logToConsole('Bundle compilation successful. Web assets verified.', 'pass');
+        logToConsole('Launching Chrome headless driver via Selenium grid...', 'info', 300);
+        logToConsole('Running 148 automated Selenium UI and API assertions...', 'info', 600);
+
+        // Mock dynamic browser assertions rendering in real-time
+        const mockAsserts = [
+            "Browser launched successfully (Chrome headless v114)",
+            "Navigate to: https://abhinav-saxena.dev/portfolio ... SUCCESS",
+            "Assert nav-links DOM visibility ... [✔ PASS]",
+            "Assert Light/Dark theme latency <= 50ms ... [✔ PASS (12ms)]",
+            "Assert AI companion roaming protocol integrity ... [✔ PASS]",
+            "Assert Certifications Carousel auto-play ... [✔ PASS]",
+            "Assert contact card mailto validation ... [✔ PASS]",
+            "148/148 assertions verified. Zero flaws remaining."
+        ];
+
+        mockAsserts.forEach((txt, idx) => {
+            setTimeout(() => {
+                const line = document.createElement('div');
+                line.className = 'assert-log-line';
+
+                let colorStyle = 'color: #38bdf8;';
+                if (txt.includes('SUCCESS') || txt.includes('[✔ PASS]')) {
+                    colorStyle = 'color: #10b981; font-weight: bold;';
+                } else if (txt.includes('Zero flaws')) {
+                    colorStyle = 'color: #ec4899; font-weight: bold; text-shadow: 0 0 5px rgba(236,72,153,0.5);';
+                }
+
+                line.innerHTML = `<span style="color: #64748b;">></span> <span style="${colorStyle}">${txt}</span>`;
+                assertLogsContainer.appendChild(line);
+                assertLogsContainer.scrollTop = assertLogsContainer.scrollHeight;
+
+                // Increment dynamic stats
+                let progressAsserts = Math.min(Math.round(((idx + 1) / mockAsserts.length) * 148), 148);
+                statAssertions.textContent = `${progressAsserts} / 148`;
+                if (progressAsserts === 148) {
+                    statAssertions.style.color = '#10b981';
+                    // Cohesive ties with Bug squasher
+                    statDefects.textContent = '4';
+                    statDefects.style.color = '#10b981';
+                }
+            }, idx * 600);
+        });
+    }, 4500);
+
+    setTimeout(() => {
+        logToConsole('Assert: Check navigation link DOM binding... PASS', 'pass');
+        logToConsole('Assert: Check light/dark theme switch latency... PASS (12ms)', 'pass');
+        logToConsole('Assert: QA AI companion roaming vital check... PASS', 'pass');
+    }, 6000);
+
+    // --- STAGE 4: Deploy Cloud ---
+    setTimeout(() => {
+        document.getElementById('stage-qa').className = 'pipeline-stage success';
+        document.getElementById('stage-deploy').classList.add('active');
+        pipelineProgress.style.width = '85%';
+        showSimulatorView('deploy');
+
+        logToConsole('All 148 automated Selenium assertions complete. ZERO bugs found.', 'pass');
+        logToConsole('Pushing verified production bundle to GCP Cloud Run...', 'info', 300);
+    }, 9800);
+
+    // --- FINISH PIPELINE ---
+    setTimeout(() => {
+        document.getElementById('stage-deploy').className = 'pipeline-stage success';
+        pipelineProgress.style.width = '100%';
+        document.getElementById('pipelineSpinner').className = 'fa-solid fa-circle-notch';
+
+        logToConsole('Production deployment complete. Server: ONLINE.', 'pass');
+        logToConsole('Telemetry assertion checks complete. Status: EXCELLENT.', 'pass');
+
+        // Finalize Telemetry Stats
+        clearInterval(timerInterval);
+        statBuildSpeed.textContent = '11.2s';
+        statStatus.textContent = 'EXCELLENT';
+        statStatus.style.color = '#10b981';
+
+        pipelineDeployBtn.disabled = false;
+        pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-check"></i> Deploy Success';
+        isPipelineRunning = false;
+        setAiState('dancing', 'All production pipelines 100% green! optimal deployment! 🚀');
+
+        setTimeout(() => {
+            pipelineDeployBtn.innerHTML = '<i class="fa-solid fa-play"></i> Trigger Commit Build';
+        }, 4000);
+    }, 11200);
+});
+
+
+/* --- FEATURE 4: QA Bug Hunter Game Logic --- */
+const certModal = document.getElementById('certModal');
+const certRecipient = document.getElementById('certRecipient');
+const certDate = document.getElementById('certDate');
+let activeBugsCount = 0;
+let gameActive = false;
+
+function triggerBugGame() {
+    // Clean up any existing bugs and containers to prevent state lock issues
+    let container = document.getElementById('bugContainer');
+    if (container) {
+        container.remove();
+    }
+
+    container = document.createElement('div');
+    container.id = 'bugContainer';
+    container.style.position = 'fixed';
+    container.style.inset = '0';
+    container.style.pointerEvents = 'none';
+    container.style.zIndex = '9998';
+    document.body.appendChild(container);
+
+    gameActive = true;
+    activeBugsCount = 4;
+    setAiState('working', 'QA Bug Hunter activated! Breach detected! 🐛');
+
+    const BugIconClasses = ['fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug', 'fa-solid fa-bug'];
+    for (let i = 0; i < 4; i++) {
+        setTimeout(() => {
+            spawnBug(BugIconClasses[i], i, container);
+        }, i * 400);
+    }
+}
+
+function spawnBug(iconClass, index, container) {
+    const bug = document.createElement('i');
+    bug.className = `${iconClass} glitch-bug`;
+    bug.id = `bug-${index}`;
+
+    const x = Math.random() * 80 + 10;
+    const y = Math.random() * 70 + 15;
+
+    bug.style.left = `${x}vw`;
+    bug.style.top = `${y}vh`;
+
+    container.appendChild(bug);
+
+    bug.addEventListener('click', (e) => {
+        e.stopPropagation();
+        squashBug(bug);
+    });
+}
+
+function squashBug(bug) {
+    const rect = bug.getBoundingClientRect();
+    createBugExplosion(rect.left + 15, rect.top + 15);
+    bug.remove();
+
+    activeBugsCount--;
+
+    if (activeBugsCount > 0) {
+        const cheerPhrases = [
+            `Glitch squashed! ${activeBugsCount} remaining! 💥`,
+            `Bug crushed! Trace eliminated! ⚡`,
+            `Target secured! Keep hunting! 🚀`
+        ];
+        setAiState('working', cheerPhrases[Math.floor(Math.random() * cheerPhrases.length)]);
+    } else {
+        setAiState('dancing', 'Perimeter Secured! Initializing certificate...');
+        gameActive = false;
+        const container = document.getElementById('bugContainer');
+        if (container) {
+            container.remove();
+        }
+        setTimeout(showCertificate, 1500);
+    }
+}
+
+function createBugExplosion(x, y) {
+    for (let i = 0; i < 10; i++) {
+        const p = document.createElement('div');
+        p.className = 'bug-particle';
+        p.style.left = `${x}px`;
+        p.style.top = `${y}px`;
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.random() * 50 + 20;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+
+        p.style.setProperty('--dx', `${dx}px`);
+        p.style.setProperty('--dy', `${dy}px`);
+
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 800);
+    }
+}
+
+function showCertificate() {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    certDate.textContent = `DATE: ${new Date().toLocaleDateString('en-US', options)}`;
+    certRecipient.textContent = "ELITE BUG SQUASHER";
+
+    certModal.classList.add('active');
+    setAiState('dancing', 'Gold Telemetry Certificate Awarded! 🏆');
+}
+
+document.body.addEventListener('click', (e) => {
+    if (certModal.classList.contains('active') && !certModal.contains(e.target)) {
+        certModal.classList.remove('active');
+        setAiState('', 'Bug hunter system offline.');
+    }
+});
+
+// Certificate modal explicit close button
+const certModalClose = document.getElementById('certModalClose');
+if (certModalClose) {
+    certModalClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        certModal.classList.remove('active');
+        setAiState('', 'Bug hunter system offline.');
+    });
+}
+
+// --- CERTIFICATIONS CAROUSEL LOGIC ---
+const certsTrack = document.getElementById('certsTrack');
+const certPrevBtn = document.getElementById('certPrevBtn');
+const certNextBtn = document.getElementById('certNextBtn');
+const certDotsContainer = document.getElementById('certsDots');
+const certSlides = document.querySelectorAll('.cert-slide');
+const certSlicesSelector = document.getElementById('certsSlicesSelector');
+let currentCertIndex = 0;
+
+function updateCertCarousel() {
+    certsTrack.style.transform = `translateX(-${currentCertIndex * 100}%)`;
+
+    // Update dots
+    const dots = certDotsContainer.querySelectorAll('.carousel-dot');
+    dots.forEach((dot, idx) => {
+        if (idx === currentCertIndex) {
+            dot.classList.add('active');
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+
+    // Update slices (tabs)
+    const tabs = certSlicesSelector.querySelectorAll('.slice-tab');
+    tabs.forEach((tab, idx) => {
+        tab.classList.remove('active', 'active-google', 'active-accenture', 'active-india');
+        if (idx === currentCertIndex) {
+            tab.classList.add('active');
+            if (idx === 0) tab.classList.add('active-google');
+            else if (idx === 1) tab.classList.add('active-accenture');
+            else if (idx === 2) tab.classList.add('active-india');
+
+            // Smoothly scroll tab into focus inside the horizontal slices bar
+            const container = certSlicesSelector;
+            const leftPos = tab.offsetLeft - (container.offsetWidth / 2) + (tab.offsetWidth / 2);
+            container.scrollTo({ left: leftPos, behavior: 'smooth' });
+        }
+    });
+}
+
+certPrevBtn.addEventListener('click', () => {
+    currentCertIndex = (currentCertIndex - 1 + certSlides.length) % certSlides.length;
+    updateCertCarousel();
+    if (!isScriptedMove) setAiState('working', 'Retrieving previous credential...');
+});
+
+certNextBtn.addEventListener('click', () => {
+    currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+    updateCertCarousel();
+    if (!isScriptedMove) setAiState('working', 'Retrieving next credential...');
+});
+
+certDotsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('carousel-dot')) {
+        currentCertIndex = parseInt(e.target.dataset.index);
+        updateCertCarousel();
+    }
+});
+
+// Click Handler for Slices (Tabs) Selector
+certSlicesSelector.addEventListener('click', (e) => {
+    const tab = e.target.closest('.slice-tab');
+    if (tab) {
+        currentCertIndex = parseInt(tab.dataset.index);
+        updateCertCarousel();
+        if (!isScriptedMove) {
+            const certNames = ["Google Cloud", "Accenture", "India AI"];
+            setAiState('working', `Navigating to ${certNames[currentCertIndex]} credential...`);
+        }
+    }
+});
+
+// Mobile Swipe Gestures
+const certsViewport = document.querySelector('.certs-viewport');
+let touchStartX = 0;
+let touchEndX = 0;
+let isSwiping = false;
+
+certsViewport.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    isSwiping = true;
+}, { passive: true });
+
+certsViewport.addEventListener('touchend', (e) => {
+    if (!isSwiping) return;
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipeGesture();
+    isSwiping = false;
+}, { passive: true });
+
+function handleSwipeGesture() {
+    const diffX = touchEndX - touchStartX;
+    // Minimum swipe threshold of 50px
+    if (Math.abs(diffX) > 50) {
+        if (diffX < 0) {
+            // Swipe Left -> Next Slide
+            currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+        } else {
+            // Swipe Right -> Previous Slide
+            currentCertIndex = (currentCertIndex - 1 + certSlides.length) % certSlides.length;
+        }
+        updateCertCarousel();
+        if (!isScriptedMove) {
+            setAiState('working', 'Swiping credential...');
+        }
+    }
+}
+
+// Auto Play Carousel every 8s
+let certsAutoPlay = setInterval(() => {
+    currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+    updateCertCarousel();
+}, 8000);
+
+// Pause auto play on hover
+const certsSection = document.getElementById('certifications');
+if (certsSection) {
+    certsSection.addEventListener('mouseenter', () => clearInterval(certsAutoPlay));
+    certsSection.addEventListener('mouseleave', () => {
+        certsAutoPlay = setInterval(() => {
+            currentCertIndex = (currentCertIndex + 1) % certSlides.length;
+            updateCertCarousel();
+        }, 8000);
+    });
+}
+
+// Dynamic Certificate Modal Logic
+const dynamicCertModal = document.getElementById('dynamicCertModal');
+const dynamicCertModalClose = document.getElementById('dynamicCertModalClose');
+
+const certDataStore = {
+    'google-cloud': {
+        org: 'Google Cloud',
+        title: 'Build Search & Recommendation Applications with AI',
+        subtitle: 'This credential confirms that Abhinav Saxena has demonstrated proficiency in designing, evaluating, and deploying search and recommendation models powered by Google Cloud GenAI.',
+        body: 'Covers Vertex AI, enterprise search architectures, agentic search retrieval, and vector search embeddings for production deployment.',
+        date: 'DATE: May 2026',
+        credId: 'CREDENTIAL ID: GCP-SRAI-26804',
+        sealColor: '#4285F4',
+        starColor: '#eab308',
+        accentColor: 'rgba(66, 133, 244, 0.25)',
+        aiResponse: 'Google Cloud Certified! Enterprise AI search capabilities verified! 🔍'
+    },
+    'accenture': {
+        org: 'Accenture',
+        title: 'Reinvention with Agentic AI Learning Program',
+        subtitle: 'This certificate validates mastery in orchestrating multi-agent networks, autonomous tool-use pipelines, and LLM-agent reasoning patterns.',
+        body: 'Comprehensive training in developing enterprise-grade agentic frameworks, multi-modal prompt tuning, and cognitive AI workflows.',
+        date: 'DATE: April 2026',
+        credId: 'CREDENTIAL ID: ACN-REAI-84021',
+        sealColor: '#A100FF',
+        starColor: '#a100ff',
+        accentColor: 'rgba(161, 0, 255, 0.25)',
+        aiResponse: 'Accenture Agentic AI Specialist! Multi-agent architecture approved! 🤖'
+    },
+    'india-ai': {
+        org: 'India AI (Digital India)',
+        title: 'India AI Impact Buildathon 2026',
+        subtitle: 'Awarded for developing high-impact AI solutions addressing critical national challenges, showcasing exceptional technical execution and innovation.',
+        body: 'Outstanding contribution in deploying localized AI models, ensuring software reliability, and robust QA testing frameworks.',
+        date: 'DATE: March 2026',
+        credId: 'CREDENTIAL ID: IND-AI-IMPACT-2026',
+        sealColor: '#FF9933',
+        starColor: '#128807',
+        accentColor: 'rgba(255, 153, 51, 0.25)',
+        aiResponse: 'India AI Impact Innovator! Exceptional nation-building tech execution! 🏆'
+    }
+};
+
+function openHoloCert(certId) {
+    const data = certDataStore[certId];
+    if (!data) return;
+
+    document.getElementById('dynCertOrg').textContent = data.org;
+    document.getElementById('dynCertTitle').textContent = data.title;
+    document.getElementById('dynCertSubtitle').textContent = data.subtitle;
+    document.getElementById('dynCertBody').textContent = data.body;
+    document.getElementById('dynCertDate').textContent = data.date;
+    document.getElementById('dynCertId').textContent = data.credId;
+
+    const sealStar = document.getElementById('dynCertSealStar');
+    const sealIcon = document.getElementById('dynCertSealIcon');
+
+    sealStar.style.color = data.starColor;
+    sealIcon.style.color = '#000';
+
+    dynamicCertModal.style.borderColor = data.sealColor;
+    dynamicCertModal.style.boxShadow = `0 25px 60px rgba(0,0,0,0.6), 0 0 40px ${data.accentColor}`;
+
+    dynamicCertModal.classList.add('active');
+
+    if (!isScriptedMove) {
+        setAiState('dancing', data.aiResponse);
+    }
+}
+
+if (dynamicCertModalClose) {
+    dynamicCertModalClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dynamicCertModal.classList.remove('active');
+        if (!isScriptedMove) setAiState('', 'Credential telemetry closed.');
+    });
+}
+
+// Close modal clicking outside
+document.body.addEventListener('click', (e) => {
+    if (dynamicCertModal && dynamicCertModal.classList.contains('active') && !dynamicCertModal.contains(e.target) && !e.target.closest('.cert-carousel-card')) {
+        dynamicCertModal.classList.remove('active');
+        if (!isScriptedMove) setAiState('', '');
+    }
+});
+
+// --- JOURNEY SECTION ACTIVE SCROLL GLOW LOGIC ---
+const journeyItems = document.querySelectorAll('.timeline-item');
+
+const journeyOptions = {
+    threshold: 0.5,
+    rootMargin: "0px 0px -15% 0px"
+};
+
+const journeyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            // Remove active, add soft-focus to all
+            journeyItems.forEach(item => {
+                item.classList.remove('active-focus');
+                item.classList.add('soft-focus');
+            });
+
+            // Highlight the focused one
+            entry.target.classList.add('active-focus');
+            entry.target.classList.remove('soft-focus');
+
+            // Dynamically interact with AI Companion
+            if (typeof isScriptedMove !== 'undefined' && !isScriptedMove) {
+                if (entry.target.id === 'journey-accenture') {
+                    setAiState('working', 'Checking Accenture logs: 2+ Years QA Telemetry verified! 🏢');
+                } else if (entry.target.id === 'journey-lpu') {
+                    setAiState('dancing', 'BCA Engineering credentials verified at LPU! 🎓');
+                }
+            }
+        }
+    });
+}, journeyOptions);
+
+journeyItems.forEach(item => {
+    journeyObserver.observe(item);
+});
+
+// Theme Toggle Logic
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = themeToggle.querySelector('i');
+
+const savedTheme = localStorage.getItem('theme') || 'dark';
+if (savedTheme === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    themeIcon.className = 'fa-solid fa-moon';
+}
+
+themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    let newTheme = 'dark';
+    if (currentTheme !== 'light') {
+        newTheme = 'light';
+    }
+
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+
+    if (newTheme === 'light') {
+        themeIcon.className = 'fa-solid fa-moon';
+        setAiState('working', 'Light Mode Engaged!');
+    } else {
+        themeIcon.className = 'fa-solid fa-sun';
+        setAiState('dancing', 'Dark Mode Restored!');
+    }
+});
+
+
