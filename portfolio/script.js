@@ -1397,3 +1397,64 @@ themeToggle.addEventListener('click', () => {
     window.addEventListener('scroll', updateDots, { passive: true });
     updateDots();
 })();
+
+// ===== Email Copy Button =====
+(function () {
+    const btn = document.getElementById('copyEmailBtn');
+    if (!btn) return;
+    const icon = btn.querySelector('i');
+    let resetTimer = null;
+    btn.addEventListener('click', function () {
+        const email = btn.dataset.email;
+        function onCopied() {
+            btn.classList.add('copied');
+            icon.className = 'fa-solid fa-check';
+            btn.title = 'Copied!';
+            if (typeof setAiState === 'function') {
+                setAiState('dancing', 'Email copied to clipboard! 📋');
+            }
+            clearTimeout(resetTimer);
+            resetTimer = setTimeout(function () {
+                btn.classList.remove('copied');
+                icon.className = 'fa-regular fa-copy';
+                btn.title = 'Copy email';
+            }, 2200);
+        }
+        function legacyCopy() {
+            const ta = document.createElement('textarea');
+            ta.value = email;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            onCopied();
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(onCopied).catch(legacyCopy);
+        } else {
+            legacyCopy();
+        }
+    });
+})();
+
+// ===== Preloader Dismiss =====
+(function () {
+    const pre = document.getElementById('preloader');
+    if (!pre || pre.style.display === 'none') return;
+    const MIN_SHOW = 900;
+    const start = performance.now();
+    function hide() {
+        const wait = Math.max(0, MIN_SHOW - (performance.now() - start));
+        setTimeout(function () {
+            pre.classList.add('done');
+            try { sessionStorage.setItem('avSeen', '1'); } catch (e) { }
+            setTimeout(function () { pre.remove(); }, 600);
+        }, wait);
+    }
+    if (document.readyState === 'complete') {
+        hide();
+    } else {
+        window.addEventListener('load', hide);
+        setTimeout(hide, 2200);
+    }
+})();

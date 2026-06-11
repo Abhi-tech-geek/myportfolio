@@ -18,14 +18,16 @@
     <meta property="og:description"
         content="QA Tester & Automation Specialist at Accenture. Selenium, Python, AI-powered testing — explore my projects: AbhiMate, DISCOVA, AuraGo.">
     <meta property="og:url" content="https://myportfolio-one-fawn-67.vercel.app/">
-    <meta property="og:image" content="https://myportfolio-one-fawn-67.vercel.app/avatar.png">
+    <meta property="og:image" content="https://myportfolio-one-fawn-67.vercel.app/og-banner.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Abhinav Saxena | QA & Automation Portfolio">
     <meta name="twitter:description"
         content="QA Tester & Automation Specialist at Accenture. AI-powered testing projects: AbhiMate, DISCOVA, AuraGo.">
-    <meta name="twitter:image" content="https://myportfolio-one-fawn-67.vercel.app/avatar.png">
+    <meta name="twitter:image" content="https://myportfolio-one-fawn-67.vercel.app/og-banner.png">
 
     <!-- Favicon (lightning bolt) -->
     <link rel="icon"
@@ -45,6 +47,18 @@
 </head>
 
 <body>
+
+    <!-- Preloader -->
+    <div id="preloader" aria-hidden="true">
+        <div class="pre-logo">Abhinav<span>.dev</span></div>
+        <div class="pre-bar">
+            <div class="pre-fill"></div>
+        </div>
+        <div class="pre-status">booting quality systems…</div>
+    </div>
+    <script>
+        try { if (sessionStorage.getItem('avSeen')) { document.getElementById('preloader').style.display = 'none'; } } catch (e) { }
+    </script>
 
     <!-- Shared SVG gradients -->
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -117,6 +131,9 @@
     <!-- Hero Section -->
     <section id="home" class="hero container">
         <div class="reveal">
+            <div class="avail-badge">
+                <span class="avail-dot" aria-hidden="true"></span> Open to Opportunities
+            </div>
             <div class="tagline">
                 <span><i class="fa-solid fa-bolt" style="margin-right: 8px;"></i> QA Engineer · Automation · AI
                     Explorer</span>
@@ -799,10 +816,16 @@
             </p>
 
             <div class="contact-cards">
-                <a href="mailto:abhinav.ujjwal98@gmail.com" class="contact-card">
-                    <i class="fa-regular fa-envelope"></i>
-                    <span>abhinav.ujjwal98@gmail.com</span>
-                </a>
+                <div class="contact-card contact-email-card">
+                    <a href="mailto:abhinav.ujjwal98@gmail.com" class="contact-email-link">
+                        <i class="fa-regular fa-envelope"></i>
+                        <span>abhinav.ujjwal98@gmail.com</span>
+                    </a>
+                    <button class="copy-email-btn" id="copyEmailBtn" data-email="abhinav.ujjwal98@gmail.com"
+                        aria-label="Copy email address" title="Copy email">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
 
                 <a href="https://www.linkedin.com/in/abhinav-saxena-5a4017123/" target="_blank" class="contact-card">
                     <i class="fa-brands fa-linkedin-in"></i>
