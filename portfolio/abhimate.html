@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="project.css">
 </head>
 
-<body class="pp-body" style="--accent-1:#8b5cf6;--accent-2:#6366f1;--accent-3:#a855f7;--gradient:linear-gradient(135deg,#8b5cf6,#6366f1);--gradient-text:linear-gradient(to right,#8b5cf6,#a855f7);">
+<body class="pp-body" style="--accent-1:#38bdf8;--accent-2:#3b82f6;--accent-3:#22d3ee;--gradient:linear-gradient(135deg,#38bdf8,#3b82f6);--gradient-text:linear-gradient(to right,#7dd3fc,#3b82f6);">
 
     <div class="pp-ambient">
         <div class="pp-blob pp-blob-1"></div>
@@ -44,7 +44,15 @@
 
     <header class="pp-hero">
         <span class="pp-status live"><span class="dot"></span> Live</span>
-        <div class="pp-hero-icon"><i class="fa-solid fa-robot"></i></div>
+        <div class="pp-hero-icon pp-logomark">
+            <svg viewBox="0 0 64 64" aria-hidden="true">
+                <path d="M32 6 L58 19 L32 32 L6 19 Z" fill="currentColor" />
+                <path d="M6 29 L32 42 L58 29" stroke="currentColor" stroke-width="5" fill="none"
+                    stroke-linejoin="round" stroke-linecap="round" opacity="0.6" />
+                <path d="M6 40 L32 53 L58 40" stroke="currentColor" stroke-width="5" fill="none"
+                    stroke-linejoin="round" stroke-linecap="round" opacity="0.35" />
+            </svg>
+        </div>
         <h1>AbhiMate</h1>
         <div class="pp-tagline">Describe a feature. Get a tested suite.</div>
         <p class="pp-hero-sub">
@@ -174,6 +182,34 @@
                     <div class="pp-metric-lbl">Browser operations</div>
                 </div>
             </div>
+        </section>
+
+        <section class="pp-section">
+            <h2 class="pp-section-title">Watch the browser <span>open</span></h2>
+            <p class="pp-section-lead">
+                The live site runs Chrome headless (invisible) on the server. Want to watch the browser open and
+                perform every action on your own machine? Run AbhiMate locally — it's optional, just for the show. 🎬
+            </p>
+            <div class="pp-code">
+                <span class="c-comment"># 1. Clone the code</span><br>
+                <span class="c-cmd">git clone https://github.com/Abhi-tech-geek/AbhiMate</span><br>
+                <span class="c-cmd">cd AbhiMate</span><br><br>
+                <span class="c-comment"># 2. Create a virtual environment</span><br>
+                <span class="c-cmd">python -m venv venv</span><br>
+                <span class="c-cmd">venv\Scripts\activate</span><br><br>
+                <span class="c-comment"># 3. Install dependencies</span><br>
+                <span class="c-cmd">pip install -r requirements.txt</span><br><br>
+                <span class="c-comment"># 4. Create a .env file with your key</span><br>
+                <span class="c-comment">#    GROQ_API_KEY=gsk_xxxxxxxx</span><br><br>
+                <span class="c-comment"># 5. Turn headless OFF so the browser is visible</span><br>
+                <span class="c-comment">#    ABHIMATE_HEADLESS=false</span><br><br>
+                <span class="c-comment"># 6. Run it</span><br>
+                <span class="c-cmd">python app.py</span>
+            </div>
+            <p class="pp-section-lead" style="margin-top:1.5rem;">
+                Then open <code>http://localhost:5000</code>, start a test run, and Chrome opens and performs every
+                click, type and navigation right in front of you.
+            </p>
         </section>
 
         <section class="pp-cta-band">

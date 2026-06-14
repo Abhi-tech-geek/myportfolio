@@ -394,3 +394,73 @@
     font-weight: 500;
     text-align: center;
 }
+
+/* ===== Hero 3D float + glow ===== */
+.pp-hero-icon {
+    animation: ppFloat 4.5s ease-in-out infinite;
+    position: relative;
+}
+
+@keyframes ppFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.pp-hero-icon:not(.pp-logomark)::after {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    border-radius: 28px;
+    background: var(--gradient);
+    filter: blur(26px);
+    opacity: 0.35;
+    z-index: -1;
+}
+
+/* Brand logomark (transparent, colored SVG) */
+.pp-logomark {
+    background: none !important;
+    box-shadow: none !important;
+    width: auto;
+    height: auto;
+    color: var(--accent-1);
+}
+
+.pp-logomark svg {
+    width: 88px;
+    height: 88px;
+    filter: drop-shadow(0 0 20px var(--accent-1));
+}
+
+/* ===== Terminal code block ===== */
+.pp-code {
+    background: #0a0a0f;
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.5rem 1.7rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.86rem;
+    line-height: 1.85;
+    color: #cbd5e1;
+    overflow-x: auto;
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.pp-code .c-comment { color: #64748b; }
+.pp-code .c-cmd { color: #34d399; }
+
+.pp-section code {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85em;
+    color: var(--accent-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pp-hero-icon { animation: none; }
+}
