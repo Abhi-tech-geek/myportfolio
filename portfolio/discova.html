@@ -25,11 +25,12 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;800&family=Caveat:wght@700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="project.css">
 </head>
 
-<body class="pp-body">
+<body class="pp-body" style="--accent-1:#10b981;--accent-2:#06b6d4;--accent-3:#34d399;--gradient:linear-gradient(135deg,#10b981,#06b6d4);--gradient-text:linear-gradient(to right,#34d399,#06b6d4);">
 
     <div class="pp-ambient">
         <div class="pp-blob pp-blob-1"></div>
@@ -133,27 +134,17 @@
 
         <section class="pp-section">
             <h2 class="pp-section-title">Tech <span>stack</span></h2>
-            <div class="pp-stack">
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">App</span>
-                    <span class="pp-stack-val">React Native · Expo SDK 54 · TypeScript</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Backend</span>
-                    <span class="pp-stack-val">Firebase — Auth, Firestore, Storage</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">AI</span>
-                    <span class="pp-stack-val">Gemini 2.5 (vision) · Groq / Llama (text)</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Data</span>
-                    <span class="pp-stack-val">Google Maps Platform · Open-Meteo</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">UI / State</span>
-                    <span class="pp-stack-val">NativeWind · Zustand</span>
-                </div>
+            <div class="pp-tech-grid">
+                <div class="pp-tech"><i class="devicon-react-original colored"></i><span>React Native</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-mobile-screen"></i><span>Expo SDK 54</span></div>
+                <div class="pp-tech"><i class="devicon-typescript-plain colored"></i><span>TypeScript</span></div>
+                <div class="pp-tech"><i class="devicon-firebase-plain colored"></i><span>Firebase</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-robot"></i><span>Gemini 2.5</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-bolt"></i><span>Groq / Llama</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-map-location-dot"></i><span>Google Maps</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-cloud-sun"></i><span>Open-Meteo</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-wind"></i><span>NativeWind</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-layer-group"></i><span>Zustand</span></div>
             </div>
         </section>
 
@@ -194,6 +185,8 @@
     <footer class="pp-footer">
         Built by Abhinav Saxena · <a href="/" style="color:var(--accent-1);">theabhinavsaxena.in</a>
     </footer>
+
+    <script src="project.js"></script>
 
 </body>
 

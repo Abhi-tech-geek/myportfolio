@@ -25,11 +25,12 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;800&family=Caveat:wght@700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="project.css">
 </head>
 
-<body class="pp-body">
+<body class="pp-body" style="--accent-1:#06b6d4;--accent-2:#3b82f6;--accent-3:#22d3ee;--gradient:linear-gradient(135deg,#06b6d4,#3b82f6);--gradient-text:linear-gradient(to right,#22d3ee,#3b82f6);">
 
     <div class="pp-ambient">
         <div class="pp-blob pp-blob-1"></div>
@@ -147,27 +148,18 @@
 
         <section class="pp-section">
             <h2 class="pp-section-title">Built <span>with</span></h2>
-            <div class="pp-stack">
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Frontend</span>
-                    <span class="pp-stack-val">React 19 · Vite · Tailwind · Framer Motion</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Backend</span>
-                    <span class="pp-stack-val">Node 20 · Express 5</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Data</span>
-                    <span class="pp-stack-val">Supabase — Auth, Postgres, Realtime</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">AI</span>
-                    <span class="pp-stack-val">Groq — Llama 3.3 70B · Serper.dev</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Deploy</span>
-                    <span class="pp-stack-val">Docker · Google Cloud Run</span>
-                </div>
+            <div class="pp-tech-grid">
+                <div class="pp-tech"><i class="devicon-react-original colored"></i><span>React 19</span></div>
+                <div class="pp-tech"><i class="devicon-vitejs-plain colored"></i><span>Vite</span></div>
+                <div class="pp-tech"><i class="devicon-tailwindcss-plain colored"></i><span>Tailwind</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-film"></i><span>Framer Motion</span></div>
+                <div class="pp-tech"><i class="devicon-nodejs-plain colored"></i><span>Node 20</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-server"></i><span>Express 5</span></div>
+                <div class="pp-tech"><i class="devicon-supabase-plain colored"></i><span>Supabase</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-robot"></i><span>Groq AI</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-magnifying-glass"></i><span>Serper.dev</span></div>
+                <div class="pp-tech"><i class="devicon-docker-plain colored"></i><span>Docker</span></div>
+                <div class="pp-tech"><i class="devicon-googlecloud-plain colored"></i><span>Cloud Run</span></div>
             </div>
         </section>
 
@@ -175,7 +167,7 @@
             <h2 class="pp-section-title">By the <span>numbers</span></h2>
             <div class="pp-metrics">
                 <div class="pp-metric">
-                    <div class="pp-metric-num">8</div>
+                    <div class="pp-metric-num" data-count="8">8</div>
                     <div class="pp-metric-lbl">Destinations per search</div>
                 </div>
                 <div class="pp-metric">
@@ -183,7 +175,7 @@
                     <div class="pp-metric-lbl">Domestic + international</div>
                 </div>
                 <div class="pp-metric">
-                    <div class="pp-metric-num">2</div>
+                    <div class="pp-metric-num" data-count="2">2</div>
                     <div class="pp-metric-lbl">Travel modes</div>
                 </div>
                 <div class="pp-metric">
@@ -211,6 +203,8 @@
     <footer class="pp-footer">
         Built by Abhinav Saxena · <a href="/" style="color:var(--accent-1);">theabhinavsaxena.in</a>
     </footer>
+
+    <script src="project.js"></script>
 
 </body>
 

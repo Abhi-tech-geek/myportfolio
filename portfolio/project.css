@@ -350,3 +350,47 @@
     .pp-section-title { font-size: 1.6rem; }
     .pp-cta-row { flex-direction: column; align-items: stretch; }
 }
+
+/* ===== Tech Logo Grid ===== */
+.pp-tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+    gap: 1rem;
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.pp-tech {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1.3rem 0.8rem;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pp-tech:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-1);
+    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.15);
+}
+
+.pp-tech i {
+    font-size: 2.2rem;
+    line-height: 1;
+}
+
+.pp-tech .fa-solid,
+.pp-tech .fa-brands {
+    color: var(--accent-1);
+}
+
+.pp-tech span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-align: center;
+}

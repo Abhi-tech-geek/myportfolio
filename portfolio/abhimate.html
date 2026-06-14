@@ -25,11 +25,12 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;500;700;800&family=Caveat:wght@700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="project.css">
 </head>
 
-<body class="pp-body">
+<body class="pp-body" style="--accent-1:#8b5cf6;--accent-2:#6366f1;--accent-3:#a855f7;--gradient:linear-gradient(135deg,#8b5cf6,#6366f1);--gradient-text:linear-gradient(to right,#8b5cf6,#a855f7);">
 
     <div class="pp-ambient">
         <div class="pp-blob pp-blob-1"></div>
@@ -139,31 +140,17 @@
 
         <section class="pp-section">
             <h2 class="pp-section-title">Tech <span>stack</span></h2>
-            <div class="pp-stack">
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Backend</span>
-                    <span class="pp-stack-val">Python · Flask · SQLite</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">AI</span>
-                    <span class="pp-stack-val">Groq — Llama 3.3 70B + vision</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Automation</span>
-                    <span class="pp-stack-val">Selenium · Playwright · Chrome</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Frontend</span>
-                    <span class="pp-stack-val">Vanilla JS · Glassmorphism UI</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Deploy</span>
-                    <span class="pp-stack-val">Docker · Railway · Custom domain</span>
-                </div>
-                <div class="pp-stack-row">
-                    <span class="pp-stack-label">Testing</span>
-                    <span class="pp-stack-val">Pytest — 441 tests</span>
-                </div>
+            <div class="pp-tech-grid">
+                <div class="pp-tech"><i class="devicon-python-plain colored"></i><span>Python</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-flask"></i><span>Flask</span></div>
+                <div class="pp-tech"><i class="devicon-sqlite-plain colored"></i><span>SQLite</span></div>
+                <div class="pp-tech"><i class="devicon-selenium-original colored"></i><span>Selenium</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-masks-theater"></i><span>Playwright</span></div>
+                <div class="pp-tech"><i class="devicon-chrome-plain colored"></i><span>Chrome</span></div>
+                <div class="pp-tech"><i class="devicon-docker-plain colored"></i><span>Docker</span></div>
+                <div class="pp-tech"><i class="devicon-javascript-plain colored"></i><span>JavaScript</span></div>
+                <div class="pp-tech"><i class="fa-solid fa-robot"></i><span>Groq AI</span></div>
+                <div class="pp-tech"><i class="devicon-pytest-plain colored"></i><span>Pytest</span></div>
             </div>
         </section>
 
@@ -171,19 +158,19 @@
             <h2 class="pp-section-title">By the <span>numbers</span></h2>
             <div class="pp-metrics">
                 <div class="pp-metric">
-                    <div class="pp-metric-num">13</div>
+                    <div class="pp-metric-num" data-count="13">13</div>
                     <div class="pp-metric-lbl">Production features</div>
                 </div>
                 <div class="pp-metric">
-                    <div class="pp-metric-num">441</div>
+                    <div class="pp-metric-num" data-count="441">441</div>
                     <div class="pp-metric-lbl">Automated tests passing</div>
                 </div>
                 <div class="pp-metric">
-                    <div class="pp-metric-num">11</div>
+                    <div class="pp-metric-num" data-count="11">11</div>
                     <div class="pp-metric-lbl">Specialized AI agents</div>
                 </div>
                 <div class="pp-metric">
-                    <div class="pp-metric-num">36</div>
+                    <div class="pp-metric-num" data-count="36">36</div>
                     <div class="pp-metric-lbl">Browser operations</div>
                 </div>
             </div>
@@ -207,6 +194,8 @@
     <footer class="pp-footer">
         Built by Abhinav Saxena · <a href="/" style="color:var(--accent-1);">theabhinavsaxena.in</a>
     </footer>
+
+    <script src="project.js"></script>
 
 </body>
 

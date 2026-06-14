@@ -3751,3 +3751,28 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 .proj-card-wip {
     opacity: 0.92;
 }
+
+/* ===== Certifications Grid (clean, replaces carousel) ===== */
+.certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.certs-grid .cert-carousel-card {
+    padding: 2.2rem 1.6rem;
+    max-width: none;
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .certs-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+    .certs-grid .cert-carousel-card {
+        padding: 1.8rem 1.4rem;
+    }
+}
