@@ -506,3 +506,117 @@
     -webkit-text-fill-color: var(--accent-1);
     margin-left: 6px;
 }
+
+/* ===== Scroll reveal ===== */
+.reveal-ready .pp-section,
+.reveal-ready .pp-showcase,
+.reveal-ready .pp-cta-band {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal-ready .pp-section.in,
+.reveal-ready .pp-showcase.in,
+.reveal-ready .pp-cta-band.in {
+    opacity: 1;
+    transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    .reveal-ready .pp-section,
+    .reveal-ready .pp-showcase,
+    .reveal-ready .pp-cta-band { opacity: 1 !important; transform: none !important; }
+}
+
+/* ===== Showcase device mockups ===== */
+.pp-showcase {
+    max-width: 720px;
+    margin: 0 auto 1rem;
+    padding: 0 5%;
+}
+
+/* Browser frame */
+.pp-browser {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+.pp-browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid var(--border-color);
+}
+.pp-browser-dots { display: flex; gap: 6px; }
+.pp-browser-dots span { width: 11px; height: 11px; border-radius: 50%; background: var(--border-color); }
+.pp-browser-url {
+    margin-left: 8px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 4px 12px;
+    border-radius: 6px;
+    flex: 1;
+}
+.pp-browser-body { padding: 1.3rem; display: flex; flex-direction: column; gap: 12px; min-height: 220px; }
+
+/* Mock dashboard rows */
+.mock-stat { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); }
+.mock-stat b { color: var(--text-primary); font-family: 'Outfit', sans-serif; }
+.mock-bar { height: 8px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+.mock-bar i { display: block; height: 100%; background: var(--gradient); border-radius: 6px; }
+.mock-row {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 10px; padding: 9px 13px; font-size: 0.84rem;
+}
+.mock-row .ic { width: 18px; text-align: center; }
+.mock-row.pass .ic { color: #34d399; }
+.mock-row.run .ic { color: var(--accent-1); animation: spinGently 1.2s linear infinite; }
+.mock-row .meta { margin-left: auto; color: var(--text-secondary); font-size: 0.74rem; font-family: 'Courier New', monospace; }
+
+/* Mock destination cards */
+.mock-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mock-dest { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; }
+.mock-dest .pic { height: 56px; background: var(--gradient); opacity: 0.85; }
+.mock-dest .info { padding: 8px 10px; }
+.mock-dest .nm { font-size: 0.78rem; font-weight: 600; }
+.mock-dest .sc { font-size: 0.68rem; color: var(--accent-1); margin-top: 2px; font-family: 'Outfit', sans-serif; font-weight: 700; }
+
+/* Phone frame */
+.pp-phone {
+    width: 250px;
+    margin: 0 auto;
+    background: #0c0c10;
+    border: 8px solid #1c1c26;
+    border-radius: 34px;
+    padding: 14px 12px 18px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+.pp-phone-notch { width: 90px; height: 6px; background: #1c1c26; border-radius: 6px; margin: 0 auto 14px; }
+.mock-place-pic { height: 90px; border-radius: 12px; background: var(--gradient); opacity: 0.85; margin-bottom: 10px; }
+.mock-place-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.mock-ring {
+    width: 58px; height: 58px; border-radius: 50%; flex-shrink: 0;
+    background: conic-gradient(var(--accent-1) 87%, rgba(255, 255, 255, 0.1) 0);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+}
+.mock-ring::after {
+    content: '87'; position: absolute; inset: 6px; background: #0c0c10; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--text-primary);
+}
+.mock-place-name { font-size: 0.95rem; font-weight: 600; }
+.mock-place-sub { font-size: 0.72rem; color: var(--text-secondary); }
+.mock-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.mock-pill { font-size: 0.68rem; padding: 3px 9px; border-radius: 50px; background: rgba(16, 185, 129, 0.12); color: #34d399; }
+
+@media (max-width: 600px) {
+    .pp-browser-body { min-height: 0; }
+}

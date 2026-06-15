@@ -1357,3 +1357,20 @@ themeToggle.addEventListener('click', () => {
     window.addEventListener('scroll', toggle, { passive: true });
     toggle();
 })();
+
+// ===== Robot eyes follow cursor =====
+(function () {
+    const eyes = document.querySelectorAll('.bot-eye');
+    const head = document.querySelector('.bot-head');
+    if (!eyes.length || !head) return;
+    if (window.matchMedia('(pointer: coarse)').matches) return; // skip on touch
+    window.addEventListener('mousemove', function (e) {
+        const r = head.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const ang = Math.atan2(e.clientY - cy, e.clientX - cx);
+        const dx = Math.cos(ang) * 2.2;
+        const dy = Math.sin(ang) * 2.2;
+        eyes.forEach(function (eye) { eye.style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; });
+    }, { passive: true });
+})();
