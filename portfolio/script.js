@@ -1374,3 +1374,67 @@ themeToggle.addEventListener('click', () => {
         eyes.forEach(function (eye) { eye.style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; });
     }, { passive: true });
 })();
+
+// ===== Robot Guide: greeting, idle tips, section reactions =====
+(function () {
+    if (typeof setAiState !== 'function' || !aiRobot) return;
+
+    function botFree() {
+        return !aiMenu.classList.contains('active') && !isScriptedMove;
+    }
+    function say(state, msg, resetMs) {
+        if (!botFree()) return;
+        setAiState(state, msg);
+        if (resetMs) setTimeout(function () { if (botFree()) setAiState('', ''); }, resetMs);
+    }
+
+    // First-visit greeting (once per session)
+    var greeted = false;
+    try { greeted = sessionStorage.getItem('guideGreeted') === '1'; } catch (e) { }
+    if (!greeted) {
+        setTimeout(function () {
+            say('working', "Hi! I'm your guide 🤖 — click me anytime.", 4000);
+            try { sessionStorage.setItem('guideGreeted', '1'); } catch (e) { }
+        }, 1800);
+    }
+
+    // Idle tips — rotate gentle hints when the bot is free
+    var tips = [
+        "Tip: try the Bug Hunter game 🐛",
+        "Psst… you can download my resume 📄",
+        "Check out DISCOVA — AI accessibility ♿",
+        "Click me to run a QA scan of this site ⚡",
+        "Explore my projects below 👇"
+    ];
+    var tipIdx = 0;
+    setInterval(function () {
+        if (document.hidden || !botFree()) return;
+        say('working', tips[tipIdx % tips.length], 3800);
+        tipIdx++;
+    }, 14000);
+
+    // Section reactions (fire once each)
+    var firedProjects = false, firedContact = false;
+    var projects = document.getElementById('projects');
+    var contact = document.getElementById('contact');
+
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (!e.isIntersecting) return;
+                if (e.target === projects && !firedProjects) {
+                    firedProjects = true;
+                    say('working', "These are my projects — take a look! 👇", 4500);
+                    var cards = document.querySelectorAll('.proj-card');
+                    cards.forEach(function (c) { c.classList.add('telemetry-pulse'); });
+                    setTimeout(function () { cards.forEach(function (c) { c.classList.remove('telemetry-pulse'); }); }, 3000);
+                } else if (e.target === contact && !firedContact) {
+                    firedContact = true;
+                    say('dancing', "Let's connect! 👋", 4500);
+                }
+            });
+        }, { threshold: 0.4 });
+        if (projects) io.observe(projects);
+        if (contact) io.observe(contact);
+    }
+})();
