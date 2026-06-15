@@ -3776,3 +3776,9 @@ body:not(.touch-device) .flip-card:hover .flip-back {
         padding: 1.8rem 1.4rem;
     }
 }
+
+/* Brand logomark SVGs inside project card icons */
+.proj-icon svg {
+    width: 30px;
+    height: 30px;
+}
