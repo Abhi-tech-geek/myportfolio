@@ -620,3 +620,68 @@
 @media (max-width: 600px) {
     .pp-browser-body { min-height: 0; }
 }
+
+/* ===== Mock app UI (matches real apps) ===== */
+.mock-appnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 2px;
+}
+.mock-brand {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+.mock-brand i { color: var(--accent-1); }
+.mock-tabs { display: flex; gap: 14px; }
+.mock-tab { font-size: 0.74rem; color: var(--text-secondary); font-weight: 600; }
+.mock-tab.active { color: var(--accent-1); border-bottom: 2px solid var(--accent-1); padding-bottom: 2px; }
+.mock-avatar {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--gradient); color: #fff; font-size: 0.7rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+.mock-chips { display: flex; gap: 8px; }
+.mock-chip {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 9px;
+    padding: 8px 6px;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+.mock-chip b { display: block; font-family: 'Outfit', sans-serif; font-size: 1.1rem; color: var(--accent-1); }
+
+.mock-dep-head {
+    display: flex; justify-content: space-between;
+    font-size: 0.64rem; letter-spacing: 1px; color: var(--text-secondary);
+    text-transform: uppercase; padding: 2px 0 8px; border-bottom: 1px solid var(--border-color);
+}
+.mock-dep {
+    display: grid;
+    grid-template-columns: 22px 1fr auto auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.82rem;
+}
+.mock-dep .rk { color: var(--text-secondary); font-family: 'Courier New', monospace; font-size: 0.7rem; }
+.mock-dep .nm { font-weight: 600; }
+.mock-dep .vb { font-size: 0.66rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+.mock-dep .ai { font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--accent-1); font-size: 1.05rem; }
+.mock-dep .pr { font-size: 0.72rem; color: var(--text-secondary); font-family: 'Courier New', monospace; }
+
+@media (max-width: 600px) {
+    .mock-dep { grid-template-columns: 20px 1fr auto auto; }
+    .mock-dep .vb { display: none; }
+    .mock-avatar { display: none; }
+}
