@@ -3782,3 +3782,38 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     width: 30px;
     height: 30px;
 }
+
+/* ===== Back to top button ===== */
+.back-to-top {
+    position: fixed;
+    bottom: 28px;
+    left: 28px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--gradient);
+    color: #fff;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+    z-index: 1200;
+}
+
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.back-to-top:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(139, 92, 246, 0.5);
+}

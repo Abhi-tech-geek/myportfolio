@@ -1342,3 +1342,20 @@ themeToggle.addEventListener('click', () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     render();
 })();
+
+// ===== Back to top button =====
+(function () {
+    const btn = document.createElement('button');
+    btn.className = 'back-to-top';
+    btn.setAttribute('aria-label', 'Back to top');
+    btn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+    btn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.body.appendChild(btn);
+    function toggle() {
+        btn.classList.toggle('show', window.scrollY > 500);
+    }
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle();
+})();

@@ -464,3 +464,45 @@
 @media (prefers-reduced-motion: reduce) {
     .pp-hero-icon { animation: none; }
 }
+
+/* ===== Next project nav ===== */
+.pp-next {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    text-align: right;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.3rem 1.6rem;
+    margin: 1rem 0 2rem;
+    transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pp-next:hover {
+    border-color: var(--accent-1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+}
+
+.pp-next-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+}
+
+.pp-next-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.pp-next-name i {
+    -webkit-text-fill-color: var(--accent-1);
+    margin-left: 6px;
+}
