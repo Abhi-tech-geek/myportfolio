@@ -803,10 +803,20 @@ footer {
 /* Projects Section */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
     margin-top: 2rem;
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
     perspective: 1000px;
+}
+
+@media (max-width: 760px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
 }
 
 .project-card {
@@ -1173,6 +1183,28 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     animation: aiFloatSide 4s infinite ease-in-out;
     pointer-events: auto;
     filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+}
+
+/* Attention glow ring behind the robot */
+.ai-robot-body::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.45), transparent 70%);
+    filter: blur(8px);
+    z-index: -1;
+    animation: botGlow 3s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes botGlow {
+    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.85); }
+    50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.15); }
 }
 
 .bot-antenna {

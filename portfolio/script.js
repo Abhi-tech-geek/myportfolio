@@ -149,11 +149,9 @@ let targetBotPos = { x: 0, y: 0 };
 let roamInterval;
 
 function pickNewTarget() {
-    // Keep bounds in a neat, premium bottom-right quadrant to stay within active view
-    const limitX = Math.min(window.innerWidth - 150, 350);
-    const limitY = Math.min(window.innerHeight - 200, 250);
-    targetBotPos.x = -(Math.random() * limitX);
-    targetBotPos.y = -(Math.random() * limitY);
+    // Gentle idle drift — stays docked in the bottom-right corner, never over content
+    targetBotPos.x = -(Math.random() * 30);
+    targetBotPos.y = -(Math.random() * 45);
 }
 
 pickNewTarget();
