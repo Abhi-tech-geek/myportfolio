@@ -3915,3 +3915,9 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 @media (prefers-reduced-motion: reduce) {
     .hero3d-hint { display: none; }
 }
+
+/* 3D hero object only in dark mode (light mode = clean hero) */
+:root[data-theme="light"] #hero3d,
+:root[data-theme="light"] .hero3d-hint {
+    display: none;
+}

@@ -40,7 +40,34 @@
         new THREE.PointLight(0xec4899, 1.0, 50)
     ];
     lights.forEach(function (l) { scene.add(l); });
-    scene.add(new THREE.AmbientLight(0x404060, 0.6));
+    var ambient = new THREE.AmbientLight(0x404060, 0.6);
+    scene.add(ambient);
+
+    // ---- Theme-aware look (dark = glowing metal, light = clean wireframe) ----
+    function isLight() { return document.documentElement.getAttribute('data-theme') === 'light'; }
+    function applyTheme() {
+        if (isLight()) {
+            core.material.color.setHex(0xc7d2fe);
+            core.material.opacity = 0.16;
+            core.material.metalness = 0.1;
+            core.material.roughness = 0.7;
+            wire.material.color.setHex(0x6d28d9);
+            wire.material.opacity = 0.5;
+            lights[0].intensity = 0.4; lights[1].intensity = 0.4; lights[2].intensity = 0.4;
+            ambient.intensity = 0.9;
+        } else {
+            core.material.color.setHex(0x12121a);
+            core.material.opacity = 0.92;
+            core.material.metalness = 0.55;
+            core.material.roughness = 0.35;
+            wire.material.color.setHex(0x8b5cf6);
+            wire.material.opacity = 0.55;
+            lights[0].intensity = 1.1; lights[1].intensity = 1.1; lights[2].intensity = 1.0;
+            ambient.intensity = 0.6;
+        }
+    }
+    applyTheme();
+    new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     function resize() {
         var w = canvas.clientWidth || canvas.offsetWidth;
@@ -97,7 +124,7 @@
     var t = 0;
     function frame() {
         requestAnimationFrame(frame);
-        if (!visible || document.hidden) return;
+        if (!visible || document.hidden || isLight()) return;
         t += 0.016;
 
         group.rotation.y += velX;
