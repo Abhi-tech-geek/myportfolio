@@ -475,7 +475,7 @@ document.querySelectorAll('section').forEach(sec => secObserver.observe(sec));
 const canvas = document.getElementById('matrixGridCanvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-const maxParticles = 65;
+const maxParticles = 38;
 let mouseX = null;
 let mouseY = null;
 
@@ -531,7 +531,14 @@ function initParticles() {
 }
 initParticles();
 
-function animateParticles() {
+let lastParticleFrame = 0;
+function animateParticles(ts) {
+    requestAnimationFrame(animateParticles);
+    // Pause when tab hidden; cap to ~30fps to cut CPU
+    if (document.hidden) return;
+    if (ts && ts - lastParticleFrame < 33) return;
+    lastParticleFrame = ts || 0;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     particles.forEach(p => {
         p.update();
@@ -554,9 +561,8 @@ function animateParticles() {
             }
         }
     }
-    requestAnimationFrame(animateParticles);
 }
-animateParticles();
+requestAnimationFrame(animateParticles);
 
 /* --- FEATURE 2: Mouse Tracker for Canvas Engine --- */
 window.addEventListener('mousemove', (e) => {
