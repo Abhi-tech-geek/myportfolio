@@ -1438,3 +1438,26 @@ themeToggle.addEventListener('click', () => {
         if (contact) io.observe(contact);
     }
 })();
+
+// ===== Hero cursor spotlight =====
+(function () {
+    const hero = document.getElementById('home');
+    const spot = document.getElementById('heroSpotlight');
+    if (!hero || !spot) return;
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let tx = 0, ty = 0, raf = null;
+    function move() {
+        raf = null;
+        spot.style.transform = 'translate(' + (tx - 240) + 'px,' + (ty - 240) + 'px)';
+    }
+    hero.addEventListener('mousemove', function (e) {
+        const r = hero.getBoundingClientRect();
+        tx = e.clientX - r.left;
+        ty = e.clientY - r.top;
+        if (!raf) raf = requestAnimationFrame(move);
+    });
+    hero.addEventListener('mouseenter', function () { spot.classList.add('lit'); });
+    hero.addEventListener('mouseleave', function () { spot.classList.remove('lit'); });
+})();
