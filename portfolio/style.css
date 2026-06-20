@@ -3254,20 +3254,27 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     fill: none;
     stroke: var(--border-color);
     stroke-width: 2;
+    opacity: 0.35;
 }
 
 .timeline-path-svg .tl-draw {
     fill: none;
     stroke: url(#tlGrad);
-    stroke-width: 3;
+    stroke-width: 3.5;
     stroke-linecap: round;
-    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.5));
+    filter: drop-shadow(0 0 7px rgba(139, 92, 246, 0.6));
 }
 
 .timeline-path-tip {
     fill: #fff;
-    filter: drop-shadow(0 0 8px var(--accent-1));
+    filter: drop-shadow(0 0 9px var(--accent-1)) drop-shadow(0 0 16px var(--accent-3));
     transition: opacity 0.3s ease;
+    animation: tlTipPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes tlTipPulse {
+    0%, 100% { r: 5; }
+    50% { r: 7.5; }
 }
 
 /* --- Visually hidden (screen readers) --- */
@@ -3850,7 +3857,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     box-shadow: 0 10px 24px rgba(139, 92, 246, 0.5);
 }
 
-/* ===== Hero cursor spotlight ===== */
 .hero {
     position: relative;
     overflow: hidden;
@@ -3861,26 +3867,33 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     z-index: 2;
 }
 
-.hero-spotlight {
-    position: absolute;
+/* ===== Global cursor glow (follows mouse across whole site) ===== */
+.cursor-glow {
+    position: fixed;
     top: 0;
     left: 0;
-    width: 480px;
-    height: 480px;
+    width: 520px;
+    height: 520px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.08) 45%, transparent 70%);
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.16), rgba(59, 130, 246, 0.07) 45%, transparent 68%);
     transform: translate(-50%, -50%);
     pointer-events: none;
-    z-index: 1;
+    z-index: 9998;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.45s ease;
     will-change: transform;
+    mix-blend-mode: screen;
 }
 
-.hero-spotlight.lit {
+.cursor-glow.lit {
     opacity: 1;
 }
 
+:root[data-theme="light"] .cursor-glow {
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent 65%);
+    mix-blend-mode: multiply;
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .hero-spotlight { display: none; }
+    .cursor-glow { display: none; }
 }

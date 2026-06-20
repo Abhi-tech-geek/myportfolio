@@ -1085,16 +1085,8 @@ themeToggle.addEventListener('click', () => {
     function buildPath() {
         const h = timeline.offsetHeight;
         const cx = window.innerWidth <= 768 ? 1 : 21;
-        const amp = 13;
-        const seg = 170;
-        let d = 'M ' + cx + ' 0';
-        let y = 0, dir = 1;
-        while (y < h) {
-            const ny = Math.min(y + seg, h);
-            d += ' Q ' + (cx + amp * dir) + ' ' + (y + (ny - y) / 2) + ' ' + cx + ' ' + ny;
-            y = ny;
-            dir *= -1;
-        }
+        // Clean single straight line — track and draw overlap perfectly (no double line)
+        const d = 'M ' + cx + ' 0 L ' + cx + ' ' + h;
         track.setAttribute('d', d);
         draw.setAttribute('d', d);
         pathLen = draw.getTotalLength();
@@ -1445,25 +1437,26 @@ themeToggle.addEventListener('click', () => {
     }
 })();
 
-// ===== Hero cursor spotlight =====
+// ===== Global cursor glow (follows mouse across the whole site) =====
 (function () {
-    const hero = document.getElementById('home');
-    const spot = document.getElementById('heroSpotlight');
-    if (!hero || !spot) return;
     if (window.matchMedia('(pointer: coarse)').matches) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    let tx = 0, ty = 0, raf = null;
+    const glow = document.createElement('div');
+    glow.className = 'cursor-glow';
+    glow.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(glow);
+
+    let tx = 0, ty = 0, raf = null, lit = false;
     function move() {
         raf = null;
-        spot.style.transform = 'translate(' + (tx - 240) + 'px,' + (ty - 240) + 'px)';
+        glow.style.transform = 'translate(' + (tx - 260) + 'px,' + (ty - 260) + 'px)';
     }
-    hero.addEventListener('mousemove', function (e) {
-        const r = hero.getBoundingClientRect();
-        tx = e.clientX - r.left;
-        ty = e.clientY - r.top;
+    document.addEventListener('mousemove', function (e) {
+        tx = e.clientX;
+        ty = e.clientY;
+        if (!lit) { lit = true; glow.classList.add('lit'); }
         if (!raf) raf = requestAnimationFrame(move);
-    });
-    hero.addEventListener('mouseenter', function () { spot.classList.add('lit'); });
-    hero.addEventListener('mouseleave', function () { spot.classList.remove('lit'); });
+    }, { passive: true });
+    document.addEventListener('mouseleave', function () { lit = false; glow.classList.remove('lit'); });
 })();
