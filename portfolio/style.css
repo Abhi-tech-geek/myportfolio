@@ -3557,43 +3557,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     }
 }
 
-/* --- Scroll Journey Line (fixed viewport, performance-safe) --- */
-.journey-line {
-    position: fixed;
-    top: 0;
-    left: clamp(10px, 2vw, 36px);
-    width: 44px;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.jl-track {
-    fill: none;
-    stroke: var(--border-color);
-    stroke-width: 1.5;
-    opacity: 0.4;
-}
-
-.jl-draw {
-    fill: none;
-    stroke: url(#ringGrad);
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    opacity: 0.85;
-}
-
-.jl-tip {
-    fill: #fff;
-    filter: drop-shadow(0 0 5px var(--accent-1));
-}
-
-@media (max-width: 1100px) {
-    .journey-line {
-        display: none;
-    }
-}
-
 /* ===== Redesigned Project Cards (static, clean) ===== */
 .section-subtitle {
     text-align: center;
@@ -3890,7 +3853,7 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 }
 
 :root[data-theme="light"] .cursor-glow {
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent 65%);
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.2), rgba(59, 130, 246, 0.11) 42%, transparent 64%);
     mix-blend-mode: multiply;
 }
 
