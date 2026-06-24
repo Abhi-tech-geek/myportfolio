@@ -871,6 +871,30 @@ const certDataStore = {
         starColor: '#128807',
         accentColor: 'rgba(255, 153, 51, 0.25)',
         aiResponse: 'India AI Impact Innovator! Exceptional nation-building tech execution! 🏆'
+    },
+    'databricks-pro': {
+        org: 'Databricks',
+        title: 'Certified Data Engineer Professional',
+        subtitle: 'This credential validates advanced expertise in building and optimizing production-grade data pipelines on the Databricks Lakehouse Platform with Delta Lake.',
+        body: 'Covers advanced data modelling, performance tuning, structured streaming, security, governance, and CI/CD for large-scale data engineering.',
+        date: 'DATE: June 2026',
+        credId: 'CREDENTIAL ID: 186202462',
+        sealColor: '#FF3621',
+        starColor: '#FF3621',
+        accentColor: 'rgba(255, 54, 33, 0.25)',
+        aiResponse: 'Databricks Professional Data Engineer! Lakehouse mastery verified! 🧱'
+    },
+    'databricks-assoc': {
+        org: 'Databricks',
+        title: 'Certified Data Engineer Associate',
+        subtitle: 'This credential confirms proficiency in using the Databricks Lakehouse Platform to build reliable ETL pipelines and manage data with Delta Lake.',
+        body: 'Covers the Databricks workspace, SQL analytics, Delta Lake fundamentals, and core ETL/ELT data-engineering workflows.',
+        date: 'DATE: June 2026',
+        credId: 'CREDENTIAL ID: 186202443',
+        sealColor: '#FF3621',
+        starColor: '#FF3621',
+        accentColor: 'rgba(255, 54, 33, 0.25)',
+        aiResponse: 'Databricks Associate Data Engineer! Lakehouse foundations approved! ⚡'
     }
 };
 
@@ -1399,4 +1423,30 @@ themeToggle.addEventListener('click', () => {
         if (!raf) raf = requestAnimationFrame(move);
     }, { passive: true });
     document.addEventListener('mouseleave', function () { lit = false; glow.classList.remove('lit'); });
+})();
+
+// ===== Scroll Rail (clean gradient line filling with scroll) =====
+(function () {
+    const rail = document.createElement('div');
+    rail.className = 'scroll-rail';
+    rail.setAttribute('aria-hidden', 'true');
+    const track = document.createElement('div'); track.className = 'scroll-rail-track';
+    const fill = document.createElement('div'); fill.className = 'scroll-rail-fill';
+    const dot = document.createElement('div'); dot.className = 'scroll-rail-dot';
+    rail.appendChild(track); rail.appendChild(fill); rail.appendChild(dot);
+    document.body.appendChild(rail);
+
+    let ticking = false;
+    function render() {
+        ticking = false;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+        fill.style.height = (p * 100) + '%';
+        dot.style.top = (p * 100) + '%';
+        dot.style.opacity = (p > 0.003 && p < 0.997) ? '1' : '0';
+    }
+    function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', render);
+    render();
 })();

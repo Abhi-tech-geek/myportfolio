@@ -3757,10 +3757,11 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 /* ===== Certifications Grid (clean, replaces carousel) ===== */
 .certs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
     gap: 1.5rem;
     max-width: 1000px;
     margin: 0 auto;
+    justify-content: center;
 }
 
 .certs-grid .cert-carousel-card {
@@ -3859,4 +3860,55 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 
 @media (prefers-reduced-motion: reduce) {
     .cursor-glow { display: none; }
+}
+
+/* ===== Scroll Rail (clean single gradient line, left edge) ===== */
+.scroll-rail {
+    position: fixed;
+    top: 0;
+    left: clamp(14px, 2vw, 34px);
+    width: 3px;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.scroll-rail-track {
+    position: absolute;
+    inset: 0;
+    background: var(--border-color);
+    opacity: 0.3;
+    border-radius: 3px;
+}
+
+.scroll-rail-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to bottom, #8b5cf6, #3b82f6, #ec4899);
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.55);
+}
+
+.scroll-rail-dot {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--accent-1), 0 0 20px var(--accent-3);
+    transition: opacity 0.3s ease;
+}
+
+:root[data-theme="light"] .scroll-rail-dot {
+    background: var(--accent-1);
+}
+
+@media (max-width: 1100px) {
+    .scroll-rail { display: none; }
 }
