@@ -1450,3 +1450,17 @@ themeToggle.addEventListener('click', () => {
     window.addEventListener('resize', render);
     render();
 })();
+
+// ===== Certifications slider arrows =====
+(function () {
+    const track = document.getElementById('certsTrack');
+    if (!track) return;
+    const prev = document.getElementById('certPrev');
+    const next = document.getElementById('certNext');
+    function step() {
+        const card = track.querySelector('.cert-carousel-card');
+        return (card ? card.offsetWidth : 320) + 24;
+    }
+    if (prev) prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    if (next) next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+})();

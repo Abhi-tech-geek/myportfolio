@@ -3755,29 +3755,95 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 }
 
 /* ===== Certifications Grid (clean, replaces carousel) ===== */
-.certs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    gap: 1.5rem;
-    max-width: 1000px;
+/* ===== Certifications horizontal slider ===== */
+.certs-slider {
+    position: relative;
+    max-width: 1080px;
     margin: 0 auto;
-    justify-content: center;
 }
 
-.certs-grid .cert-carousel-card {
-    padding: 2.2rem 1.6rem;
+.certs-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0.5rem 0.25rem 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+}
+
+.certs-track::-webkit-scrollbar { display: none; }
+
+.certs-track .cert-carousel-card {
+    flex: 0 0 320px;
+    scroll-snap-align: center;
     max-width: none;
     width: auto;
+    padding: 2.2rem 1.6rem;
+}
+
+.certs-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--nav-bg-scrolled);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.certs-arrow:hover {
+    border-color: var(--accent-1);
+    color: var(--accent-1);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.certs-arrow.prev { left: -14px; }
+.certs-arrow.next { right: -14px; }
+
+/* Edge fade hint */
+.certs-slider::before,
+.certs-slider::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 16px;
+    width: 60px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.certs-slider::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-color), transparent);
+}
+
+.certs-slider::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-color), transparent);
 }
 
 @media (max-width: 768px) {
-    .certs-grid {
-        grid-template-columns: 1fr;
-        gap: 1.2rem;
-    }
-    .certs-grid .cert-carousel-card {
+    .certs-arrow { display: none; }
+    .certs-track .cert-carousel-card {
+        flex: 0 0 80%;
         padding: 1.8rem 1.4rem;
     }
+    .certs-slider::before,
+    .certs-slider::after { display: none; }
 }
 
 /* Brand logomark SVGs inside project card icons */
@@ -3911,4 +3977,24 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 
 @media (max-width: 1100px) {
     .scroll-rail { display: none; }
+}
+
+/* Scroll rail dot — subtle premium pulse ring */
+.scroll-rail-dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--accent-1);
+    opacity: 0.6;
+    animation: railDotPulse 2s infinite ease-out;
+}
+
+@keyframes railDotPulse {
+    0% { transform: scale(0.7); opacity: 0.7; }
+    100% { transform: scale(2.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-rail-dot::after { animation: none; }
 }
