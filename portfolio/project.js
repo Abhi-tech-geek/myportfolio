@@ -62,3 +62,21 @@
     // safety: reveal everything after 2.5s in case observer misses
     setTimeout(function () { els.forEach(el => el.classList.add('in')); }, 2500);
 })();
+
+// ===== Magnetic buttons =====
+(function () {
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    document.querySelectorAll('.btn').forEach(function (btn) {
+        btn.classList.add('magnetic');
+        btn.addEventListener('mousemove', function (e) {
+            const r = btn.getBoundingClientRect();
+            const mx = e.clientX - (r.left + r.width / 2);
+            const my = e.clientY - (r.top + r.height / 2);
+            const dx = Math.max(-14, Math.min(14, mx * 0.3));
+            const dy = Math.max(-10, Math.min(10, my * 0.5));
+            btn.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+        });
+        btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+    });
+})();
