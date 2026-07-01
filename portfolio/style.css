@@ -95,7 +95,7 @@ ul {
 
 .ambient-blob {
     position: absolute;
-    filter: blur(100px);
+    filter: blur(55px);
     border-radius: 50%;
     opacity: 0.25;
     animation: float 30s infinite alternate;
@@ -1100,7 +1100,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
         left: 0;
         width: 100%;
         background: rgba(10, 10, 12, 0.95);
-        backdrop-filter: blur(10px);
         flex-direction: column;
         padding: 2rem 5%;
         gap: 1.5rem;
@@ -1543,8 +1542,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     flex-direction: column;
     gap: 8px;
     box-shadow: 0 10px 30px rgba(139, 92, 246, 0.25);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     opacity: 0;
     transform: translateY(15px) scale(0.9);
     pointer-events: none;
@@ -1692,8 +1689,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     opacity: 0;
     pointer-events: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
 }
 
 .qa-modal.active {
@@ -1863,8 +1858,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     gap: 3rem;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
 .pipeline-visual::before {
@@ -2122,8 +2115,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     margin-top: 2rem;
     position: relative;
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
 }
 
 .sim-standby-view {
@@ -2451,8 +2442,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     opacity: 0;
     pointer-events: none;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
     text-align: center;
 }
 
@@ -2581,8 +2570,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     overflow: hidden;
     transition: all 0.4s ease;
     cursor: pointer;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -2748,8 +2735,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 50px;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
     overflow-x: auto;
     scrollbar-width: none;
     /* Hide scrollbar for Firefox */
@@ -2997,8 +2982,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
         flex-direction: column;
         gap: 0.4rem;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.15);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
@@ -3799,8 +3782,6 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     align-items: center;
     justify-content: center;
     font-size: 1.1rem;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     transition: all 0.25s ease;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
@@ -3953,9 +3934,20 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     left: 0;
     width: 100%;
     height: 0%;
-    background: linear-gradient(to bottom, #8b5cf6, #3b82f6, #ec4899);
+    background: linear-gradient(180deg, #8b5cf6, #3b82f6, #ec4899, #8b5cf6);
+    background-size: 100% 250%;
     border-radius: 3px;
     box-shadow: 0 0 8px rgba(139, 92, 246, 0.55);
+    animation: railFlow 3.5s linear infinite;
+}
+
+@keyframes railFlow {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 -250%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-rail-fill { animation: none; }
 }
 
 .scroll-rail-dot {
