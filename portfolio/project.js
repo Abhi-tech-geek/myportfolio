@@ -35,8 +35,7 @@
     btn.setAttribute('aria-label', 'Back to top');
     btn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
     btn.addEventListener('click', function () {
-        if (window.__lenis) { window.__lenis.scrollTo(0); }
-        else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
     document.body.appendChild(btn);
     function toggle() {
@@ -82,22 +81,18 @@
     });
 })();
 
-// ===== Smooth scroll (Lenis glide) =====
+// ===== Smooth in-page anchor scroll (native, no per-frame cost) =====
 (function () {
-    if (typeof Lenis === 'undefined') return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
-    window.__lenis = lenis;
-    // smooth in-page anchor links (offset for fixed navbar)
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
         const id = a.getAttribute('href');
-        if (id && id.length > 1) {
-            a.addEventListener('click', function (e) {
-                const t = document.querySelector(id);
-                if (t) { e.preventDefault(); lenis.scrollTo(t, { offset: -72 }); }
-            });
-        }
+        if (!id || id.length < 2) return;
+        a.addEventListener('click', function (e) {
+            const t = document.querySelector(id);
+            if (!t) return;
+            e.preventDefault();
+            const y = t.getBoundingClientRect().top + window.pageYOffset - 72;
+            window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+        });
     });
 })();

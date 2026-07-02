@@ -475,7 +475,9 @@ document.querySelectorAll('section').forEach(sec => secObserver.observe(sec));
 const canvas = document.getElementById('matrixGridCanvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
-const maxParticles = 38;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// lighter on mobile / respects reduced-motion; fewer nodes = far cheaper O(n²) link math
+const maxParticles = prefersReducedMotion ? 0 : (window.innerWidth < 768 ? 12 : 20);
 let mouseX = null;
 let mouseY = null;
 
@@ -534,8 +536,8 @@ initParticles();
 let lastParticleFrame = 0;
 function animateParticles(ts) {
     requestAnimationFrame(animateParticles);
-    // Pause when tab hidden; cap to ~30fps to cut CPU
-    if (document.hidden) return;
+    // Pause when tab hidden or reduced-motion; cap to ~30fps to cut CPU
+    if (document.hidden || prefersReducedMotion) return;
     if (ts && ts - lastParticleFrame < 33) return;
     lastParticleFrame = ts || 0;
 
@@ -1310,8 +1312,7 @@ themeToggle.addEventListener('click', () => {
     btn.setAttribute('aria-label', 'Back to top');
     btn.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
     btn.addEventListener('click', function () {
-        if (window.__lenis) { window.__lenis.scrollTo(0); }
-        else { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     });
     document.body.appendChild(btn);
     function toggle() {
@@ -1433,8 +1434,9 @@ themeToggle.addEventListener('click', () => {
     rail.setAttribute('aria-hidden', 'true');
     const track = document.createElement('div'); track.className = 'scroll-rail-track';
     const fill = document.createElement('div'); fill.className = 'scroll-rail-fill';
+    const comet = document.createElement('div'); comet.className = 'scroll-rail-comet';
     const dot = document.createElement('div'); dot.className = 'scroll-rail-dot';
-    rail.appendChild(track); rail.appendChild(fill); rail.appendChild(dot);
+    rail.appendChild(track); rail.appendChild(fill); rail.appendChild(comet); rail.appendChild(dot);
     document.body.appendChild(rail);
 
     let ticking = false;
@@ -1484,22 +1486,18 @@ themeToggle.addEventListener('click', () => {
     });
 })();
 
-// ===== Smooth scroll (Lenis glide) =====
+// ===== Smooth in-page anchor scroll (native, no per-frame cost) =====
 (function () {
-    if (typeof Lenis === 'undefined') return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-    requestAnimationFrame(raf);
-    window.__lenis = lenis;
-    // smooth in-page anchor links (offset for fixed navbar)
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
         const id = a.getAttribute('href');
-        if (id && id.length > 1) {
-            a.addEventListener('click', function (e) {
-                const t = document.querySelector(id);
-                if (t) { e.preventDefault(); lenis.scrollTo(t, { offset: -72 }); }
-            });
-        }
+        if (!id || id.length < 2) return;
+        a.addEventListener('click', function (e) {
+            const t = document.querySelector(id);
+            if (!t) return;
+            e.preventDefault();
+            const y = t.getBoundingClientRect().top + window.pageYOffset - 72;
+            window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
+        });
     });
 })();

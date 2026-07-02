@@ -3934,33 +3934,58 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     left: 0;
     width: 100%;
     height: 0%;
-    background: linear-gradient(180deg, #8b5cf6, #3b82f6, #ec4899, #8b5cf6);
-    background-size: 100% 250%;
+    background: linear-gradient(180deg, #8b5cf6, #6366f1, #3b82f6, #ec4899, #8b5cf6);
+    background-size: 100% 300%;
     border-radius: 3px;
-    box-shadow: 0 0 8px rgba(139, 92, 246, 0.55);
-    animation: railFlow 3.5s linear infinite;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+    animation: railFlow 4s linear infinite;
 }
 
 @keyframes railFlow {
     0% { background-position: 0 0; }
-    100% { background-position: 0 -250%; }
+    100% { background-position: 0 -300%; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .scroll-rail-fill { animation: none; }
+/* Traveling light beam — runs top→bottom down the whole rail, forever (GPU transform only) */
+.scroll-rail-comet {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 3px;
+    height: 84px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, transparent, #c4b5fd 35%, #f0abfc 62%, transparent);
+    box-shadow: 0 0 14px rgba(167, 139, 250, 0.9), 0 0 26px rgba(236, 72, 153, 0.5);
+    opacity: 0;
+    transform: translate(-50%, -120px);
+    will-change: transform, opacity;
+    animation: railComet 3.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes railComet {
+    0%   { transform: translate(-50%, -120px); opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { transform: translate(-50%, calc(100vh + 40px)); opacity: 0; }
 }
 
 .scroll-rail-dot {
     position: absolute;
     left: 50%;
     top: 0;
-    width: 11px;
-    height: 11px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: #fff;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px var(--accent-1), 0 0 20px var(--accent-3);
+    box-shadow: 0 0 12px var(--accent-1), 0 0 22px var(--accent-3);
     transition: opacity 0.3s ease;
+    animation: railDotBreathe 2.4s ease-in-out infinite;
+}
+
+@keyframes railDotBreathe {
+    0%, 100% { box-shadow: 0 0 10px var(--accent-1), 0 0 18px var(--accent-3); }
+    50%      { box-shadow: 0 0 16px var(--accent-1), 0 0 32px var(--accent-3), 0 0 46px var(--accent-1); }
 }
 
 :root[data-theme="light"] .scroll-rail-dot {
@@ -3975,7 +4000,7 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 .scroll-rail-dot::after {
     content: '';
     position: absolute;
-    inset: -4px;
+    inset: -5px;
     border-radius: 50%;
     border: 1px solid var(--accent-1);
     opacity: 0.6;
@@ -3983,12 +4008,15 @@ body:not(.touch-device) .flip-card:hover .flip-back {
 }
 
 @keyframes railDotPulse {
-    0% { transform: scale(0.7); opacity: 0.7; }
-    100% { transform: scale(2.2); opacity: 0; }
+    0% { transform: scale(0.6); opacity: 0.75; }
+    100% { transform: scale(2.4); opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .scroll-rail-fill,
+    .scroll-rail-dot,
     .scroll-rail-dot::after { animation: none; }
+    .scroll-rail-comet { display: none; }
 }
 
 /* ===== Custom gradient scrollbar ===== */
@@ -4021,12 +4049,3 @@ body:not(.touch-device) .flip-card:hover .flip-back {
     transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, background 0.3s ease;
 }
 
-/* ===== Lenis smooth scroll ===== */
-html.lenis,
-html.lenis body { height: auto; }
-
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-
-.lenis.lenis-stopped { overflow: hidden; }
