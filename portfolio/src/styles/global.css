@@ -23,6 +23,9 @@
   --warn: #ffb454;
   --glow: rgba(139, 92, 246, 0.2);
   --glow-2: rgba(59, 130, 246, 0.08);
+  --amb-1: rgba(139, 92, 246, 0.17);
+  --amb-2: rgba(236, 72, 153, 0.08);
+  --amb-3: rgba(59, 130, 246, 0.07);
   --nav-bg: rgba(14, 15, 18, 0.94);
   --grid-line: rgba(255, 255, 255, 0.045);
   --shadow-card: 0 40px 90px -40px rgba(139, 92, 246, 0.55);
@@ -60,6 +63,9 @@
   --warn: #b45309;
   --glow: rgba(124, 58, 237, 0.13);
   --glow-2: rgba(37, 99, 235, 0.06);
+  --amb-1: rgba(124, 58, 237, 0.09);
+  --amb-2: rgba(219, 39, 119, 0.05);
+  --amb-3: rgba(37, 99, 235, 0.05);
   --nav-bg: rgba(247, 247, 248, 0.95);
   --grid-line: rgba(14, 15, 18, 0.06);
   --shadow-card: 0 40px 90px -45px rgba(91, 33, 182, 0.35);
@@ -147,7 +153,21 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   font-family: var(--f-mono);
   font-size: 13px;
   letter-spacing: 0.02em;
-  color: var(--text-3);
+  color: var(--violet);
+}
+
+/* Site-wide purple ambience: one fixed, static layer behind everything.
+   Painted once and composited on its own layer, so scrolling costs nothing. */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transform: translateZ(0);
+  background:
+    radial-gradient(55vw 55vh at 88% 4%, var(--amb-1), transparent 70%),
+    radial-gradient(45vw 50vh at 4% 96%, var(--amb-2), transparent 70%),
+    radial-gradient(40vw 40vh at 30% 45%, var(--amb-3), transparent 70%);
 }
 
 .grad-text {
@@ -208,7 +228,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.25s var(--ease-out), box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
-  will-change: transform;
 }
 .btn svg { width: 18px; height: 18px; flex: none; }
 .btn:active { transform: translateY(1px) scale(0.98); }

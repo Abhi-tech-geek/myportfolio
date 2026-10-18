@@ -1,44 +1,38 @@
 ---
 import TestRun from './TestRun.astro';
-import Aurora from './Aurora.astro';
 import Icon from './Icon.astro';
-import { site } from '../data/site';
 
-// Things I test. The highlighted line of the headline cycles through these.
-const targets = ['checkout flows', 'login pages', 'AI chatbots', 'APIs', 'mobile apps', 'dashboards'];
-// Original one-liners (not quotes), rotated in the terminal line under the CTAs.
+// The one word that changes in the sub-headline.
+const targets = ['web apps', 'APIs', 'mobile apps', 'AI chatbots', 'checkout flows'];
+// Original one-liners (not quotes), typed out in the terminal line under the CTAs.
 const truths = [
   'A test that never fails is a test nobody should trust.',
   'Every bug caught here is one your users never meet.',
   'Automate the boring checks. Think hard about the rest.',
   'Accessibility is not a feature. It is the baseline.',
   'Green builds are earned, not assumed.',
-  "If it isn't tested, \"it works\" is just a rumour.",
 ];
 ---
 <section class="hero">
-  <div class="bg" aria-hidden="true">
-    <Aurora />
-    <div class="floor"><div class="floor-grid"></div></div>
-  </div>
+  <div class="bg" aria-hidden="true"><div class="glow"></div><div class="grid"></div></div>
 
   <div class="container inner">
     <div class="copy">
-      <span class="badge">
-        <span class="dot pulse"></span>
-        <span data-decode>Open to QA &amp; automation roles</span>
-      </span>
+      <span class="badge"><span class="dot pulse"></span> Open to QA &amp; automation roles</span>
 
       <h1>
-        <span class="sr-only">I break software before your users do.</span>
-        <span class="l1" aria-hidden="true">I break</span>
-        <span class="swap" aria-hidden="true"><span class="swap-word" data-swap={JSON.stringify(targets)}>{targets[0]}</span></span>
-        <span class="l3" aria-hidden="true">before your users do.</span>
+        <span class="l1">I find the bugs</span>
+        <span class="l2">before your users do.</span>
       </h1>
 
+      <p class="dyn">
+        <span class="sr-only">Testing web apps, APIs, mobile apps, AI chatbots and checkout flows with AI agents that work on their own.</span>
+        <span aria-hidden="true">Testing <span class="word" data-swap={JSON.stringify(targets)}>{targets[0]}</span> with AI agents that work on their own.</span>
+      </p>
+
       <p class="sub">
-        I'm <strong>Abhinav</strong>, a QA engineer at Accenture. I build AI agents that test software on their own, so
-        every release ships with fewer surprises.
+        I'm <strong>Abhinav Saxena</strong>, a QA engineer at Accenture. I build AI tools that make testing faster and
+        software easier for everyone to use.
       </p>
 
       <div class="cta">
@@ -48,7 +42,7 @@ const truths = [
 
       <p class="truth mono" aria-hidden="true">
         <span class="prompt">❯ qa.truth()</span>
-        <span class="tq" data-truths={JSON.stringify(truths)}>{truths[0]}</span>
+        <span class="tq" data-truths={JSON.stringify(truths)}>{truths[0]}</span><span class="tcaret"></span>
       </p>
     </div>
 
@@ -67,40 +61,30 @@ const truths = [
   .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(48px, 7vw, 96px) clamp(72px, 9vw, 120px);
+    padding-block: clamp(48px, 7vw, 100px) clamp(72px, 9vw, 120px);
   }
   .bg { position: absolute; inset: 0; pointer-events: none; }
-
-  /* Futuristic 3D grid floor flowing toward the viewer (transform-only animation) */
-  .floor {
+  .glow {
     position: absolute;
-    left: -50%;
-    right: -50%;
-    bottom: 0;
-    height: 46%;
-    perspective: 420px;
-    perspective-origin: 50% 0%;
-    overflow: hidden;
-    mask-image: linear-gradient(to bottom, transparent, #000 45%, #000 70%, transparent);
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, #000 70%, transparent);
+    top: -25%;
+    right: -12%;
+    width: 65%;
+    height: 130%;
+    background: radial-gradient(closest-side, rgba(139, 92, 246, 0.28), rgba(236, 72, 153, 0.08) 55%, transparent);
   }
-  .floor-grid {
+  :global(:root[data-theme='light']) .glow {
+    background: radial-gradient(closest-side, rgba(124, 58, 237, 0.13), rgba(219, 39, 119, 0.04) 55%, transparent);
+  }
+  /* Static tech grid, faded at the edges. Painted once, never animated. */
+  .grid {
     position: absolute;
-    inset: -100% 0 0;
-    transform-origin: 50% 100%;
-    transform: rotateX(68deg);
+    inset: 0;
     background-image:
-      linear-gradient(color-mix(in srgb, var(--violet) 34%, transparent) 1px, transparent 1px),
-      linear-gradient(90deg, color-mix(in srgb, var(--violet) 22%, transparent) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .floor-grid { animation: floor-flow 2.6s linear infinite; }
-  }
-  /* translate inside the rotated plane, one grid cell per loop = seamless */
-  @keyframes floor-flow {
-    from { transform: rotateX(68deg) translateY(0); }
-    to { transform: rotateX(68deg) translateY(64px); }
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 75% 70% at 60% 40%, #000 25%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 60% 40%, #000 25%, transparent 75%);
   }
 
   .inner {
@@ -110,7 +94,7 @@ const truths = [
     align-items: center;
     gap: clamp(40px, 5vw, 72px);
   }
-  .copy { flex: 999 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+  .copy { flex: 999 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
   .stage { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
 
   .badge {
@@ -130,30 +114,35 @@ const truths = [
   h1 {
     display: flex;
     flex-direction: column;
-    font-size: clamp(44px, 6.4vw, 92px);
-    line-height: 1;
+    font-size: clamp(42px, 6vw, 86px);
+    line-height: 1.02;
     letter-spacing: -0.045em;
   }
-  .l3 { color: var(--text-2); font-size: 0.56em; letter-spacing: -0.035em; margin-top: 0.18em; }
-  .swap {
-    display: block;
-    height: 1.12em;
-    overflow: hidden;
-    padding-bottom: 0.04em;
-  }
-  .swap-word {
-    display: inline-block;
+  .l2 {
     background: var(--grad);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    padding-right: 0.05em;
-    transition: translate 0.45s var(--ease-out), opacity 0.45s var(--ease-out);
+    padding-bottom: 0.06em;
   }
-  .swap-word.out { translate: 0 -70%; opacity: 0; }
-  .swap-word.enter { translate: 0 70%; opacity: 0; transition: none; }
 
-  .sub { max-width: 560px; font-size: clamp(17px, 1.45vw, 20px); line-height: 1.65; color: var(--text-2); }
+  .dyn {
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.35;
+    color: var(--text-2);
+  }
+  .word {
+    display: inline-block;
+    color: var(--text);
+    border-bottom: 2px solid var(--violet);
+    transition: opacity 0.3s ease, translate 0.3s var(--ease-out);
+  }
+  .word.out { opacity: 0; translate: 0 -0.3em; }
+  .word.enter { opacity: 0; translate: 0 0.3em; transition: none; }
+
+  .sub { max-width: 580px; font-size: clamp(16.5px, 1.35vw, 18.5px); line-height: 1.65; color: var(--text-2); }
   .sub strong { color: var(--text); font-weight: 600; }
 
   .cta { display: flex; flex-wrap: wrap; gap: 14px; }
@@ -161,8 +150,8 @@ const truths = [
   .truth {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 12px;
     align-items: baseline;
+    gap: 6px 12px;
     max-width: 600px;
     padding: 12px 16px;
     border: 1px dashed var(--border-strong);
@@ -173,6 +162,16 @@ const truths = [
   }
   .prompt { color: var(--violet); white-space: nowrap; }
   .tq { min-height: 1.5em; }
+  .tcaret {
+    display: inline-block;
+    width: 7px;
+    height: 1em;
+    margin-left: -8px;
+    align-self: center;
+    background: var(--violet);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
 
   .kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-3); }
   .caption { font-size: 18px; font-weight: 600; color: var(--text-2); text-align: center; letter-spacing: -0.01em; }
@@ -184,98 +183,71 @@ const truths = [
     border-radius: 18px;
     transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transition: transform 0.6s var(--ease-out);
-    will-change: transform;
   }
   .tilt.tilting { transition: transform 0.08s linear; }
   .glare {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(500px circle at var(--gx, 70%) var(--gy, 0%), rgba(255, 255, 255, 0.09), transparent 45%);
+    background: radial-gradient(500px circle at var(--gx, 70%) var(--gy, 0%), rgba(255, 255, 255, 0.08), transparent 45%);
     opacity: 0;
     transition: opacity 0.4s;
     pointer-events: none;
   }
   .tilt.tilting .glare { opacity: 1; }
 
-  /* Intro choreography: opacity/translate only (no blur filters) */
+  /* Intro choreography: opacity/translate only */
   @media (prefers-reduced-motion: no-preference) {
-    .badge, .l1, .swap, .l3, .sub, .cta, .truth, .stage {
+    .badge, .l1, .l2, .dyn, .sub, .cta, .truth, .stage {
       opacity: 0;
       translate: 0 18px;
       animation: rise 0.8s var(--ease-out) forwards;
     }
     .l1 { animation-delay: 0.05s; }
-    .swap { animation-delay: 0.14s; }
-    .l3 { animation-delay: 0.23s; }
+    .l2 { animation-delay: 0.14s; }
+    .dyn { animation-delay: 0.26s; }
     .sub { animation-delay: 0.36s; }
     .cta { animation-delay: 0.46s; }
     .truth { animation-delay: 0.56s; }
     .stage { animation-delay: 0.3s; }
   }
   @keyframes rise { to { opacity: 1; translate: none; } }
-
-  @media (max-width: 760px) {
-    .floor { height: 30%; }
-  }
 </style>
 
 <script>
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-  const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
 
-  // Scramble-to-text "decode" effect
-  const decode = (el: HTMLElement, text: string, frames = 22) =>
-    new Promise<void>((done) => {
-      let f = 0;
-      const tick = () => {
-        f++;
-        const shown = Math.floor((f / frames) * text.length);
-        el.textContent = [...text].map((c, i) => (i < shown || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0])).join('');
-        if (f < frames) setTimeout(tick, 32);
-        else { el.textContent = text; done(); }
-      };
-      tick();
-    });
-
-  // Pause the loops while the hero is off-screen or the tab is hidden
+  // Pause loops while the hero is off-screen or the tab is hidden
   const hero = document.querySelector<HTMLElement>('.hero');
   let onScreen = true;
   if (hero) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(hero);
   const ready = async () => { while (!onScreen || document.hidden) await sleep(300); };
 
   if (!reduce) {
-    const badge = document.querySelector<HTMLElement>('[data-decode]');
-    if (badge) {
-      badge.style.display = 'inline-block';
-      badge.style.minWidth = `${badge.offsetWidth}px`;
-      setTimeout(() => decode(badge, badge.textContent ?? ''), 250);
-    }
-
-    // Headline word swap
+    // Sub-headline word swap
     const word = document.querySelector<HTMLElement>('[data-swap]');
     if (word) {
       const list: string[] = JSON.parse(word.dataset.swap ?? '[]');
       (async () => {
         let i = 0;
-        await sleep(2600);
+        await sleep(2800);
         while (true) {
           await ready();
           word.classList.add('out');
-          await sleep(450);
+          await sleep(300);
           i = (i + 1) % list.length;
           word.textContent = list[i];
           word.classList.remove('out');
           word.classList.add('enter');
-          void word.offsetWidth; // commit the start position before transitioning in
+          void word.offsetWidth; // commit the start position before easing in
           word.classList.remove('enter');
-          await sleep(2400);
+          await sleep(2600);
         }
       })();
     }
 
-    // Rotating QA truths
+    // QA truths: erase, then type the next one
     const truth = document.querySelector<HTMLElement>('[data-truths]');
     if (truth) {
       const list: string[] = JSON.parse(truth.dataset.truths ?? '[]');
@@ -284,9 +256,12 @@ const truths = [
         await sleep(5000);
         while (true) {
           await ready();
+          const cur = truth.textContent ?? '';
+          for (let n = cur.length; n >= 0; n -= 2) { truth.textContent = cur.slice(0, n); await sleep(12); }
           i = (i + 1) % list.length;
-          await decode(truth, list[i], 26);
-          await sleep(5200);
+          const next = list[i];
+          for (let n = 1; n <= next.length; n++) { truth.textContent = next.slice(0, n); await sleep(30); }
+          await sleep(5000);
         }
       })();
     }
@@ -303,8 +278,8 @@ const truths = [
       const b = tilt.getBoundingClientRect();
       const x = (px - b.left) / b.width;
       const y = (py - b.top) / b.height;
-      tilt.style.setProperty('--ry', `${(x - 0.5) * 12}deg`);
-      tilt.style.setProperty('--rx', `${(0.5 - y) * 10}deg`);
+      tilt.style.setProperty('--ry', `${(x - 0.5) * 10}deg`);
+      tilt.style.setProperty('--rx', `${(0.5 - y) * 8}deg`);
       tilt.style.setProperty('--gx', `${x * 100}%`);
       tilt.style.setProperty('--gy', `${y * 100}%`);
     };

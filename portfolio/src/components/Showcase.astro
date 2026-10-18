@@ -176,7 +176,7 @@ const host = p.primary.href.startsWith('https://') && !p.primary.href.includes('
   .msg.me { align-self: flex-end; background: color-mix(in srgb, var(--p) 20%, transparent); border-bottom-right-radius: 5px; }
   .msg.bot { background: var(--surface-2); border: 1px solid var(--border); border-bottom-left-radius: 5px; color: var(--text-2); }
   .route { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-3); }
-  .route b { font-weight: 500; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); transition: all 0.3s; }
+  .route b { font-weight: 500; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); transition: color 0.3s, border-color 0.3s, background-color 0.3s, box-shadow 0.3s; }
   .route b.on { color: var(--text); border-color: var(--p); background: color-mix(in srgb, var(--p) 16%, transparent); box-shadow: 0 0 16px -4px var(--p); }
   .chat :global(.caret) {
     display: inline-block; width: 7px; height: 1em; margin-left: 2px; vertical-align: -2px;

@@ -124,7 +124,17 @@ const num = String(index + 1).padStart(2, '0');
     border: 1px solid var(--border);
     font-family: var(--f-mono);
     font-size: 12px;
-    color: var(--text-3);
+    color: var(--text-2);
+  }
+  /* The "lit" state is a separate layer whose opacity animates: compositor-only, no repaint */
+  .step::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    border: 1px solid var(--p);
+    background: color-mix(in srgb, var(--p) 16%, transparent);
+    opacity: 0;
     animation: lit 5s infinite;
     animation-delay: calc(var(--s) * 0.6s);
   }
@@ -138,8 +148,8 @@ const num = String(index + 1).padStart(2, '0');
     background: var(--border-strong);
   }
   @keyframes lit {
-    0%, 22%, 100% { color: var(--text-3); border-color: var(--border); background: transparent; }
-    8%, 16% { color: var(--text); border-color: var(--p); background: color-mix(in srgb, var(--p) 14%, transparent); }
+    0%, 22%, 100% { opacity: 0; }
+    8%, 16% { opacity: 1; }
   }
 
   /* AbhiNova chat snippet */

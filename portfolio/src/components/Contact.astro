@@ -48,13 +48,15 @@ import { site } from '../data/site';
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 160%;
+    width: 112%;
     aspect-ratio: 1;
     translate: -50% -50%;
     background: conic-gradient(#8b5cf6, #3b82f6, #ec4899, transparent 35%, transparent 65%, #8b5cf6);
     animation: spin-border 8s linear infinite paused;
   }
   .box.live .ring { animation-play-state: running; }
+  /* Tall box on phones: the spinning square must still cover the corners */
+  @media (max-width: 760px) { .ring { width: 260%; } }
   @keyframes spin-border { to { rotate: 360deg; } }
 
   .inner {
