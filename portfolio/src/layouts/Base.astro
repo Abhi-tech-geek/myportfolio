@@ -108,14 +108,36 @@ const person = {
         document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
       }
 
-      // Cursor spotlight on cards (only while hovering; no global listeners)
+      // Cursor spotlight + optional 3D tilt on cards. Pointer devices only, one rAF per card.
       if (matchMedia('(hover: hover)').matches) {
-        document.querySelectorAll<HTMLElement>('.spot').forEach((el) => {
-          el.addEventListener('pointermove', (e) => {
+        document.querySelectorAll<HTMLElement>('.spot, [data-tilt3d]').forEach((el) => {
+          const tilt = !reduce && el.hasAttribute('data-tilt3d');
+          let raf = 0;
+          let x = 0;
+          let y = 0;
+          const apply = () => {
+            raf = 0;
             const r = el.getBoundingClientRect();
-            el.style.setProperty('--mx', `${e.clientX - r.left}px`);
-            el.style.setProperty('--my', `${e.clientY - r.top}px`);
+            el.style.setProperty('--mx', `${x - r.left}px`);
+            el.style.setProperty('--my', `${y - r.top}px`);
+            if (tilt) {
+              el.style.setProperty('--ry', `${((x - r.left) / r.width - 0.5) * 7}deg`);
+              el.style.setProperty('--rx', `${(0.5 - (y - r.top) / r.height) * 6}deg`);
+            }
+          };
+          el.addEventListener('pointermove', (e) => {
+            x = e.clientX;
+            y = e.clientY;
+            if (!raf) raf = requestAnimationFrame(apply);
           });
+          if (tilt) {
+            el.addEventListener('pointerenter', () => el.classList.add('tilting'));
+            el.addEventListener('pointerleave', () => {
+              el.classList.remove('tilting');
+              el.style.setProperty('--rx', '0deg');
+              el.style.setProperty('--ry', '0deg');
+            });
+          }
         });
       }
 
@@ -151,10 +173,11 @@ const person = {
         const sio = new IntersectionObserver((entries) => {
           entries.forEach((e) => {
             if (!e.isIntersecting) return;
+            // Any untracked section (hero, marquee, certs) clears the highlight
             navLinks.forEach((a) => a.setAttribute('aria-current', String(a.hash === `#${e.target.id}`)));
           });
         }, { rootMargin: '-45% 0px -50% 0px' });
-        sections.forEach((s) => sio.observe(s));
+        document.querySelectorAll('main > section, main > div > section').forEach((s) => sio.observe(s));
       }
     </script>
   </body>

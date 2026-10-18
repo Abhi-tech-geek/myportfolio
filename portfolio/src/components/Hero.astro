@@ -1,53 +1,62 @@
 ---
 import TestRun from './TestRun.astro';
+import Aurora from './Aurora.astro';
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 
-// Each word animates in on its own; `cls` styles the two accent words.
-const lines = [
-  [{ w: 'Every' }, { w: 'release,' }, { w: 'green.', cls: 'pass' }],
-  [{ w: 'Every' }, { w: 'failure,' }, { w: 'explained.', cls: 'grad' }],
+const roles = ['a QA Engineer', 'an Automation Specialist', 'an AI Builder', 'an Accessibility Advocate'];
+const facts = [
+  { k: '2+ yrs', v: 'in software testing' },
+  { k: 'Accenture', v: 'QA Tester' },
+  { k: '4', v: 'AI products shipped' },
 ];
-let i = 0;
 ---
 <section class="hero">
   <div class="bg" aria-hidden="true">
-    <div class="grid"></div>
-    <div class="orb"></div>
+    <Aurora />
+    <div class="floor"><div class="floor-grid"></div></div>
   </div>
 
   <div class="container inner">
     <div class="copy">
       <span class="badge">
         <span class="dot pulse"></span>
-        <span data-decode>{site.role} @ {site.company}</span>
+        <span data-decode>Open to QA &amp; automation roles</span>
       </span>
 
-      <h1 aria-label="Every release, green. Every failure, explained.">
-        {lines.map((line) => (
-          <span class="line" aria-hidden="true">
-            {line.map((word) => (
-              <span class={`word ${word.cls ?? ''}`} style={`--i:${i++}`}>{word.w}</span>
-            ))}
-          </span>
-        ))}
+      <h1>
+        <span class="hi">Hi, I'm</span>
+        <span class="name">Abhinav Saxena</span>
       </h1>
 
-      <p class="sub">
-        I build AI agents that write, run and triage tests — and apps that make the real world more accessible.
+      <p class="role">
+        <span class="sr-only">I'm {roles.slice(0, -1).join(', ')} and {roles.at(-1)}.</span>
+        <span aria-hidden="true" class="role-pre">I'm</span>
+        <span aria-hidden="true" class="role-word" data-roles={JSON.stringify(roles)}>{roles[0]}</span><span class="caret" aria-hidden="true"></span>
       </p>
 
+      <p class="sub">
+        I make sure software works — <strong>for everyone</strong>. At Accenture I test enterprise apps; after hours I
+        build AI agents that write, run and fix tests on their own, and apps that make places accessible.
+      </p>
+
+      <ul class="facts">
+        {facts.map((f) => <li><b>{f.k}</b><span>{f.v}</span></li>)}
+      </ul>
+
       <div class="cta">
-        <a href="#work" class="btn btn-primary">View projects <Icon name="arrow-right" /></a>
+        <a href="#work" class="btn btn-primary">See my projects <Icon name="arrow-right" /></a>
         <a href={site.resume} class="btn btn-ghost" download="Abhinav_Saxena_Resume.pdf"><Icon name="download" /> Resume</a>
-        <svg class="sig" viewBox="0 0 190 64" role="img" aria-label="Signature: Abhinav">
-          <text x="6" y="46">Abhinav</text>
-        </svg>
       </div>
     </div>
 
-    <div class="card">
-      <TestRun />
+    <div class="stage">
+      <p class="kicker mono"><span class="dot pulse"></span> live · one of my AI agents at work</p>
+      <div class="tilt" data-tilt>
+        <TestRun />
+        <span class="glare" aria-hidden="true"></span>
+      </div>
+      <p class="caption">Every release <span class="ok">green</span>. Every failure <span class="grad-text">explained</span>.</p>
     </div>
   </div>
 </section>
@@ -56,33 +65,40 @@ let i = 0;
   .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(56px, 9vw, 128px) clamp(64px, 9vw, 120px);
+    padding-block: clamp(48px, 7vw, 96px) clamp(72px, 9vw, 120px);
   }
-
   .bg { position: absolute; inset: 0; pointer-events: none; }
-  .grid {
+
+  /* Futuristic 3D grid floor flowing toward the viewer — transform-only animation */
+  .floor {
     position: absolute;
-    inset: -1px;
+    left: -50%;
+    right: -50%;
+    bottom: 0;
+    height: 46%;
+    perspective: 420px;
+    perspective-origin: 50% 0%;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, transparent, #000 45%, #000 70%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, #000 70%, transparent);
+  }
+  .floor-grid {
+    position: absolute;
+    inset: -100% 0 0;
+    transform-origin: 50% 100%;
+    transform: rotateX(68deg);
     background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 70% 60% at 65% 35%, #000 20%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 35%, #000 20%, transparent 75%);
+      linear-gradient(color-mix(in srgb, var(--violet) 34%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--violet) 22%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
   }
-  .orb {
-    position: absolute;
-    top: -260px;
-    right: -200px;
-    width: 900px;
-    height: 900px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--glow), var(--glow-2) 45%, transparent 70%);
-    animation: drift 22s ease-in-out infinite alternate;
+  @media (prefers-reduced-motion: no-preference) {
+    .floor-grid { animation: floor-flow 2.6s linear infinite; }
   }
-  @keyframes drift {
-    from { transform: translate3d(0, 0, 0) scale(1); }
-    to { transform: translate3d(-120px, 80px, 0) scale(1.08); }
+  /* translate inside the rotated plane, one grid cell per loop = seamless */
+  @keyframes floor-flow {
+    from { transform: rotateX(68deg) translateY(0); }
+    to { transform: rotateX(68deg) translateY(64px); }
   }
 
   .inner {
@@ -90,10 +106,10 @@ let i = 0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 56px;
+    gap: clamp(40px, 5vw, 72px);
   }
-  .copy { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
-  .card { flex: 1 1 380px; min-width: 0; }
+  .copy { flex: 999 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+  .stage { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
 
   .badge {
     align-self: flex-start;
@@ -101,101 +117,182 @@ let i = 0;
     align-items: center;
     gap: 10px;
     padding: 7px 14px;
-    border: 1px solid var(--border-strong);
+    border: 1px solid var(--pass-border);
     border-radius: 999px;
     font-family: var(--f-mono);
     font-size: 13px;
-    color: var(--text-2);
-    background: color-mix(in srgb, var(--surface) 60%, transparent);
+    color: var(--pass);
+    background: color-mix(in srgb, var(--pass-bg) 80%, transparent);
   }
 
-  h1 {
-    font-size: clamp(46px, 6.8vw, 100px);
-    line-height: 0.98;
-    letter-spacing: -0.04em;
-  }
-  .line { display: block; }
-  .word {
-    display: inline-block;
-    margin-right: 0.22em;
-  }
-  .word.pass { color: var(--pass); }
-  .word.grad {
+  h1 { display: flex; flex-direction: column; gap: 6px; letter-spacing: -0.04em; }
+  .hi { font-size: clamp(28px, 3vw, 40px); font-weight: 600; color: var(--text-2); letter-spacing: -0.02em; }
+  .name {
+    font-size: clamp(50px, 7vw, 104px);
+    line-height: 0.95;
     background: var(--grad);
-    background-size: 200% 100%;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    padding-bottom: 0.06em; /* keep descenders inside the clip */
   }
 
-  .sub { max-width: 560px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; color: var(--text-2); }
-
-  .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-
-  .sig { width: 150px; height: 52px; margin-left: 6px; overflow: visible; }
-  .sig text {
-    font-family: var(--f-sig);
-    font-size: 48px;
-    fill: var(--violet);
-    stroke: var(--violet);
-    stroke-width: 1;
-    transform: rotate(-4deg);
-    transform-box: fill-box;
-    transform-origin: center;
+  .role {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.35em;
+    font-size: clamp(22px, 2.4vw, 30px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    min-height: 1.3em;
   }
+  .role-pre { color: var(--text-3); font-weight: 500; }
+  .role-word { color: var(--text); }
+  .caret {
+    align-self: center;
+    width: 3px;
+    height: 1.05em;
+    margin-left: 2px;
+    border-radius: 2px;
+    background: var(--violet);
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
 
+  .sub { max-width: 600px; font-size: clamp(17px, 1.4vw, 19px); line-height: 1.65; color: var(--text-2); }
+  .sub strong { color: var(--text); font-weight: 600; }
+
+  .facts { display: flex; flex-wrap: wrap; gap: 10px; }
+  .facts li {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--surface) 70%, transparent);
+    font-size: 14.5px;
+    color: var(--text-3);
+  }
+  .facts b { color: var(--text); font-weight: 700; font-size: 16px; }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 4px; }
+
+  .kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-3); }
+  .caption { font-size: 18px; font-weight: 600; color: var(--text-2); text-align: center; letter-spacing: -0.01em; }
+  .ok { color: var(--pass); }
+
+  /* 3D tilt (pointer-driven via --rx/--ry) with a moving glare */
+  .tilt {
+    position: relative;
+    border-radius: 18px;
+    transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.6s var(--ease-out);
+    will-change: transform;
+  }
+  .tilt.tilting { transition: transform 0.08s linear; }
+  .glare {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(500px circle at var(--gx, 70%) var(--gy, 0%), rgba(255, 255, 255, 0.09), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .tilt.tilting .glare { opacity: 1; }
+
+  /* Intro choreography — opacity/translate only (no blur filters) */
   @media (prefers-reduced-motion: no-preference) {
-    .word {
+    .badge, .hi, .name, .role, .sub, .facts, .cta, .stage {
       opacity: 0;
-      filter: blur(10px);
-      transform: translateY(0.35em);
-      animation: word-in 0.9s var(--ease-out) forwards;
-      animation-delay: calc(120ms + var(--i) * 85ms);
+      translate: 0 18px;
+      animation: rise 0.8s var(--ease-out) forwards;
     }
-    .word.grad { animation: word-in 0.9s var(--ease-out) forwards, shimmer 6s linear 1.6s infinite; animation-delay: calc(120ms + var(--i) * 85ms), 1.6s; }
-    .badge, .sub, .cta, .card {
-      opacity: 0;
-      transform: translateY(18px);
-      animation: rise 0.9s var(--ease-out) forwards;
-    }
-    .badge { animation-delay: 0s; }
-    .sub { animation-delay: 0.65s; }
-    .cta { animation-delay: 0.8s; }
-    .card { animation-delay: 0.45s; }
-
-    .sig text {
-      fill-opacity: 0;
-      stroke-dasharray: 520;
-      stroke-dashoffset: 520;
-      animation: sign 2.2s ease forwards 1.3s, ink 0.8s ease forwards 2.9s;
-    }
+    .hi { animation-delay: 0.05s; }
+    .name { animation-delay: 0.15s; }
+    .role { animation-delay: 0.3s; }
+    .sub { animation-delay: 0.4s; }
+    .facts { animation-delay: 0.5s; }
+    .cta { animation-delay: 0.58s; }
+    .stage { animation-delay: 0.35s; }
   }
-  @keyframes word-in { to { opacity: 1; filter: blur(0); transform: none; } }
-  @keyframes rise { to { opacity: 1; transform: none; } }
-  @keyframes sign { to { stroke-dashoffset: 0; } }
-  @keyframes ink { to { fill-opacity: 1; stroke-opacity: 0; } }
+  @keyframes rise { to { opacity: 1; translate: none; } }
+
+  @media (max-width: 760px) {
+    .floor { height: 30%; }
+  }
 </style>
 
 <script>
-  // "Decode" the role badge once on load — a small AI-flavoured touch.
-  const el = document.querySelector<HTMLElement>('[data-decode]');
-  if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const final = el.textContent ?? '';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // "Decode" the availability badge once on load.
+  const dec = document.querySelector<HTMLElement>('[data-decode]');
+  if (dec && !reduce) {
+    const final = dec.textContent ?? '';
     const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
-    el.style.display = 'inline-block';
-    el.style.minWidth = `${el.offsetWidth}px`;
+    dec.style.display = 'inline-block';
+    dec.style.minWidth = `${dec.offsetWidth}px`;
     let frame = 0;
-    const total = 26;
+    const total = 24;
     const tick = () => {
       frame++;
-      const revealed = Math.floor((frame / total) * final.length);
-      el.textContent = final
-        .split('')
-        .map((c, i) => (i < revealed || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0]))
-        .join('');
+      const shown = Math.floor((frame / total) * final.length);
+      dec.textContent = [...final].map((c, i) => (i < shown || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0])).join('');
       if (frame < total) setTimeout(tick, 34);
-      else el.textContent = final;
+      else dec.textContent = final;
     };
-    setTimeout(tick, 200);
+    setTimeout(tick, 250);
+  }
+
+  // Role typewriter
+  const roleEl = document.querySelector<HTMLElement>('[data-roles]');
+  if (roleEl && !reduce) {
+    const roles: string[] = JSON.parse(roleEl.dataset.roles ?? '[]');
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    (async () => {
+      let i = 0;
+      await sleep(2200);
+      while (true) {
+        const word = roles[i];
+        for (let n = word.length; n >= 0; n--) { roleEl.textContent = word.slice(0, n); await sleep(28); }
+        i = (i + 1) % roles.length;
+        const next = roles[i];
+        await sleep(200);
+        for (let n = 1; n <= next.length; n++) { roleEl.textContent = next.slice(0, n); await sleep(55); }
+        await sleep(2200);
+      }
+    })();
+  }
+
+  // 3D tilt for the hero card (pointer devices only)
+  const tilt = document.querySelector<HTMLElement>('[data-tilt]');
+  if (tilt && !reduce && matchMedia('(hover: hover)').matches) {
+    let raf = 0;
+    let px = 0;
+    let py = 0;
+    const apply = () => {
+      raf = 0;
+      const b = tilt.getBoundingClientRect();
+      const x = (px - b.left) / b.width;
+      const y = (py - b.top) / b.height;
+      tilt.style.setProperty('--ry', `${(x - 0.5) * 12}deg`);
+      tilt.style.setProperty('--rx', `${(0.5 - y) * 10}deg`);
+      tilt.style.setProperty('--gx', `${x * 100}%`);
+      tilt.style.setProperty('--gy', `${y * 100}%`);
+    };
+    tilt.addEventListener('pointerenter', () => tilt.classList.add('tilting'));
+    tilt.addEventListener('pointermove', (e) => {
+      px = e.clientX;
+      py = e.clientY;
+      if (!raf) raf = requestAnimationFrame(apply);
+    });
+    tilt.addEventListener('pointerleave', () => {
+      tilt.classList.remove('tilting');
+      tilt.style.setProperty('--rx', '0deg');
+      tilt.style.setProperty('--ry', '0deg');
+    });
   }
 </script>

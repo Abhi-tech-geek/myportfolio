@@ -173,16 +173,16 @@ const last = workflow.length - 1;
 
     const update = () => {
       ticking = false;
+      // Read every rect first, then write — mixing them forces a layout per step.
       const r = list.getBoundingClientRect();
+      const tops = steps.map((s) => s.getBoundingClientRect().top);
       const anchor = innerHeight * 0.62;
       const p = Math.min(1, Math.max(0, (anchor - r.top) / r.height));
       list.style.setProperty('--wf', p.toFixed(4));
       let passed = 0;
-      steps.forEach((s) => {
-        const sr = s.getBoundingClientRect();
-        const reached = sr.top < innerHeight * 0.8;
-        const done = sr.top + 22 < anchor;
-        s.classList.toggle('on', reached);
+      steps.forEach((s, i) => {
+        const done = tops[i] + 22 < anchor;
+        s.classList.toggle('on', tops[i] < innerHeight * 0.8);
         s.classList.toggle('passed', done);
         if (done) passed++;
       });

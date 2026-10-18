@@ -5,6 +5,8 @@ import { site } from '../data/site';
 <section id="contact" class="section">
   <div class="container">
     <div class="box reveal" data-contact>
+      <span class="ring" aria-hidden="true"></span>
+      <div class="inner">
       <div class="copy">
         <span class="eyebrow">// contact</span>
         <h2>Got something that needs to ship <span class="ok">green?</span></h2>
@@ -26,17 +28,36 @@ import { site } from '../data/site';
           <a href={site.resume} download="Abhinav_Saxena_Resume.pdf" class="btn btn-ghost"><Icon name="download" /> Resume</a>
         </div>
       </div>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
-  @property --angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
-  }
+  /* Rotating gradient border: a conic layer spun with `rotate` (compositor-only)
+     behind a 1px inset panel. Runs only while the box is on screen. */
   .box {
+    position: relative;
+    padding: 1px;
+    border-radius: 28px;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--border);
+  }
+  .ring {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 160%;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    background: conic-gradient(#8b5cf6, #3b82f6, #ec4899, transparent 35%, transparent 65%, #8b5cf6);
+    animation: spin-border 8s linear infinite paused;
+  }
+  .box.live .ring { animation-play-state: running; }
+  @keyframes spin-border { to { rotate: 360deg; } }
+
+  .inner {
     position: relative;
     display: flex;
     flex-wrap: wrap;
@@ -44,34 +65,11 @@ import { site } from '../data/site';
     align-items: flex-end;
     gap: 40px;
     padding: clamp(36px, 6vw, 80px);
-    border-radius: 28px;
-    background: var(--surface);
-    isolation: isolate;
+    border-radius: 27px;
+    background:
+      radial-gradient(ellipse 60% 70% at 30% 100%, var(--glow), transparent 70%),
+      var(--surface);
   }
-  /* Rotating gradient border — runs only while the box is on screen */
-  .box::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: conic-gradient(from var(--angle), #8b5cf6, #3b82f6, #ec4899, transparent 60%, #8b5cf6);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-    animation: spin-border 7s linear infinite paused;
-    z-index: -1;
-  }
-  .box.live::before { animation-play-state: running; }
-  .box::after {
-    content: '';
-    position: absolute;
-    inset: 20% 10% -10%;
-    background: radial-gradient(closest-side, var(--glow), transparent);
-    z-index: -2;
-    pointer-events: none;
-  }
-  @keyframes spin-border { to { --angle: 360deg; } }
 
   .copy { flex: 1 1 420px; display: flex; flex-direction: column; gap: 16px; }
   .copy h2 { font-size: clamp(36px, 4.8vw, 64px); }

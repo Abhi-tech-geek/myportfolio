@@ -9,6 +9,7 @@ const num = String(index + 1).padStart(2, '0');
 <a
   href={`/${p.slug}`}
   class:list={['card', 'spot', 'tinted', 'reveal', { wide }]}
+  data-tilt3d
   style={`--pc:${p.color};--pc-l:${p.colorLight};--i:${index}`}
 >
   <span class="top">
@@ -51,8 +52,10 @@ const num = String(index + 1).padStart(2, '0');
     border-radius: var(--radius);
     text-decoration: none;
     overflow: hidden;
-    transition: transform 0.4s var(--ease-out), border-color 0.3s ease, box-shadow 0.4s ease;
+    transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
+    transition: transform 0.5s var(--ease-out), border-color 0.3s ease, box-shadow 0.4s ease;
   }
+  .card:global(.tilting) { transition: transform 0.1s linear, border-color 0.3s ease, box-shadow 0.4s ease; }
   .card::after {
     /* project-colored top edge that grows on hover */
     content: '';
@@ -67,7 +70,7 @@ const num = String(index + 1).padStart(2, '0');
     transition: transform 0.5s var(--ease-out);
   }
   .card:hover {
-    transform: translateY(-4px);
+    --lift: -4px;
     border-color: color-mix(in srgb, var(--p) 45%, var(--border));
     box-shadow: 0 30px 60px -36px color-mix(in srgb, var(--p) 70%, transparent);
   }

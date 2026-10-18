@@ -5,10 +5,10 @@ interface Props { home?: boolean }
 const { home = false } = Astro.props;
 const base = home ? '' : '/';
 const links = [
-  { href: `${base}#work`, label: 'work' },
-  { href: `${base}#approach`, label: 'approach' },
-  { href: `${base}#about`, label: 'about' },
-  { href: `${base}#contact`, label: 'contact' },
+  { href: `${base}#about`, label: 'About' },
+  { href: `${base}#work`, label: 'Projects' },
+  { href: `${base}#approach`, label: 'How I test' },
+  { href: `${base}#contact`, label: 'Contact' },
 ];
 ---
 <header class="nav">
@@ -17,7 +17,7 @@ const links = [
       Abhinav.<span class="grad-text">dev</span>
     </a>
     <nav aria-label="Primary" class="links">
-      {links.map((l) => <a href={l.href}><span aria-hidden="true">/</span>{l.label}</a>)}
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
     </nav>
     <div class="actions">
       <a href={site.resume} class="resume" download="Abhinav_Saxena_Resume.pdf">
@@ -36,9 +36,8 @@ const links = [
     position: sticky;
     top: 0;
     z-index: 50;
+    /* Solid, not backdrop-filter: blurring the page under a sticky bar repaints every scroll frame */
     background: var(--nav-bg);
-    backdrop-filter: blur(14px) saturate(140%);
-    -webkit-backdrop-filter: blur(14px) saturate(140%);
     border-bottom: 1px solid transparent;
     transition: border-color 0.3s ease;
   }
@@ -64,9 +63,9 @@ const links = [
   }
   .links {
     display: flex;
-    gap: 26px;
-    font-family: var(--f-mono);
-    font-size: 14px;
+    gap: 30px;
+    font-size: 15.5px;
+    font-weight: 500;
   }
   .links a {
     position: relative;
@@ -75,7 +74,6 @@ const links = [
     padding-block: 6px;
     transition: color 0.2s;
   }
-  .links a span { color: var(--violet); }
   .links a::after {
     content: '';
     position: absolute;

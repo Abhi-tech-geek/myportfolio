@@ -23,7 +23,7 @@
   --warn: #ffb454;
   --glow: rgba(139, 92, 246, 0.2);
   --glow-2: rgba(59, 130, 246, 0.08);
-  --nav-bg: rgba(14, 15, 18, 0.74);
+  --nav-bg: rgba(14, 15, 18, 0.94);
   --grid-line: rgba(255, 255, 255, 0.045);
   --shadow-card: 0 40px 90px -40px rgba(139, 92, 246, 0.55);
 
@@ -61,7 +61,7 @@
   --warn: #b45309;
   --glow: rgba(124, 58, 237, 0.13);
   --glow-2: rgba(37, 99, 235, 0.06);
-  --nav-bg: rgba(247, 247, 248, 0.8);
+  --nav-bg: rgba(247, 247, 248, 0.95);
   --grid-line: rgba(14, 15, 18, 0.06);
   --shadow-card: 0 40px 90px -45px rgba(91, 33, 182, 0.35);
 
@@ -91,7 +91,6 @@ body {
   font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   overflow-x: clip;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
@@ -191,7 +190,7 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   background: var(--pass);
   flex: none;
 }
-.dot.pulse { box-shadow: 0 0 0 0 color-mix(in srgb, var(--pass) 60%, transparent); animation: dot-pulse 2.4s infinite; }
+.dot.pulse { animation: dot-pulse 2.4s ease-in-out infinite; }
 
 /* ==========================================================================
    Buttons
@@ -287,15 +286,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   to { opacity: 1; translate: none; scale: none; }
 }
 
+/* Compositor-only pulse (transform + opacity) — no per-frame paint */
 @keyframes dot-pulse {
-  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--pass) 55%, transparent); }
-  70% { box-shadow: 0 0 0 10px transparent; }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
-
-@keyframes shimmer {
-  from { background-position: 0% 50%; }
-  to { background-position: 200% 50%; }
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.65); opacity: 0.5; }
 }
 
 /* ==========================================================================
