@@ -1,15 +1,16 @@
 ---
 // Aurora behind the hero — "render once, animate cheaply".
-// The WebGL shader runs only TWICE (two moments of the same flow), once the page is idle.
-// Each frame is copied into a plain canvas and the GPU context is released.
-// The motion you see is CSS only: the two frames cross-fade and the layer drifts, which the
-// compositor does for free. So the look of a live shader, at the cost of two static images.
+// The WebGL shader runs only THREE times (three moments of the same flow), once the page is
+// idle. Each frame is copied into a plain canvas and the GPU context is released.
+// The flow you see is CSS: each frame drifts, rotates and fades on its own out-of-sync loop,
+// so the colours keep mixing like a live shader, while the compositor does all the work.
 ---
 <div class="aurora" aria-hidden="true">
   <div class="fallback"></div>
   <div class="layer" data-aurora>
     <canvas class="a"></canvas>
     <canvas class="b"></canvas>
+    <canvas class="c"></canvas>
   </div>
 </div>
 
@@ -25,38 +26,49 @@
   }
   .layer {
     position: absolute;
-    inset: -6%;
+    inset: -14%;
     opacity: 0;
-    transition: opacity 1.4s ease;
+    /* pointer parallax (set by script) */
+    transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
+    transition: opacity 1.4s ease, transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
   .layer.on { opacity: 1; }
   :global(:root[data-theme='light']) .layer.on { opacity: 0.5; }
   canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  canvas.b { opacity: 0; }
+  canvas.b, canvas.c { opacity: 0; }
 
   @media (prefers-reduced-motion: no-preference) {
-    .layer.on { animation: drift 26s ease-in-out infinite alternate; }
-    .layer.on canvas.b { animation: morph 11s ease-in-out infinite alternate; }
+    .layer.on canvas.a { animation: flow-a 12s ease-in-out infinite alternate; }
+    .layer.on canvas.b { animation: flow-b 9s ease-in-out infinite alternate; }
+    .layer.on canvas.c { animation: flow-c 15s ease-in-out infinite alternate; }
   }
   /* paused while the hero is off-screen (class set by Hero) */
-  :global(.hero.idle) .layer, :global(.hero.idle) canvas { animation-play-state: paused !important; }
+  :global(.hero.idle) canvas { animation-play-state: paused !important; }
 
-  @keyframes drift {
-    from { transform: translate3d(0, 0, 0) scale(1); }
-    to { transform: translate3d(-3%, 2.5%, 0) scale(1.07); }
+  @keyframes flow-a {
+    from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 1; }
+    to { transform: translate3d(-6%, 4%, 0) rotate(-6deg) scale(1.14); opacity: 0.45; }
   }
-  @keyframes morph { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes flow-b {
+    from { transform: translate3d(4%, -3%, 0) rotate(4deg) scale(1.1); opacity: 0; }
+    to { transform: translate3d(-3%, 5%, 0) rotate(-3deg) scale(1); opacity: 0.9; }
+  }
+  @keyframes flow-c {
+    from { transform: translate3d(-4%, 3%, 0) rotate(7deg) scale(1.16); opacity: 0.7; }
+    to { transform: translate3d(5%, -4%, 0) rotate(-2deg) scale(1.02); opacity: 0; }
+  }
 </style>
 
 <script>
   const layer = document.querySelector<HTMLElement>('[data-aurora]');
   const saveData = (navigator as any).connection?.saveData === true;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const render = () => {
     if (!layer || saveData) return;
     const targets = [...layer.querySelectorAll('canvas')];
     const box = layer.getBoundingClientRect();
-    const SCALE = 0.5;
+    const SCALE = 0.42;
     const w = Math.max(1, Math.round(box.width * SCALE));
     const h = Math.max(1, Math.round(box.height * SCALE));
 
@@ -84,7 +96,7 @@
         vec3 violet=vec3(.545,.361,.965), blue=vec3(.231,.510,.965), pink=vec3(.925,.282,.6);
         vec3 col=mix(violet,blue,clamp(q.x*1.5-.2,0.,1.));
         col=mix(col,pink,clamp(w.y*w.y*1.8-.15,0.,1.));
-        float a=smoothstep(.42,1.,f)*.66;
+        float a=smoothstep(.42,1.,f)*.58;
         a*=smoothstep(.05,.75,uv.x*.9+uv.y*.35);   /* keep the copy side calm */
         gl_FragColor=vec4(col*a,a);
       }`;
@@ -104,8 +116,8 @@
     gl.uniform2f(gl.getUniformLocation(prog, 'r'), w, h);
     const uT = gl.getUniformLocation(prog, 't');
 
-    // Two moments of the same flow; CSS blends between them.
-    [0, 55].forEach((time, i) => {
+    // Three moments of the same flow; CSS keeps them moving and mixing.
+    [0, 38, 76].forEach((time, i) => {
       gl.uniform1f(uT, time);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -116,6 +128,24 @@
     });
     gl.getExtension('WEBGL_lose_context')?.loseContext(); // free the GPU context right away
     layer.classList.add('on');
+
+    // Gentle pointer parallax: one transform update per frame at most, pointer devices only
+    const hero = layer.closest('section');
+    if (hero && !reduce && matchMedia('(hover: hover)').matches) {
+      let raf = 0;
+      let x = 0;
+      let y = 0;
+      hero.addEventListener('pointermove', (e) => {
+        const b = hero.getBoundingClientRect();
+        x = ((e.clientX - b.left) / b.width - 0.5) * -36;
+        y = ((e.clientY - b.top) / b.height - 0.5) * -24;
+        if (!raf) raf = requestAnimationFrame(() => {
+          raf = 0;
+          layer.style.setProperty('--px', `${x.toFixed(1)}px`);
+          layer.style.setProperty('--py', `${y.toFixed(1)}px`);
+        });
+      });
+    }
   };
 
   const later = () =>
