@@ -1,5 +1,6 @@
 ---
 import TestRun from './TestRun.astro';
+import Aurora from './Aurora.astro';
 import Icon from './Icon.astro';
 
 // The one word that changes in the sub-headline.
@@ -14,7 +15,10 @@ const truths = [
 ];
 ---
 <section class="hero">
-  <div class="bg" aria-hidden="true"><div class="glow"></div><div class="grid"></div></div>
+  <div class="bg" aria-hidden="true">
+    <Aurora />
+    <div class="floor"><div class="floor-grid"></div></div>
+  </div>
 
   <div class="container inner">
     <div class="copy">
@@ -64,28 +68,39 @@ const truths = [
     padding-block: clamp(48px, 7vw, 100px) clamp(72px, 9vw, 120px);
   }
   .bg { position: absolute; inset: 0; pointer-events: none; }
-  .glow {
+  /* 3D grid floor flowing toward the viewer. The grid texture is painted once; the loop only
+     moves it inside the tilted plane (transform), and pauses when the hero is off-screen. */
+  .floor {
     position: absolute;
-    top: -25%;
-    right: -12%;
-    width: 65%;
-    height: 130%;
-    background: radial-gradient(closest-side, rgba(139, 92, 246, 0.28), rgba(236, 72, 153, 0.08) 55%, transparent);
+    left: -30%;
+    right: -30%;
+    bottom: 0;
+    height: 42%;
+    perspective: 420px;
+    perspective-origin: 50% 0%;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, transparent, #000 45%, #000 72%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, #000 72%, transparent);
   }
-  :global(:root[data-theme='light']) .glow {
-    background: radial-gradient(closest-side, rgba(124, 58, 237, 0.13), rgba(219, 39, 119, 0.04) 55%, transparent);
-  }
-  /* Static tech grid, faded at the edges. Painted once, never animated. */
-  .grid {
+  .floor-grid {
     position: absolute;
-    inset: 0;
+    inset: -60% 0 0;
+    transform-origin: 50% 100%;
+    transform: rotateX(68deg);
     background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: radial-gradient(ellipse 75% 70% at 60% 40%, #000 25%, transparent 75%);
-    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 60% 40%, #000 25%, transparent 75%);
+      linear-gradient(color-mix(in srgb, var(--violet) 34%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--violet) 22%, transparent) 1px, transparent 1px);
+    background-size: 64px 64px;
   }
+  @media (prefers-reduced-motion: no-preference) {
+    .floor-grid { animation: floor-flow 2.8s linear infinite; }
+    .hero.idle .floor-grid { animation-play-state: paused; }
+  }
+  @keyframes floor-flow {
+    from { transform: rotateX(68deg) translateY(0); }
+    to { transform: rotateX(68deg) translateY(64px); }
+  }
+  @media (max-width: 760px) { .floor { height: 28%; } }
 
   .inner {
     position: relative;
@@ -221,7 +236,10 @@ const truths = [
   // Pause loops while the hero is off-screen or the tab is hidden
   const hero = document.querySelector<HTMLElement>('.hero');
   let onScreen = true;
-  if (hero) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(hero);
+  if (hero) new IntersectionObserver(([e]) => {
+    onScreen = e.isIntersecting;
+    hero.classList.toggle('idle', !onScreen); // pauses the floor + aurora CSS loops off-screen
+  }).observe(hero);
   const ready = async () => { while (!onScreen || document.hidden) await sleep(300); };
 
   if (!reduce) {
