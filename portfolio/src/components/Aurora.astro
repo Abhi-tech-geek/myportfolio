@@ -1,17 +1,15 @@
 ---
-// Aurora behind the hero — "render once, animate cheaply".
-// The WebGL shader runs only THREE times (three moments of the same flow), once the page is
-// idle. Each frame is copied into a plain canvas and the GPU context is released.
-// The flow you see is CSS: each frame drifts, rotates and fades on its own out-of-sync loop,
-// so the colours keep mixing like a live shader, while the compositor does all the work.
+// Live WebGL aurora behind the hero, tuned to stay light:
+//  - rendered at 25% resolution and scaled up by CSS (an aurora is soft, so it looks the same)
+//  - 4-octave noise, capped at 30 fps
+//  - runs only while the hero is on screen and the tab is visible; starts once the page is idle
+//  - adaptive: if frames run slow it drops to a lower resolution, and if that is still slow it
+//    fades out and leaves the static CSS glow
+//  - skipped for reduced motion, Save-Data, software GPUs, or no WebGL
 ---
 <div class="aurora" aria-hidden="true">
   <div class="fallback"></div>
-  <div class="layer" data-aurora>
-    <canvas class="a"></canvas>
-    <canvas class="b"></canvas>
-    <canvas class="c"></canvas>
-  </div>
+  <canvas data-aurora></canvas>
 </div>
 
 <style>
@@ -24,86 +22,59 @@
     height: 130%;
     background: radial-gradient(closest-side, rgba(139, 92, 246, 0.28), rgba(236, 72, 153, 0.08) 55%, transparent);
   }
-  .layer {
+  canvas {
     position: absolute;
-    inset: -14%;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     opacity: 0;
-    /* pointer parallax (set by script) */
-    transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
-    transition: opacity 1.4s ease, transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: opacity 1.4s ease;
   }
-  .layer.on { opacity: 1; }
-  :global(:root[data-theme='light']) .layer.on { opacity: 0.5; }
-  canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-  canvas.b, canvas.c { opacity: 0; }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .layer.on canvas.a { animation: flow-a 12s ease-in-out infinite alternate; }
-    .layer.on canvas.b { animation: flow-b 9s ease-in-out infinite alternate; }
-    .layer.on canvas.c { animation: flow-c 15s ease-in-out infinite alternate; }
-  }
-  /* paused while the hero is off-screen (class set by Hero) */
-  :global(.hero.idle) canvas { animation-play-state: paused !important; }
-
-  @keyframes flow-a {
-    from { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); opacity: 1; }
-    to { transform: translate3d(-6%, 4%, 0) rotate(-6deg) scale(1.14); opacity: 0.45; }
-  }
-  @keyframes flow-b {
-    from { transform: translate3d(4%, -3%, 0) rotate(4deg) scale(1.1); opacity: 0; }
-    to { transform: translate3d(-3%, 5%, 0) rotate(-3deg) scale(1); opacity: 0.9; }
-  }
-  @keyframes flow-c {
-    from { transform: translate3d(-4%, 3%, 0) rotate(7deg) scale(1.16); opacity: 0.7; }
-    to { transform: translate3d(5%, -4%, 0) rotate(-2deg) scale(1.02); opacity: 0; }
-  }
+  canvas.on { opacity: 1; }
+  :global(:root[data-theme='light']) canvas.on { opacity: 0.5; }
 </style>
 
 <script>
-  const layer = document.querySelector<HTMLElement>('[data-aurora]');
-  const saveData = (navigator as any).connection?.saveData === true;
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-aurora]');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saveData = (navigator as any).connection?.saveData === true;
 
-  const render = () => {
-    if (!layer || saveData) return;
-    const targets = [...layer.querySelectorAll('canvas')];
-    const box = layer.getBoundingClientRect();
-    const SCALE = 0.42;
-    const w = Math.max(1, Math.round(box.width * SCALE));
-    const h = Math.max(1, Math.round(box.height * SCALE));
+  const FS = `
+    precision mediump float;
+    uniform vec2 r; uniform float t; uniform vec2 m;
+    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
+      return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);}
+    float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+    void main(){
+      vec2 uv=gl_FragCoord.xy/r;
+      vec2 p=uv*vec2(r.x/r.y,1.)*1.7;
+      float tt=t*.07;
+      vec2 q=vec2(fbm(p+vec2(0.,tt)),fbm(p+vec2(5.2,1.3)-tt));
+      vec2 w=vec2(fbm(p+2.2*q+vec2(1.7,9.2)+tt*1.4),fbm(p+2.2*q+vec2(8.3,2.8)-tt));
+      float f=fbm(p+2.6*w);
+      vec3 violet=vec3(.545,.361,.965), blue=vec3(.231,.510,.965), pink=vec3(.925,.282,.6);
+      vec3 col=mix(violet,blue,clamp(q.x*1.5-.2,0.,1.));
+      col=mix(col,pink,clamp(w.y*w.y*1.8-.15,0.,1.));
+      float glow=exp(-dot(uv-m,uv-m)*9.)*.4;
+      float a=smoothstep(.38,.95,f)*.64+glow*f*.8;
+      a*=smoothstep(.05,.75,uv.x*.9+uv.y*.35);   /* keep the copy side calm */
+      gl_FragColor=vec4(col*a,a);
+    }`;
+  const VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
 
-    const glc = document.createElement('canvas');
-    glc.width = w;
-    glc.height = h;
-    const gl = glc.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true, preserveDrawingBuffer: true });
+  const init = () => {
+    if (!canvas || reduce || saveData) return;
+    const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true, powerPreference: 'low-power' });
     if (!gl) return;
+    const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    const renderer = String(dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER));
+    if (/swiftshader|llvmpipe|software|basic render/i.test(renderer)) return;
 
-    const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
-    const fs = `
-      precision mediump float;
-      uniform vec2 r; uniform float t;
-      float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-      float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.-2.*f);
-        return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);}
-      float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
-      void main(){
-        vec2 uv=gl_FragCoord.xy/r;
-        vec2 p=uv*vec2(r.x/r.y,1.)*1.7;
-        float tt=t*.035;
-        vec2 q=vec2(fbm(p+vec2(0.,tt)),fbm(p+vec2(5.2,1.3)-tt));
-        vec2 w=vec2(fbm(p+2.2*q+vec2(1.7,9.2)+tt*1.4),fbm(p+2.2*q+vec2(8.3,2.8)-tt));
-        float f=fbm(p+2.6*w);
-        vec3 violet=vec3(.545,.361,.965), blue=vec3(.231,.510,.965), pink=vec3(.925,.282,.6);
-        vec3 col=mix(violet,blue,clamp(q.x*1.5-.2,0.,1.));
-        col=mix(col,pink,clamp(w.y*w.y*1.8-.15,0.,1.));
-        float a=smoothstep(.42,1.,f)*.58;
-        a*=smoothstep(.05,.75,uv.x*.9+uv.y*.35);   /* keep the copy side calm */
-        gl_FragColor=vec4(col*a,a);
-      }`;
     const sh = (type: number, src: string) => { const s = gl.createShader(type)!; gl.shaderSource(s, src); gl.compileShader(s); return s; };
     const prog = gl.createProgram()!;
-    gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs));
-    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
     gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
     gl.useProgram(prog);
@@ -112,44 +83,76 @@
     const loc = gl.getAttribLocation(prog, 'p');
     gl.enableVertexAttribArray(loc);
     gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    gl.viewport(0, 0, w, h);
-    gl.uniform2f(gl.getUniformLocation(prog, 'r'), w, h);
+    const uR = gl.getUniformLocation(prog, 'r');
     const uT = gl.getUniformLocation(prog, 't');
+    const uM = gl.getUniformLocation(prog, 'm');
 
-    // Three moments of the same flow; CSS keeps them moving and mixing.
-    [0, 38, 76].forEach((time, i) => {
-      gl.uniform1f(uT, time);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-      const c = targets[i];
-      c.width = w;
-      c.height = h;
-      c.getContext('2d')!.drawImage(glc, 0, 0);
+    let scale = 0.25;
+    const resize = () => {
+      const w = Math.max(1, Math.round(canvas.clientWidth * scale));
+      const h = Math.max(1, Math.round(canvas.clientHeight * scale));
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uR, canvas.width, canvas.height);
+    };
+    resize();
+    addEventListener('resize', resize);
+
+    // Mouse light, eased; only tracked while the pointer is over the hero
+    const hero = canvas.closest('section') ?? document.body;
+    const target = { x: 0.75, y: 0.6 };
+    const cur = { x: 0.75, y: 0.6 };
+    hero.addEventListener('pointermove', (e) => {
+      const b = canvas.getBoundingClientRect();
+      target.x = (e.clientX - b.left) / b.width;
+      target.y = 1 - (e.clientY - b.top) / b.height;
     });
-    gl.getExtension('WEBGL_lose_context')?.loseContext(); // free the GPU context right away
-    layer.classList.add('on');
 
-    // Gentle pointer parallax: one transform update per frame at most, pointer devices only
-    const hero = layer.closest('section');
-    if (hero && !reduce && matchMedia('(hover: hover)').matches) {
-      let raf = 0;
-      let x = 0;
-      let y = 0;
-      hero.addEventListener('pointermove', (e) => {
-        const b = hero.getBoundingClientRect();
-        x = ((e.clientX - b.left) / b.width - 0.5) * -36;
-        y = ((e.clientY - b.top) / b.height - 0.5) * -24;
-        if (!raf) raf = requestAnimationFrame(() => {
-          raf = 0;
-          layer.style.setProperty('--px', `${x.toFixed(1)}px`);
-          layer.style.setProperty('--py', `${y.toFixed(1)}px`);
-        });
-      });
+    // One rAF loop at most. It stops itself off-screen / hidden; resume() re-arms it.
+    let visible = true;
+    let dead = false;
+    let rafId = 0;
+    let last = 0;
+    let gaps: number[] = [];
+    const start = performance.now();
+    const schedule = () => { if (!dead && !rafId && visible && !document.hidden) rafId = requestAnimationFrame(loop); };
+    const resume = () => { last = 0; schedule(); };
+
+    function loop(now: number) {
+      rafId = 0;
+      if (!visible || document.hidden) return;
+      schedule();
+      if (last && now - last < 33) return; // ~30 fps cap
+
+      // Adaptive quality: judge the average gap between our frames over ~2 seconds
+      if (last) {
+        gaps.push(now - last);
+        if (gaps.length === 60) {
+          const avg = gaps.reduce((a, b) => a + b, 0) / gaps.length;
+          gaps = [];
+          if (avg > 45) {
+            if (scale > 0.17) { scale = 0.16; resize(); }
+            else { dead = true; canvas!.classList.remove('on'); gl!.getExtension('WEBGL_lose_context')?.loseContext(); return; }
+          }
+        }
+      }
+      last = now;
+      cur.x += (target.x - cur.x) * 0.08;
+      cur.y += (target.y - cur.y) * 0.08;
+      gl!.uniform1f(uT, (now - start) / 1000);
+      gl!.uniform2f(uM, cur.x, cur.y);
+      gl!.drawArrays(gl!.TRIANGLES, 0, 3);
     }
+
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; resume(); }).observe(canvas);
+    document.addEventListener('visibilitychange', resume);
+    resume();
+    canvas.classList.add('on');
   };
 
+  // Start after the page has painted and the main thread is idle
   const later = () =>
-    'requestIdleCallback' in window ? requestIdleCallback(render, { timeout: 1500 }) : setTimeout(render, 400);
+    'requestIdleCallback' in window ? requestIdleCallback(init, { timeout: 1500 }) : setTimeout(init, 400);
   if (document.readyState === 'complete') later();
   else addEventListener('load', later, { once: true });
 </script>
