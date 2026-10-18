@@ -75,6 +75,13 @@ const person = {
       const root = document.documentElement;
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+      // Enable smooth in-page scrolling only after the initial (hash) position is settled
+      if (!reduce) {
+        const enableSmooth = () => setTimeout(() => root.classList.add('smooth'), 100);
+        if (document.readyState === 'complete') enableSmooth();
+        else addEventListener('load', enableSmooth, { once: true });
+      }
+
       // Theme toggle
       const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
       const syncLabel = () =>

@@ -26,7 +26,7 @@
   --amb-1: rgba(139, 92, 246, 0.17);
   --amb-2: rgba(236, 72, 153, 0.08);
   --amb-3: rgba(59, 130, 246, 0.07);
-  --nav-bg: rgba(14, 15, 18, 0.94);
+  --nav-bg: rgba(14, 15, 18, 0.985);
   --grid-line: rgba(255, 255, 255, 0.045);
   --shadow-card: 0 40px 90px -40px rgba(139, 92, 246, 0.55);
 
@@ -66,7 +66,7 @@
   --amb-1: rgba(124, 58, 237, 0.09);
   --amb-2: rgba(219, 39, 119, 0.05);
   --amb-3: rgba(37, 99, 235, 0.05);
-  --nav-bg: rgba(247, 247, 248, 0.95);
+  --nav-bg: rgba(247, 247, 248, 0.985);
   --grid-line: rgba(14, 15, 18, 0.06);
   --shadow-card: 0 40px 90px -45px rgba(91, 33, 182, 0.35);
 
@@ -82,8 +82,10 @@
    ========================================================================== */
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Smooth scrolling is switched on only after load (class set in Base), so arriving on
+   /#work from another page jumps straight there instead of animating past the whole page. */
+html.smooth { scroll-behavior: smooth; }
 html {
-  scroll-behavior: smooth;
   scroll-padding-top: 88px;
   -webkit-text-size-adjust: 100%;
 }
