@@ -9,7 +9,7 @@ export const site = {
   github: 'https://github.com/Abhi-tech-geek',
   resume: '/AbhinavSaxena.pdf',
   description:
-    'Abhinav Saxena — QA & Automation Engineer at Accenture. I build AI agents that write, run and explain tests, and apps that make the real world more accessible.',
+    'Abhinav Saxena, QA & Automation Engineer at Accenture. I build AI agents that write, run and explain tests, and apps that make the real world more accessible.',
 };
 
 export const stats = [
@@ -23,14 +23,14 @@ export const workflow = [
   {
     key: 'requirement',
     title: 'Requirement analysis',
-    desc: 'Study the stories, map testable scenarios and flag ambiguities early — before a single test is written.',
+    desc: 'Study the stories, map testable scenarios and flag ambiguities early, before a single test is written.',
     tools: ['Jira', 'Confluence', 'User stories'],
     deliverable: 'Scenarios + clarification log',
   },
   {
     key: 'design',
     title: 'Test design',
-    desc: 'Happy paths, edge cases and business rules — every case traceable back to its requirement.',
+    desc: 'Happy paths, edge cases and business rules, with every case traceable back to its requirement.',
     tools: ['ALM', 'RTM', 'Sheets'],
     deliverable: 'Test cases + traceability matrix',
   },
@@ -44,7 +44,7 @@ export const workflow = [
   {
     key: 'defects',
     title: 'Defect reporting',
-    desc: 'Clear repro steps, severity, screenshots and logs — tracked until verified closed.',
+    desc: 'Clear repro steps, severity, screenshots and logs, tracked until verified closed.',
     tools: ['Jira', 'Bug lifecycle', 'Triage'],
     deliverable: 'Actionable bug reports',
   },

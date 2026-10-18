@@ -12,7 +12,7 @@ import { site } from '../data/site';
 
 const wide = new Set(['abhimate', 'abhinova']);
 ---
-<Base title={`${site.name} — QA & AI Automation Engineer`} home>
+<Base title={`${site.name} | QA & AI Automation Engineer`} home>
   <Hero />
   <Marquee />
   <About />
@@ -24,7 +24,7 @@ const wide = new Set(['abhimate', 'abhinova']);
           <span class="eyebrow reveal">// selected work</span>
           <h2 class="reveal">Projects</h2>
         </div>
-        <p class="reveal">Four AI products I designed, built and tested end to end — from multi-agent QA to accessibility.</p>
+        <p class="reveal">Four AI products I designed, built and tested end to end, from multi-agent QA to accessibility.</p>
       </div>
       <div class="bento">
         {projects.map((p, i) => <ProjectCard project={p} index={i} wide={wide.has(p.slug)} />)}

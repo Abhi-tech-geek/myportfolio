@@ -4,11 +4,16 @@ import Aurora from './Aurora.astro';
 import Icon from './Icon.astro';
 import { site } from '../data/site';
 
-const roles = ['a QA Engineer', 'an Automation Specialist', 'an AI Builder', 'an Accessibility Advocate'];
-const facts = [
-  { k: '2+ yrs', v: 'in software testing' },
-  { k: 'Accenture', v: 'QA Tester' },
-  { k: '4', v: 'AI products shipped' },
+// Things I test. The highlighted line of the headline cycles through these.
+const targets = ['checkout flows', 'login pages', 'AI chatbots', 'APIs', 'mobile apps', 'dashboards'];
+// Original one-liners (not quotes), rotated in the terminal line under the CTAs.
+const truths = [
+  'A test that never fails is a test nobody should trust.',
+  'Every bug caught here is one your users never meet.',
+  'Automate the boring checks. Think hard about the rest.',
+  'Accessibility is not a feature. It is the baseline.',
+  'Green builds are earned, not assumed.',
+  "If it isn't tested, \"it works\" is just a rumour.",
 ];
 ---
 <section class="hero">
@@ -25,29 +30,26 @@ const facts = [
       </span>
 
       <h1>
-        <span class="hi">Hi, I'm</span>
-        <span class="name">Abhinav Saxena</span>
+        <span class="sr-only">I break software before your users do.</span>
+        <span class="l1" aria-hidden="true">I break</span>
+        <span class="swap" aria-hidden="true"><span class="swap-word" data-swap={JSON.stringify(targets)}>{targets[0]}</span></span>
+        <span class="l3" aria-hidden="true">before your users do.</span>
       </h1>
 
-      <p class="role">
-        <span class="sr-only">I'm {roles.slice(0, -1).join(', ')} and {roles.at(-1)}.</span>
-        <span aria-hidden="true" class="role-pre">I'm</span>
-        <span aria-hidden="true" class="role-word" data-roles={JSON.stringify(roles)}>{roles[0]}</span><span class="caret" aria-hidden="true"></span>
-      </p>
-
       <p class="sub">
-        I make sure software works — <strong>for everyone</strong>. At Accenture I test enterprise apps; after hours I
-        build AI agents that write, run and fix tests on their own, and apps that make places accessible.
+        I'm <strong>Abhinav</strong>, a QA engineer at Accenture. I build AI agents that test software on their own, so
+        every release ships with fewer surprises.
       </p>
-
-      <ul class="facts">
-        {facts.map((f) => <li><b>{f.k}</b><span>{f.v}</span></li>)}
-      </ul>
 
       <div class="cta">
-        <a href="#work" class="btn btn-primary">See my projects <Icon name="arrow-right" /></a>
-        <a href={site.resume} class="btn btn-ghost" download="Abhinav_Saxena_Resume.pdf"><Icon name="download" /> Resume</a>
+        <a href="#work" class="btn btn-primary">See my work <Icon name="arrow-right" /></a>
+        <a href="#about" class="btn btn-ghost">About me</a>
       </div>
+
+      <p class="truth mono" aria-hidden="true">
+        <span class="prompt">❯ qa.truth()</span>
+        <span class="tq" data-truths={JSON.stringify(truths)}>{truths[0]}</span>
+      </p>
     </div>
 
     <div class="stage">
@@ -69,7 +71,7 @@ const facts = [
   }
   .bg { position: absolute; inset: 0; pointer-events: none; }
 
-  /* Futuristic 3D grid floor flowing toward the viewer — transform-only animation */
+  /* Futuristic 3D grid floor flowing toward the viewer (transform-only animation) */
   .floor {
     position: absolute;
     left: -50%;
@@ -108,7 +110,7 @@ const facts = [
     align-items: center;
     gap: clamp(40px, 5vw, 72px);
   }
-  .copy { flex: 999 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+  .copy { flex: 999 1 540px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
   .stage { flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
 
   .badge {
@@ -125,59 +127,52 @@ const facts = [
     background: color-mix(in srgb, var(--pass-bg) 80%, transparent);
   }
 
-  h1 { display: flex; flex-direction: column; gap: 6px; letter-spacing: -0.04em; }
-  .hi { font-size: clamp(28px, 3vw, 40px); font-weight: 600; color: var(--text-2); letter-spacing: -0.02em; }
-  .name {
-    font-size: clamp(50px, 7vw, 104px);
-    line-height: 0.95;
+  h1 {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(44px, 6.4vw, 92px);
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+  .l3 { color: var(--text-2); font-size: 0.56em; letter-spacing: -0.035em; margin-top: 0.18em; }
+  .swap {
+    display: block;
+    height: 1.12em;
+    overflow: hidden;
+    padding-bottom: 0.04em;
+  }
+  .swap-word {
+    display: inline-block;
     background: var(--grad);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    padding-bottom: 0.06em; /* keep descenders inside the clip */
+    padding-right: 0.05em;
+    transition: translate 0.45s var(--ease-out), opacity 0.45s var(--ease-out);
   }
+  .swap-word.out { translate: 0 -70%; opacity: 0; }
+  .swap-word.enter { translate: 0 70%; opacity: 0; transition: none; }
 
-  .role {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0 0.35em;
-    font-size: clamp(22px, 2.4vw, 30px);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    min-height: 1.3em;
-  }
-  .role-pre { color: var(--text-3); font-weight: 500; }
-  .role-word { color: var(--text); }
-  .caret {
-    align-self: center;
-    width: 3px;
-    height: 1.05em;
-    margin-left: 2px;
-    border-radius: 2px;
-    background: var(--violet);
-    animation: blink 1s steps(1) infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  .sub { max-width: 600px; font-size: clamp(17px, 1.4vw, 19px); line-height: 1.65; color: var(--text-2); }
+  .sub { max-width: 560px; font-size: clamp(17px, 1.45vw, 20px); line-height: 1.65; color: var(--text-2); }
   .sub strong { color: var(--text); font-weight: 600; }
 
-  .facts { display: flex; flex-wrap: wrap; gap: 10px; }
-  .facts li {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding: 9px 14px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--surface) 70%, transparent);
-    font-size: 14.5px;
-    color: var(--text-3);
-  }
-  .facts b { color: var(--text); font-weight: 700; font-size: 16px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; }
 
-  .cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 4px; }
+  .truth {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    align-items: baseline;
+    max-width: 600px;
+    padding: 12px 16px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 12px;
+    font-size: 13.5px;
+    color: var(--text-2);
+    background: color-mix(in srgb, var(--surface) 55%, transparent);
+  }
+  .prompt { color: var(--violet); white-space: nowrap; }
+  .tq { min-height: 1.5em; }
 
   .kicker { display: inline-flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-3); }
   .caption { font-size: 18px; font-weight: 600; color: var(--text-2); text-align: center; letter-spacing: -0.01em; }
@@ -203,20 +198,20 @@ const facts = [
   }
   .tilt.tilting .glare { opacity: 1; }
 
-  /* Intro choreography — opacity/translate only (no blur filters) */
+  /* Intro choreography: opacity/translate only (no blur filters) */
   @media (prefers-reduced-motion: no-preference) {
-    .badge, .hi, .name, .role, .sub, .facts, .cta, .stage {
+    .badge, .l1, .swap, .l3, .sub, .cta, .truth, .stage {
       opacity: 0;
       translate: 0 18px;
       animation: rise 0.8s var(--ease-out) forwards;
     }
-    .hi { animation-delay: 0.05s; }
-    .name { animation-delay: 0.15s; }
-    .role { animation-delay: 0.3s; }
-    .sub { animation-delay: 0.4s; }
-    .facts { animation-delay: 0.5s; }
-    .cta { animation-delay: 0.58s; }
-    .stage { animation-delay: 0.35s; }
+    .l1 { animation-delay: 0.05s; }
+    .swap { animation-delay: 0.14s; }
+    .l3 { animation-delay: 0.23s; }
+    .sub { animation-delay: 0.36s; }
+    .cta { animation-delay: 0.46s; }
+    .truth { animation-delay: 0.56s; }
+    .stage { animation-delay: 0.3s; }
   }
   @keyframes rise { to { opacity: 1; translate: none; } }
 
@@ -227,44 +222,74 @@ const facts = [
 
 <script>
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
 
-  // "Decode" the availability badge once on load.
-  const dec = document.querySelector<HTMLElement>('[data-decode]');
-  if (dec && !reduce) {
-    const final = dec.textContent ?? '';
-    const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
-    dec.style.display = 'inline-block';
-    dec.style.minWidth = `${dec.offsetWidth}px`;
-    let frame = 0;
-    const total = 24;
-    const tick = () => {
-      frame++;
-      const shown = Math.floor((frame / total) * final.length);
-      dec.textContent = [...final].map((c, i) => (i < shown || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0])).join('');
-      if (frame < total) setTimeout(tick, 34);
-      else dec.textContent = final;
-    };
-    setTimeout(tick, 250);
-  }
+  // Scramble-to-text "decode" effect
+  const decode = (el: HTMLElement, text: string, frames = 22) =>
+    new Promise<void>((done) => {
+      let f = 0;
+      const tick = () => {
+        f++;
+        const shown = Math.floor((f / frames) * text.length);
+        el.textContent = [...text].map((c, i) => (i < shown || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0])).join('');
+        if (f < frames) setTimeout(tick, 32);
+        else { el.textContent = text; done(); }
+      };
+      tick();
+    });
 
-  // Role typewriter
-  const roleEl = document.querySelector<HTMLElement>('[data-roles]');
-  if (roleEl && !reduce) {
-    const roles: string[] = JSON.parse(roleEl.dataset.roles ?? '[]');
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-    (async () => {
-      let i = 0;
-      await sleep(2200);
-      while (true) {
-        const word = roles[i];
-        for (let n = word.length; n >= 0; n--) { roleEl.textContent = word.slice(0, n); await sleep(28); }
-        i = (i + 1) % roles.length;
-        const next = roles[i];
-        await sleep(200);
-        for (let n = 1; n <= next.length; n++) { roleEl.textContent = next.slice(0, n); await sleep(55); }
-        await sleep(2200);
-      }
-    })();
+  // Pause the loops while the hero is off-screen or the tab is hidden
+  const hero = document.querySelector<HTMLElement>('.hero');
+  let onScreen = true;
+  if (hero) new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; }).observe(hero);
+  const ready = async () => { while (!onScreen || document.hidden) await sleep(300); };
+
+  if (!reduce) {
+    const badge = document.querySelector<HTMLElement>('[data-decode]');
+    if (badge) {
+      badge.style.display = 'inline-block';
+      badge.style.minWidth = `${badge.offsetWidth}px`;
+      setTimeout(() => decode(badge, badge.textContent ?? ''), 250);
+    }
+
+    // Headline word swap
+    const word = document.querySelector<HTMLElement>('[data-swap]');
+    if (word) {
+      const list: string[] = JSON.parse(word.dataset.swap ?? '[]');
+      (async () => {
+        let i = 0;
+        await sleep(2600);
+        while (true) {
+          await ready();
+          word.classList.add('out');
+          await sleep(450);
+          i = (i + 1) % list.length;
+          word.textContent = list[i];
+          word.classList.remove('out');
+          word.classList.add('enter');
+          void word.offsetWidth; // commit the start position before transitioning in
+          word.classList.remove('enter');
+          await sleep(2400);
+        }
+      })();
+    }
+
+    // Rotating QA truths
+    const truth = document.querySelector<HTMLElement>('[data-truths]');
+    if (truth) {
+      const list: string[] = JSON.parse(truth.dataset.truths ?? '[]');
+      (async () => {
+        let i = 0;
+        await sleep(5000);
+        while (true) {
+          await ready();
+          i = (i + 1) % list.length;
+          await decode(truth, list[i], 26);
+          await sleep(5200);
+        }
+      })();
+    }
   }
 
   // 3D tilt for the hero card (pointer devices only)

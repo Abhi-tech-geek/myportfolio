@@ -56,7 +56,7 @@ const host = p.primary.href.startsWith('https://') && !p.primary.href.includes('
           <div class="route mono" data-route>
             <span>routing →</span><b data-agent>calendar</b><b data-agent>mail</b><b data-agent>notes</b>
           </div>
-          <div class="msg bot" data-reply>Done. Stand-up at 10, release review at 3 — I've set a reminder 30 minutes before, and drafted the release notes from your notes.</div>
+          <div class="msg bot" data-reply>Done. Stand-up at 10, release review at 3. I've set a reminder 30 minutes before, and drafted the release notes from your notes.</div>
         </div>
       )}
     </div>
@@ -273,7 +273,10 @@ const host = p.primary.href.startsWith('https://') && !p.primary.href.includes('
         route.style.opacity = '1';
         for (const a of agents) { a.classList.add('on'); await sleep(450); }
         reply.style.opacity = '1';
-        reply.innerHTML = '<span class="dots3"><i></i><i></i><i></i></span>';
+        const dots = document.createElement('span');
+        dots.className = 'dots3';
+        dots.append(document.createElement('i'), document.createElement('i'), document.createElement('i'));
+        reply.replaceChildren(dots);
         await sleep(1100);
         reply.textContent = '';
         const caret = document.createElement('span');

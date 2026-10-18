@@ -1,9 +1,15 @@
 ---
+// Self-hosted fonts: no third-party request, keeps the CSP same-origin.
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
 import '../styles/global.css';
+import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ScrollRail from '../components/ScrollRail.astro';
 import { site } from '../data/site';
+import { themeInit } from '../lib/theme-init.mjs';
 
 interface Props {
   title: string;
@@ -36,6 +42,8 @@ const person = {
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#0e0f12" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
@@ -48,20 +56,8 @@ const person = {
     <meta name="twitter:image" content={ogImage} />
 
     <!-- Theme + scroll-driven support set before first paint (no flash) -->
-    <script is:inline>
-      (function () {
-        var d = document.documentElement;
-        try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') d.dataset.theme = t; } catch (e) {}
-        if (!(window.CSS && CSS.supports('animation-timeline: view()'))) d.classList.add('no-sda');
-      })();
-    </script>
+    <script is:inline set:html={themeInit} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@700&display=swap"
-    />
     {home && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
   </head>
   <body>

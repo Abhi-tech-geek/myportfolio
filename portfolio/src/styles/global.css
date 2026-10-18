@@ -27,9 +27,8 @@
   --grid-line: rgba(255, 255, 255, 0.045);
   --shadow-card: 0 40px 90px -40px rgba(139, 92, 246, 0.55);
 
-  --f-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  --f-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
   --f-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
-  --f-sig: 'Caveat', 'Segoe Script', cursive;
 
   --radius: 18px;
   --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);

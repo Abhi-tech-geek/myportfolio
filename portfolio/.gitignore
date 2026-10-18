@@ -4,3 +4,5 @@ dist/
 .vercel/
 .env
 .DS_Store
+# personal notes, never published
+PROJECT_NOTES.md

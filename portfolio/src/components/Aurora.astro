@@ -123,14 +123,18 @@
       const gaps: number[] = [];
       const start = performance.now();
       const schedule = () => { if (!dead && !rafId && visible && !document.hidden) rafId = requestAnimationFrame(loop); };
+      // Coming back from hidden/off-screen: forget the old timestamp so the pause isn't counted as a slow frame
+      const resume = () => { last = 0; schedule(); };
       function loop(now: number) {
         rafId = 0;
         if (!visible || document.hidden) return;
         schedule();
         if (now - last < 33) return; // ~30 fps cap
         // Auto kill-switch: if this device can't hold ~20 fps here, fade back to the CSS glow.
+        // `last` is reset to 0 whenever the loop resumes (tab shown / hero back on screen),
+        // so only genuinely slow frames are counted, however slow they are.
         const gap = now - last;
-        if (last && gap < 500 && gaps.length < 60) {
+        if (last && gaps.length < 60) {
           gaps.push(gap);
           if (gaps.length === 60) {
             const avg = gaps.slice(10).reduce((a, b) => a + b, 0) / 50;
@@ -149,8 +153,8 @@
         gl!.uniform2f(uM, cur.x, cur.y);
         gl!.drawArrays(gl!.TRIANGLES, 0, 3);
       }
-      new IntersectionObserver(([e]) => { visible = e.isIntersecting; schedule(); }).observe(canvas);
-      document.addEventListener('visibilitychange', schedule);
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; resume(); }).observe(canvas);
+      document.addEventListener('visibilitychange', resume);
       schedule();
       canvas.classList.add('on');
     }
