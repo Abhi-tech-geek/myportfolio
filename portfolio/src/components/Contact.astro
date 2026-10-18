@@ -1,0 +1,128 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+<section id="contact" class="section">
+  <div class="container">
+    <div class="box reveal" data-contact>
+      <div class="copy">
+        <span class="eyebrow">// contact</span>
+        <h2>Got something that needs to ship <span class="ok">green?</span></h2>
+        <p>Open to QA and automation roles, AI-testing collaborations, and accessibility projects.</p>
+      </div>
+
+      <div class="actions">
+        <div class="mail">
+          <a href={`mailto:${site.email}`} class="addr">{site.email}</a>
+          <button type="button" class="copybtn" data-copy={site.email} aria-label="Copy email address">
+            <Icon name="copy" size={16} class="i-copy" />
+            <Icon name="check" size={16} class="i-done" />
+          </button>
+          <span class="sr-only" aria-live="polite" data-copy-status></span>
+        </div>
+        <div class="row">
+          <a href={site.linkedin} target="_blank" rel="noopener" class="btn btn-primary"><Icon name="linkedin" /> LinkedIn</a>
+          <a href={site.github} target="_blank" rel="noopener" class="btn btn-ghost"><Icon name="github" /> GitHub</a>
+          <a href={site.resume} download="Abhinav_Saxena_Resume.pdf" class="btn btn-ghost"><Icon name="download" /> Resume</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+  .box {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 40px;
+    padding: clamp(36px, 6vw, 80px);
+    border-radius: 28px;
+    background: var(--surface);
+    isolation: isolate;
+  }
+  /* Rotating gradient border — runs only while the box is on screen */
+  .box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--angle), #8b5cf6, #3b82f6, #ec4899, transparent 60%, #8b5cf6);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    animation: spin-border 7s linear infinite paused;
+    z-index: -1;
+  }
+  .box.live::before { animation-play-state: running; }
+  .box::after {
+    content: '';
+    position: absolute;
+    inset: 20% 10% -10%;
+    background: radial-gradient(closest-side, var(--glow), transparent);
+    z-index: -2;
+    pointer-events: none;
+  }
+  @keyframes spin-border { to { --angle: 360deg; } }
+
+  .copy { flex: 1 1 420px; display: flex; flex-direction: column; gap: 16px; }
+  .copy h2 { font-size: clamp(36px, 4.8vw, 64px); }
+  .copy p { color: var(--text-2); max-width: 480px; }
+  .ok { color: var(--pass); }
+
+  .actions { flex: 1 1 360px; display: flex; flex-direction: column; gap: 18px; align-items: flex-start; }
+  .mail { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .addr {
+    font-size: clamp(19px, 2.2vw, 26px);
+    font-weight: 600;
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    transition: background-size 0.4s var(--ease-out);
+    overflow-wrap: anywhere;
+  }
+  .addr:hover { background-size: 100% 1px; }
+  .copybtn {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .copybtn:hover { border-color: var(--violet); }
+  .copybtn > :global(*) { grid-area: 1 / 1; transition: transform 0.35s var(--ease-spring), opacity 0.2s; }
+  .copybtn :global(.i-done) { opacity: 0; transform: scale(0.4); color: var(--pass); }
+  .copybtn.done :global(.i-copy) { opacity: 0; transform: scale(0.4); }
+  .copybtn.done :global(.i-done) { opacity: 1; transform: none; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; }
+</style>
+
+<script>
+  const box = document.querySelector<HTMLElement>('[data-contact]');
+  if (box) new IntersectionObserver(([e]) => box.classList.toggle('live', e.isIntersecting)).observe(box);
+
+  const btn = document.querySelector<HTMLButtonElement>('[data-copy]');
+  const status = document.querySelector<HTMLElement>('[data-copy-status]');
+  btn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(btn.dataset.copy ?? '');
+      btn.classList.add('done');
+      if (status) status.textContent = 'Email copied';
+      setTimeout(() => { btn.classList.remove('done'); if (status) status.textContent = ''; }, 1800);
+    } catch {
+      location.href = `mailto:${btn.dataset.copy}`;
+    }
+  });
+</script>

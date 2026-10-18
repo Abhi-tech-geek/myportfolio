@@ -1,0 +1,327 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectLogo from '../components/ProjectLogo.astro';
+import Showcase from '../components/Showcase.astro';
+import Icon from '../components/Icon.astro';
+import { projects, getProject, type Project } from '../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+}
+
+interface Props { project: Project }
+const { project: p } = Astro.props;
+const next = getProject(p.next);
+const isExternal = (href: string) => href.startsWith('http');
+---
+<Base title={`${p.seo.title} | Abhinav Saxena`} description={p.seo.description} og={p.seo.og}>
+  <div
+    class="page tinted"
+    style={`--pc:${p.color};--pc-l:${p.colorLight};--pc2:${p.color2}`}
+  >
+    <header class="hero">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <a href="/#work" class="back"><Icon name="arrow-left" size={16} /> All projects</a>
+
+        <span class="logo" style={`view-transition-name: logo-${p.slug}`}><ProjectLogo slug={p.slug} size={44} /></span>
+        <span class="status mono" data-status={p.status}><span class="sdot"></span>{p.statusLabel} · {p.category}</span>
+        <h1 style={`view-transition-name: name-${p.slug}`}>{p.name}</h1>
+        <p class="tagline">{p.tagline}</p>
+        <p class="sub">{p.seo.description}</p>
+
+        <div class="cta">
+          <a
+            href={p.primary.href}
+            class="btn btn-project"
+            {...(isExternal(p.primary.href) ? { target: '_blank', rel: 'noopener' } : {})}
+          >
+            {p.status === 'android' ? <Icon name="android" /> : p.status === 'soon' ? <Icon name="github" /> : <Icon name="arrow-up-right" />}
+            {p.primary.label}
+          </a>
+          {p.secondary && (
+            <a href={p.secondary.href} class="btn btn-ghost" target="_blank" rel="noopener">
+              <Icon name="github" /> {p.secondary.label}
+            </a>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <section class="container show">
+      <Showcase project={p} />
+    </section>
+
+    <section class="section">
+      <div class="container narrow">
+        <span class="eyebrow reveal">// {p.overviewTitle.toLowerCase()}</span>
+        <h2 class="reveal">{p.overviewTitle}</h2>
+        {p.overview.map((para) => <p class="lead reveal">{para}</p>)}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="reveal">{p.featuresTitle}</h2>
+          {p.featuresLead && <p class="reveal">{p.featuresLead}</p>}
+        </div>
+        <ul class="features">
+          {p.features.map((f, i) => (
+            <li class="feature spot reveal" style={`--i:${i % 3}`}>
+              <span class="fnum mono">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    {p.highlights && (
+      <section class="section">
+        <div class="container">
+          <div class="section-head"><h2 class="reveal">Engineering highlights</h2></div>
+          <ul class="highlights">
+            {p.highlights.map((h) => (
+              <li class="hl reveal">
+                <h3>{h.title}</h3>
+                <p>{h.desc}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><h2 class="reveal">Built with</h2></div>
+        <ul class="stack reveal">
+          {p.stack.map((s) => <li class="chip">{s}</li>)}
+        </ul>
+
+        {p.metrics.length > 0 && (
+          <dl class="metrics">
+            {p.metrics.map((m, i) => (
+              <div class="metric reveal" style={`--i:${i}`}>
+                <dt>{m.label}</dt>
+                <dd>{m.count !== undefined ? <span data-count={m.count}>{m.value}</span> : m.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </div>
+    </section>
+
+    {p.runLocally && (
+      <section class="section">
+        <div class="container narrow">
+          <span class="eyebrow reveal">// optional, just for the show</span>
+          <h2 class="reveal">Watch the browser open</h2>
+          <p class="lead reveal">
+            The live site runs Chrome headless on the server. Run AbhiMate locally and Chrome opens and performs every
+            click, type and navigation right in front of you.
+          </p>
+          <pre class="code reveal"><code>{p.runLocally.map((l) => l.comment
+            ? <span class="c">{l.comment}{'\n'}</span>
+            : <span class="k"><span class="pr" aria-hidden="true">$ </span>{l.cmd}{'\n'}</span>)}</code></pre>
+        </div>
+      </section>
+    )}
+
+    <section class="container">
+      <div class="band reveal">
+        <h2>{p.cta.title}</h2>
+        <p>{p.cta.text}</p>
+        <a
+          href={p.primary.href}
+          class="btn btn-project"
+          {...(isExternal(p.primary.href) ? { target: '_blank', rel: 'noopener' } : {})}
+        >
+          {p.primary.label} <Icon name="arrow-right" />
+        </a>
+      </div>
+    </section>
+
+    <section class="container">
+      <a href={`/${next.slug}`} class="next tinted" style={`--pc:${next.color};--pc-l:${next.colorLight}`}>
+        <span class="mono nl">Next project</span>
+        <span class="nn">
+          <span class="nlogo"><ProjectLogo slug={next.slug} size={26} /></span>
+          {next.name}
+          <Icon name="arrow-right" size={28} class="narrow-i" />
+        </span>
+        <span class="ns">{next.tagline}</span>
+      </a>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page { --p-grad: linear-gradient(135deg, var(--pc), var(--pc2)); }
+
+  .hero { position: relative; overflow: hidden; padding-block: clamp(40px, 6vw, 72px) clamp(48px, 6vw, 80px); text-align: center; }
+  .glow {
+    position: absolute;
+    left: 50%;
+    top: -360px;
+    width: 1100px;
+    height: 800px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--p) 26%, transparent), transparent);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-bottom: clamp(16px, 4vw, 40px);
+    font-family: var(--f-mono);
+    font-size: 14px;
+    color: var(--text-2);
+    text-decoration: none;
+  }
+  .back:hover { color: var(--text); }
+  .back :global(svg) { transition: transform 0.3s var(--ease-out); }
+  .back:hover :global(svg) { transform: translateX(-4px); }
+
+  .logo {
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 26px;
+    color: var(--p);
+    background: color-mix(in srgb, var(--p) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--p) 30%, transparent);
+    box-shadow: 0 0 60px -12px var(--p);
+  }
+  .status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--p); margin-top: 8px; }
+  .sdot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .status[data-status='live'] .sdot, .status[data-status='android'] .sdot { animation: dot-pulse 2.4s infinite; }
+  .status[data-status='soon'] .sdot { background: var(--warn); }
+
+  h1 { font-size: clamp(56px, 10vw, 128px); letter-spacing: -0.05em; line-height: 0.95; width: fit-content; }
+  .tagline {
+    font-size: clamp(22px, 2.6vw, 32px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: var(--p-grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  :global(:root[data-theme='light']) .tagline { background: none; color: var(--p); }
+  .sub { max-width: 680px; color: var(--text-2); font-size: 18px; }
+  .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 10px; }
+
+  .btn-project {
+    color: #0e0f12;
+    background: var(--p-grad);
+    box-shadow: 0 12px 34px -12px var(--pc);
+  }
+  .btn-project:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -12px var(--pc); }
+
+  .show { padding-bottom: clamp(24px, 4vw, 48px); }
+
+  .narrow { max-width: 820px; }
+  .narrow h2 { font-size: clamp(34px, 4vw, 48px); margin: 12px 0 24px; }
+  .lead { font-size: 18.5px; line-height: 1.75; color: var(--text-2); }
+  .lead + .lead { margin-top: 18px; }
+
+  .features { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .feature {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: border-color 0.3s, transform 0.4s var(--ease-out);
+  }
+  .feature:hover { border-color: color-mix(in srgb, var(--p) 50%, var(--border)); transform: translateY(-3px); }
+  .fnum { font-size: 13px; color: var(--p); }
+  .feature h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  .feature p { color: var(--text-2); font-size: 15.5px; }
+
+  .highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); border-top: 1px solid var(--border); }
+  .hl { padding: 26px 26px 26px 0; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
+  .hl h3 { font-size: 20px; font-weight: 600; }
+  .hl h3::before { content: '◆ '; color: var(--p); font-size: 14px; vertical-align: 2px; }
+  .hl p { color: var(--text-2); font-size: 15.5px; }
+
+  .stack { display: flex; flex-wrap: wrap; gap: 10px; }
+  .stack .chip { transition: border-color 0.2s, color 0.2s; }
+  .stack .chip:hover { border-color: var(--p); color: var(--p); }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    margin: 48px 0 0;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .metric { display: flex; flex-direction: column-reverse; gap: 6px; padding: 28px; background: var(--surface); }
+  .metric dt { font-family: var(--f-mono); font-size: 13px; color: var(--text-3); }
+  .metric dd { margin: 0; font-size: clamp(40px, 4vw, 56px); font-weight: 700; letter-spacing: -0.04em; line-height: 1; color: var(--p); font-variant-numeric: tabular-nums; }
+
+  .code {
+    margin: 28px 0 0;
+    padding: 24px 26px;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--bg-2);
+    font-family: var(--f-mono);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .code .c { color: var(--text-3); }
+  .code .k { color: var(--text); }
+  .code .pr { color: var(--p); }
+
+  .band {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-block: clamp(64px, 8vw, 100px) 40px;
+    padding: clamp(40px, 6vw, 72px) 24px;
+    text-align: center;
+    border-radius: 28px;
+    border: 1px solid color-mix(in srgb, var(--p) 35%, var(--border));
+    background:
+      radial-gradient(ellipse at top, color-mix(in srgb, var(--p) 18%, transparent), transparent 70%),
+      var(--surface);
+  }
+  .band h2 { font-size: clamp(32px, 4vw, 48px); }
+  .band p { color: var(--text-2); margin-bottom: 8px; }
+
+  .next {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 64px;
+    padding: 34px 0;
+    border-top: 1px solid var(--border);
+    text-decoration: none;
+  }
+  .nl { font-size: 13px; color: var(--text-3); }
+  .nn { display: inline-flex; align-items: center; gap: 16px; font-size: clamp(40px, 6vw, 72px); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+  .nlogo {
+    display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px;
+    color: var(--p); background: color-mix(in srgb, var(--p) 13%, transparent);
+  }
+  .nn :global(.narrow-i) { transition: transform 0.4s var(--ease-out); color: var(--p); }
+  .next:hover :global(.narrow-i) { transform: translateX(10px); }
+  .ns { color: var(--text-2); }
+</style>

@@ -1,0 +1,152 @@
+---
+import ProjectLogo from './ProjectLogo.astro';
+import Icon from './Icon.astro';
+import type { Project } from '../data/projects';
+interface Props { project: Project; index: number; wide?: boolean }
+const { project: p, index, wide = false } = Astro.props;
+const num = String(index + 1).padStart(2, '0');
+---
+<a
+  href={`/${p.slug}`}
+  class:list={['card', 'spot', 'tinted', 'reveal', { wide }]}
+  style={`--pc:${p.color};--pc-l:${p.colorLight};--i:${index}`}
+>
+  <span class="top">
+    <span class="logo" style={`view-transition-name: logo-${p.slug}`}><ProjectLogo slug={p.slug} /></span>
+    <span class="status" data-status={p.status}>
+      <span class="sdot"></span>{p.statusLabel}
+    </span>
+  </span>
+
+  <span class="meta">{num} · {p.category}</span>
+  <span class="name" style={`view-transition-name: name-${p.slug}`}>{p.name}</span>
+  <span class="short">{p.short}</span>
+
+  {wide && p.slug === 'abhimate' && (
+    <span class="pipe" aria-hidden="true">
+      {['describe', 'generate', 'run', 'heal', 'report'].map((s, i) => (
+        <span class="step" style={`--s:${i}`}>{s}</span>
+      ))}
+    </span>
+  )}
+  {wide && p.slug === 'abhinova' && (
+    <span class="chat" aria-hidden="true">
+      <span class="msg me">Plan my Monday</span>
+      <span class="msg bot">Delegating to calendar, mail and notes agents<span class="typing"><i></i><i></i><i></i></span></span>
+    </span>
+  )}
+
+  <span class="more">Read case study <Icon name="arrow-right" size={16} /></span>
+</a>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 300px;
+    padding: 30px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.4s var(--ease-out), border-color 0.3s ease, box-shadow 0.4s ease;
+  }
+  .card::after {
+    /* project-colored top edge that grows on hover */
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--p), transparent);
+    transform-origin: left;
+    transform: scaleX(0.35);
+    transition: transform 0.5s var(--ease-out);
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--p) 45%, var(--border));
+    box-shadow: 0 30px 60px -36px color-mix(in srgb, var(--p) 70%, transparent);
+  }
+  .card:hover::after { transform: scaleX(1); }
+
+  .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .logo {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 15px;
+    color: var(--p);
+    background: color-mix(in srgb, var(--p) 13%, transparent);
+    border: 1px solid color-mix(in srgb, var(--p) 25%, transparent);
+    transition: transform 0.5s var(--ease-spring), box-shadow 0.4s;
+  }
+  .card:hover .logo { transform: rotate(-8deg) scale(1.06); box-shadow: 0 0 28px -6px var(--p); }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    color: var(--p);
+  }
+  .sdot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .status[data-status='live'] .sdot, .status[data-status='android'] .sdot { animation: dot-pulse 2.4s infinite; color: var(--p); }
+
+  .meta { font-family: var(--f-mono); font-size: 13px; color: var(--text-3); }
+  .name { font-weight: 700; font-size: clamp(34px, 3.4vw, 44px); line-height: 1; letter-spacing: -0.03em; width: fit-content; }
+  .short { font-size: 17px; line-height: 1.55; color: var(--text-2); max-width: 520px; }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 10px;
+    font-weight: 600;
+  }
+  .more :global(svg) { transition: transform 0.35s var(--ease-out); }
+  .card:hover .more :global(svg) { transform: translateX(5px); }
+
+  /* AbhiMate pipeline strip */
+  .pipe { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 8px; }
+  .step {
+    position: relative;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-family: var(--f-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    animation: lit 5s infinite;
+    animation-delay: calc(var(--s) * 0.6s);
+  }
+  .step + .step::before {
+    content: '';
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    width: 6px;
+    height: 1px;
+    background: var(--border-strong);
+  }
+  @keyframes lit {
+    0%, 22%, 100% { color: var(--text-3); border-color: var(--border); background: transparent; }
+    8%, 16% { color: var(--text); border-color: var(--p); background: color-mix(in srgb, var(--p) 14%, transparent); }
+  }
+
+  /* AbhiNova chat snippet */
+  .chat { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; font-size: 15px; }
+  .msg { width: fit-content; max-width: 90%; padding: 9px 14px; border-radius: 14px; }
+  .msg.me { align-self: flex-end; background: color-mix(in srgb, var(--p) 18%, transparent); border-bottom-right-radius: 4px; }
+  .msg.bot { background: var(--surface-2); border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--text-2); }
+  .typing { display: inline-flex; gap: 3px; margin-left: 6px; }
+  .typing i { width: 5px; height: 5px; border-radius: 50%; background: var(--p); animation: bounce 1.2s infinite; }
+  .typing i:nth-child(2) { animation-delay: 0.15s; }
+  .typing i:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: none; opacity: 0.5; } 30% { transform: translateY(-4px); opacity: 1; } }
+</style>

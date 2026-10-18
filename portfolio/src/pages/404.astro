@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+<Base title="404 — Test failed | Abhinav Saxena" description="This page could not be found.">
+  <section class="container nf">
+    <span class="eyebrow">assert page.exists()</span>
+    <h1><span class="fail">✕</span> 404 — test failed</h1>
+    <pre class="log mono">Expected: a page at this URL
+Received: nothing
+Root cause: the link is broken or the page moved.</pre>
+    <a href="/" class="btn btn-primary"><Icon name="arrow-left" /> Back to a passing page</a>
+  </section>
+</Base>
+
+<style>
+  .nf { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; padding-block: clamp(80px, 14vw, 180px); }
+  h1 { font-size: clamp(44px, 7vw, 88px); }
+  .fail { color: var(--warn); }
+  .log {
+    margin: 0;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface);
+    color: var(--text-2);
+    font-size: 14px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+</style>

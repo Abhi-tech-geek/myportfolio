@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Workflow from '../components/Workflow.astro';
+import About from '../components/About.astro';
+import Certs from '../components/Certs.astro';
+import Contact from '../components/Contact.astro';
+import { projects } from '../data/projects';
+import { site } from '../data/site';
+
+const wide = new Set(['abhimate', 'abhinova']);
+---
+<Base title={`${site.name} — QA & AI Automation Engineer`} home>
+  <Hero />
+  <Marquee />
+
+  <section id="work" class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow reveal">// selected work</span>
+          <h2 class="reveal">Projects</h2>
+        </div>
+        <p class="reveal">Four AI products I designed, built and tested end to end — from multi-agent QA to accessibility.</p>
+      </div>
+      <div class="bento">
+        {projects.map((p, i) => <ProjectCard project={p} index={i} wide={wide.has(p.slug)} />)}
+      </div>
+    </div>
+  </section>
+
+  <Workflow />
+  <About />
+  <Certs />
+  <Contact />
+</Base>
+
+<style>
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+  .bento > :global(.wide) { grid-column: span 2; }
+  @media (max-width: 980px) {
+    .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .bento > :global(.wide) { grid-column: span 2; }
+  }
+  @media (max-width: 640px) {
+    .bento { grid-template-columns: minmax(0, 1fr); }
+    .bento > :global(.wide) { grid-column: auto; }
+  }
+  .section-head .eyebrow { display: block; margin-bottom: 12px; }
+</style>

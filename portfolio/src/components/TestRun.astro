@@ -1,0 +1,294 @@
+---
+// A live, self-playing preview of an AbhiMate run. The markup is the finished
+// state (all green), so no-JS and reduced-motion visitors see a complete card;
+// the script replays the run only while the card is on screen.
+const rows = [
+  { file: 'login.feature', total: 24 },
+  { file: 'checkout.feature', total: 19 },
+  { file: 'search.feature', total: 12, fail: true },
+];
+const agents = ['planner', 'generator', 'executor', 'triage'];
+const total = rows.reduce((n, r) => n + r.total, 0);
+---
+<figure class="run" data-run aria-label="Animated preview of an AbhiMate test run that self-heals a failing test">
+  <div class="bar">
+    <span class="title"><span class="live" aria-hidden="true"></span>abhimate · run #128</span>
+    <span class="engine">Playwright</span>
+  </div>
+
+  <div class="agents" aria-hidden="true">
+    {agents.map((a) => <span class="agent" data-agent>{a}</span>)}
+  </div>
+
+  <ul class="rows">
+    {rows.map((r) => (
+      <li class="row" data-row data-total={r.total} data-fail={r.fail ? '1' : undefined} data-state="pass">
+        <span class="ic" aria-hidden="true">
+          <svg class="i-pass" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+          <span class="i-warn">!</span>
+          <span class="i-spin"></span>
+        </span>
+        <span class="file">{r.file}</span>
+        <span class="n" data-n>{r.total}/{r.total}</span>
+        <span class="prog" aria-hidden="true"></span>
+      </li>
+    ))}
+  </ul>
+
+  <div class="triage" data-triage>
+    <span class="tlabel">triage agent</span>
+    <p data-triage-text>Root cause: the search button was renamed. Self-healing locator updated — re-run passed.</p>
+  </div>
+
+  <div class="summary" data-summary data-state="pass">
+    <span data-summary-text>{total}/{total} passed · all green</span>
+    <span class="time">4.2s</span>
+  </div>
+</figure>
+
+<style>
+  .run {
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    font-family: var(--f-mono);
+    font-size: 14px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .run::after {
+    /* faint scanline sweep — the "AI is working" cue */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--violet) 7%, transparent) 50%, transparent);
+    height: 40%;
+    transform: translateY(-100%);
+    pointer-events: none;
+    opacity: 0;
+  }
+  .run.playing::after { opacity: 1; animation: scan 2.8s linear infinite; }
+  @keyframes scan { to { transform: translateY(260%); } }
+
+  .bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-3);
+  }
+  .title { display: inline-flex; align-items: center; gap: 10px; }
+  .live { width: 8px; height: 8px; border-radius: 50%; background: var(--pass); animation: dot-pulse 2.4s infinite; }
+  .engine { padding: 3px 10px; border: 1px solid var(--border-strong); border-radius: 999px; font-size: 12px; }
+
+  .agents { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 18px 4px; }
+  .agent {
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text-3);
+    font-size: 12px;
+    transition: color 0.3s, border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+  }
+  .agent.on {
+    color: var(--text);
+    border-color: color-mix(in srgb, var(--violet) 70%, transparent);
+    background: color-mix(in srgb, var(--violet) 14%, transparent);
+    box-shadow: 0 0 18px -4px color-mix(in srgb, var(--violet) 70%, transparent);
+  }
+
+  .rows { display: flex; flex-direction: column; gap: 4px; padding: 10px 18px; }
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    --prog: 1;
+  }
+  .prog {
+    position: absolute;
+    left: 32px;
+    right: 0;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .prog::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--pass);
+    transform-origin: left;
+    transform: scaleX(var(--prog));
+    transition: transform 0.12s linear, background-color 0.3s;
+  }
+  .row[data-state='warn'] .prog::after { background: var(--warn); }
+  .row[data-state='run'] .prog::after { background: var(--violet); }
+  .row[data-state='idle'] { opacity: 0.45; }
+  .n { color: var(--text-3); font-variant-numeric: tabular-nums; }
+
+  .ic { display: grid; place-items: center; width: 22px; height: 22px; }
+  .ic > * { grid-area: 1 / 1; display: none; }
+  .i-pass { color: var(--pass); }
+  .i-warn { color: var(--warn); font-weight: 700; }
+  .i-spin {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--border-strong);
+    border-top-color: var(--violet);
+    animation: spin 0.7s linear infinite;
+  }
+  .row[data-state='pass'] .i-pass { display: block; animation: pop 0.4s var(--ease-spring); }
+  .row[data-state='warn'] .i-warn { display: block; }
+  .row[data-state='run'] .i-spin { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pop { from { transform: scale(0.3); } to { transform: scale(1); } }
+
+  .triage {
+    margin: 4px 18px 0;
+    padding: 14px;
+    background: var(--surface-2);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    line-height: 1.55;
+    color: var(--text-2);
+    transition: opacity 0.35s, transform 0.35s var(--ease-out);
+  }
+  .triage.hide { opacity: 0; transform: translateY(6px); }
+  .tlabel { display: block; margin-bottom: 6px; font-size: 12px; color: var(--violet); }
+  .triage p { min-height: 3.1em; }
+  .triage :global(.caret) {
+    display: inline-block;
+    width: 7px;
+    height: 1em;
+    margin-left: 2px;
+    vertical-align: -2px;
+    background: var(--violet);
+    animation: blink 0.9s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .summary {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+    transition: background-color 0.4s, color 0.4s;
+  }
+  .summary[data-state='pass'] { background: var(--pass-bg); color: var(--pass); }
+  .summary[data-state='run'] { color: var(--text-3); }
+  .time { color: var(--text-3); }
+</style>
+
+<script>
+  const card = document.querySelector<HTMLElement>('[data-run]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (card && !reduce) {
+    const rows = [...card.querySelectorAll<HTMLElement>('[data-row]')];
+    const agents = [...card.querySelectorAll<HTMLElement>('[data-agent]')];
+    const triage = card.querySelector<HTMLElement>('[data-triage]')!;
+    const triageText = card.querySelector<HTMLElement>('[data-triage-text]')!;
+    const summary = card.querySelector<HTMLElement>('[data-summary]')!;
+    const summaryText = card.querySelector<HTMLElement>('[data-summary-text]')!;
+    const time = summary.querySelector<HTMLElement>('.time')!;
+    const grand = rows.reduce((n, r) => n + Number(r.dataset.total), 0);
+
+    let visible = false;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.35 }).observe(card);
+
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const ready = async () => { while (!visible || document.hidden) await sleep(250); };
+
+    const setAgent = (i: number) => agents.forEach((a, j) => a.classList.toggle('on', i === j));
+    const setRow = (row: HTMLElement, state: string, n: number) => {
+      const t = Number(row.dataset.total);
+      row.dataset.state = state;
+      row.style.setProperty('--prog', String(n / t));
+      row.querySelector('[data-n]')!.textContent = `${n}/${t}`;
+    };
+    const count = async (row: HTMLElement, from: number, to: number) => {
+      const steps = to - from;
+      for (let n = from; n <= to; n++) {
+        setRow(row, 'run', n);
+        await sleep(Math.max(22, 700 / Math.max(steps, 1)));
+      }
+    };
+    const type = async (text: string) => {
+      triageText.textContent = '';
+      const caret = document.createElement('span');
+      caret.className = 'caret';
+      for (const ch of text) {
+        triageText.textContent += ch;
+        triageText.append(caret);
+        await sleep(ch === ' ' ? 14 : 24);
+      }
+      await sleep(250);
+      caret.remove();
+    };
+
+    const cycle = async () => {
+      card.classList.add('playing');
+      rows.forEach((r) => setRow(r, 'idle', 0));
+      triage.classList.add('hide');
+      triageText.textContent = '';
+      summary.dataset.state = 'run';
+      summaryText.textContent = 'planning test run…';
+      time.textContent = '';
+
+      setAgent(0); await sleep(1000);
+      summaryText.textContent = 'generating BDD scenarios…';
+      setAgent(1); await sleep(1000);
+      setAgent(2);
+      summaryText.textContent = 'executing in browser…';
+
+      let passed = 0;
+      for (const row of rows) {
+        await ready();
+        const t = Number(row.dataset.total);
+        const fails = row.dataset.fail === '1';
+        await count(row, 0, fails ? t - 1 : t);
+        setRow(row, fails ? 'warn' : 'pass', fails ? t - 1 : t);
+        passed += fails ? t - 1 : t;
+        summaryText.textContent = `${passed}/${grand} passed`;
+        await sleep(250);
+
+        if (fails) {
+          setAgent(3);
+          triage.classList.remove('hide');
+          await sleep(300);
+          await type('Root cause: the search button was renamed.');
+          await sleep(500);
+          await type('Self-healing locator updated → re-running…');
+          setAgent(2);
+          await count(row, t - 1, t);
+          setRow(row, 'pass', t);
+          passed += 1;
+          await type('Healed. search.feature now passes 12/12.');
+        }
+      }
+
+      setAgent(-1);
+      summary.dataset.state = 'pass';
+      summaryText.textContent = `${grand}/${grand} passed · all green`;
+      time.textContent = '4.2s';
+      card.classList.remove('playing');
+      await sleep(5200);
+    };
+
+    (async () => {
+      await sleep(700);
+      // eslint-disable-next-line no-constant-condition
+      while (true) { await ready(); await cycle(); }
+    })();
+  }
+</script>

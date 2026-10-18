@@ -1,0 +1,102 @@
+---
+// The one signature motion carried over from the old site: a progress rail on the
+// left edge with a light beam running down it. Progress is a CSS scroll-driven
+// animation (compositor-only, no JS); a tiny rAF fallback covers older browsers.
+---
+<div class="rail" aria-hidden="true">
+  <div class="rail-fill" data-rail-fill></div>
+  <div class="rail-beam"></div>
+  <div class="rail-dot" data-rail-dot></div>
+</div>
+
+<style>
+  .rail {
+    position: fixed;
+    top: 0;
+    left: clamp(14px, 1.6vw, 30px);
+    width: 2px;
+    height: 100vh;
+    z-index: 40;
+    pointer-events: none;
+    background: var(--border);
+    display: none;
+  }
+  @media (min-width: 1100px) { .rail { display: block; } }
+
+  .rail-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #8b5cf6, #3b82f6 45%, #ec4899);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+    transform-origin: top;
+    transform: scaleY(var(--rail, 0));
+  }
+  .rail-dot {
+    position: absolute;
+    top: 0;
+    left: 1px;
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 12px #8b5cf6, 0 0 26px #ec4899;
+    transform: translateY(calc(var(--rail, 0) * 100vh));
+  }
+  .rail-dot::after {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    border: 1px solid #a78bfa;
+    animation: ring 2.2s ease-out infinite;
+  }
+  .rail-beam {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 90px;
+    background: linear-gradient(180deg, transparent, #c4b5fd 35%, #f0abfc 62%, transparent);
+    box-shadow: 0 0 14px rgba(167, 139, 250, 0.9);
+    opacity: 0;
+    animation: beam 3.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .rail-fill { animation: fill linear both; animation-timeline: scroll(root); }
+    .rail-dot { animation: travel linear both; animation-timeline: scroll(root); }
+  }
+  @keyframes fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes travel { from { transform: translateY(0); } to { transform: translateY(100vh); } }
+  @keyframes beam {
+    0% { transform: translateY(-120px); opacity: 0; }
+    10%, 90% { opacity: 1; }
+    100% { transform: translateY(calc(100vh + 40px)); opacity: 0; }
+  }
+  @keyframes ring {
+    from { transform: scale(0.6); opacity: 0.8; }
+    to { transform: scale(2.4); opacity: 0; }
+  }
+  :global(:root[data-theme='light']) .rail-dot { background: #7c3aed; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail-beam, .rail-dot::after { display: none; }
+  }
+</style>
+
+<script>
+  // Fallback only when scroll-driven animations are unavailable.
+  if (!CSS.supports('animation-timeline: scroll()')) {
+    const rail = document.querySelector<HTMLElement>('.rail');
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      rail?.style.setProperty('--rail', String(max > 0 ? Math.min(1, scrollY / max) : 0));
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+</script>

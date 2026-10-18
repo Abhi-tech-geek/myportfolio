@@ -1,0 +1,201 @@
+---
+import TestRun from './TestRun.astro';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+// Each word animates in on its own; `cls` styles the two accent words.
+const lines = [
+  [{ w: 'Every' }, { w: 'release,' }, { w: 'green.', cls: 'pass' }],
+  [{ w: 'Every' }, { w: 'failure,' }, { w: 'explained.', cls: 'grad' }],
+];
+let i = 0;
+---
+<section class="hero">
+  <div class="bg" aria-hidden="true">
+    <div class="grid"></div>
+    <div class="orb"></div>
+  </div>
+
+  <div class="container inner">
+    <div class="copy">
+      <span class="badge">
+        <span class="dot pulse"></span>
+        <span data-decode>{site.role} @ {site.company}</span>
+      </span>
+
+      <h1 aria-label="Every release, green. Every failure, explained.">
+        {lines.map((line) => (
+          <span class="line" aria-hidden="true">
+            {line.map((word) => (
+              <span class={`word ${word.cls ?? ''}`} style={`--i:${i++}`}>{word.w}</span>
+            ))}
+          </span>
+        ))}
+      </h1>
+
+      <p class="sub">
+        I build AI agents that write, run and triage tests — and apps that make the real world more accessible.
+      </p>
+
+      <div class="cta">
+        <a href="#work" class="btn btn-primary">View projects <Icon name="arrow-right" /></a>
+        <a href={site.resume} class="btn btn-ghost" download="Abhinav_Saxena_Resume.pdf"><Icon name="download" /> Resume</a>
+        <svg class="sig" viewBox="0 0 190 64" role="img" aria-label="Signature: Abhinav">
+          <text x="6" y="46">Abhinav</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="card">
+      <TestRun />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(56px, 9vw, 128px) clamp(64px, 9vw, 120px);
+  }
+
+  .bg { position: absolute; inset: 0; pointer-events: none; }
+  .grid {
+    position: absolute;
+    inset: -1px;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 70% 60% at 65% 35%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 65% 35%, #000 20%, transparent 75%);
+  }
+  .orb {
+    position: absolute;
+    top: -260px;
+    right: -200px;
+    width: 900px;
+    height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--glow), var(--glow-2) 45%, transparent 70%);
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(-120px, 80px, 0) scale(1.08); }
+  }
+
+  .inner {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 56px;
+  }
+  .copy { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 28px; }
+  .card { flex: 1 1 380px; min-width: 0; }
+
+  .badge {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font-family: var(--f-mono);
+    font-size: 13px;
+    color: var(--text-2);
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+  }
+
+  h1 {
+    font-size: clamp(46px, 6.8vw, 100px);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+  }
+  .line { display: block; }
+  .word {
+    display: inline-block;
+    margin-right: 0.22em;
+  }
+  .word.pass { color: var(--pass); }
+  .word.grad {
+    background: var(--grad);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .sub { max-width: 560px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.6; color: var(--text-2); }
+
+  .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+
+  .sig { width: 150px; height: 52px; margin-left: 6px; overflow: visible; }
+  .sig text {
+    font-family: var(--f-sig);
+    font-size: 48px;
+    fill: var(--violet);
+    stroke: var(--violet);
+    stroke-width: 1;
+    transform: rotate(-4deg);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .word {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(0.35em);
+      animation: word-in 0.9s var(--ease-out) forwards;
+      animation-delay: calc(120ms + var(--i) * 85ms);
+    }
+    .word.grad { animation: word-in 0.9s var(--ease-out) forwards, shimmer 6s linear 1.6s infinite; animation-delay: calc(120ms + var(--i) * 85ms), 1.6s; }
+    .badge, .sub, .cta, .card {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: rise 0.9s var(--ease-out) forwards;
+    }
+    .badge { animation-delay: 0s; }
+    .sub { animation-delay: 0.65s; }
+    .cta { animation-delay: 0.8s; }
+    .card { animation-delay: 0.45s; }
+
+    .sig text {
+      fill-opacity: 0;
+      stroke-dasharray: 520;
+      stroke-dashoffset: 520;
+      animation: sign 2.2s ease forwards 1.3s, ink 0.8s ease forwards 2.9s;
+    }
+  }
+  @keyframes word-in { to { opacity: 1; filter: blur(0); transform: none; } }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @keyframes sign { to { stroke-dashoffset: 0; } }
+  @keyframes ink { to { fill-opacity: 1; stroke-opacity: 0; } }
+</style>
+
+<script>
+  // "Decode" the role badge once on load — a small AI-flavoured touch.
+  const el = document.querySelector<HTMLElement>('[data-decode]');
+  if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const final = el.textContent ?? '';
+    const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+<>/';
+    el.style.display = 'inline-block';
+    el.style.minWidth = `${el.offsetWidth}px`;
+    let frame = 0;
+    const total = 26;
+    const tick = () => {
+      frame++;
+      const revealed = Math.floor((frame / total) * final.length);
+      el.textContent = final
+        .split('')
+        .map((c, i) => (i < revealed || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0]))
+        .join('');
+      if (frame < total) setTimeout(tick, 34);
+      else el.textContent = final;
+    };
+    setTimeout(tick, 200);
+  }
+</script>

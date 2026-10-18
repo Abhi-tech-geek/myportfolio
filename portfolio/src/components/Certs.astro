@@ -1,0 +1,56 @@
+---
+import { certs } from '../data/site';
+---
+<section id="certs" class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2 class="reveal">Certifications</h2>
+      <p class="reveal">Recognized programs and awards across cloud, data and agentic AI.</p>
+    </div>
+    <ul class="grid">
+      {certs.map((c, i) => (
+        <li class="cert spot reveal" style={`--p:${c.color};--i:${i}`}>
+          <span class="org"><span class="sw"></span>{c.org}</span>
+          <h3>{c.title}</h3>
+          <span class="meta mono">
+            <span>{c.date}</span>
+            <span class="badge">{c.badge}</span>
+          </span>
+          <span class="id mono">ID · {c.id}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* 5 cards: 3 + 2 on desktop, 2 + 2 + 1 (full) on tablet, stacked on phone */
+  .grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .cert { grid-column: span 2; }
+  .cert:nth-child(n + 4) { grid-column: span 3; }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cert, .cert:nth-child(n + 4) { grid-column: auto; }
+    .cert:last-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+  }
+  .cert {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 26px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: border-color 0.3s, transform 0.4s var(--ease-out);
+  }
+  .cert:hover { border-color: color-mix(in srgb, var(--p) 55%, var(--border)); transform: translateY(-3px); }
+  .org { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+  .sw { width: 10px; height: 10px; border-radius: 3px; background: var(--p); box-shadow: 0 0 12px var(--p); }
+  h3 { font-size: 19px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
+  .meta { display: flex; justify-content: space-between; align-items: center; margin-top: auto; font-size: 13px; color: var(--text-3); }
+  .badge { padding: 3px 10px; border-radius: 999px; border: 1px solid var(--pass-border); color: var(--pass); font-size: 12px; }
+  .id { font-size: 12px; color: var(--text-3); border-top: 1px dashed var(--border); padding-top: 12px; }
+</style>

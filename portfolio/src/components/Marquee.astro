@@ -1,0 +1,48 @@
+---
+import { toolbelt } from '../data/site';
+---
+<section class="marquee" aria-label="Tools I work with">
+  <ul class="track">
+    {toolbelt.map((t) => <li>{t}</li>)}
+    {toolbelt.map((t) => <li aria-hidden="true">{t}</li>)}
+  </ul>
+</section>
+
+<style>
+  .marquee {
+    border-block: 1px solid var(--border);
+    overflow: hidden;
+    padding-block: 18px;
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .track {
+    display: flex;
+    width: max-content;
+    gap: 0;
+    animation: slide 46s linear infinite;
+  }
+  .marquee:hover .track { animation-play-state: paused; }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding-right: 40px;
+    font-family: var(--f-mono);
+    font-size: 15px;
+    color: var(--text-3);
+    white-space: nowrap;
+  }
+  li::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--grad);
+  }
+  @keyframes slide { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .track { flex-wrap: wrap; width: auto; justify-content: center; animation: none; padding-inline: 20px; }
+    li[aria-hidden='true'] { display: none; }
+  }
+</style>

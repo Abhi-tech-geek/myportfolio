@@ -1,0 +1,288 @@
+---
+import ProjectLogo from './ProjectLogo.astro';
+import type { Project } from '../data/projects';
+interface Props { project: Project }
+const { project: p } = Astro.props;
+const host = p.primary.href.startsWith('https://') && !p.primary.href.includes('github.com')
+  ? new URL(p.primary.href).host
+  : `${p.name} · preview`;
+---
+{p.slug !== 'discova' && (
+  <div class="browser reveal" aria-hidden="true">
+    <div class="chrome">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="url mono">{host}</span>
+    </div>
+    <div class="screen">
+      <div class="appnav">
+        <span class="brand"><ProjectLogo slug={p.slug} size={18} /> {p.name}</span>
+        {p.slug === 'abhimate' && <span class="tabs"><b class="on">Tests</b><b>Runs</b><b>Insights</b></span>}
+        {p.slug === 'aurago' && <span class="tabs"><b>Sasta</b><b class="on">Elite</b></span>}
+        {p.slug === 'abhinova' && <span class="tabs"><b class="on">Chat</b><b>Agents</b></span>}
+      </div>
+
+      {p.slug === 'abhimate' && (
+        <div class="pad">
+          <div class="kpis">
+            <span><b>24</b> Total tests</span>
+            <span><b>96%</b> Pass rate</span>
+            <span><b>11</b> AI agents</span>
+          </div>
+          <div class="trow ok"><span class="ic">✓</span> Login suite · Selenium <span class="mono">24/24 · 3.1s</span></div>
+          <div class="trow ok"><span class="ic">✓</span> Checkout flow · Playwright <span class="mono">19/19 · 5.4s</span></div>
+          <div class="trow run"><span class="ic spin"></span> API regression suite <span class="mono">running…</span></div>
+        </div>
+      )}
+
+      {p.slug === 'aurago' && (
+        <div class="pad">
+          <div class="dephead mono"><span>AuraGo · Departures</span><span>8 gems · live-checked</span></div>
+          {[
+            ['01', 'Buddhist Heritage', 'monasteries', '9.0', '~₹72,000'],
+            ['02', 'Mountain Retreat', 'Himalayan', '8.0', '~₹68,000'],
+            ['03', 'Scenic Valley', 'offbeat', '8.0', '~₹70,000'],
+          ].map(([rk, nm, vb, ai, pr], i) => (
+            <div class="dep" style={`--d:${i}`}>
+              <span class="mono rk">{rk}</span><span class="nm">{nm}</span><span class="vb">{vb}</span>
+              <span class="mono ai">{ai}</span><span class="mono pr">{pr}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {p.slug === 'abhinova' && (
+        <div class="pad chat" data-nova>
+          <div class="msg me">Plan my Monday and remind me about the release.</div>
+          <div class="route mono" data-route>
+            <span>routing →</span><b data-agent>calendar</b><b data-agent>mail</b><b data-agent>notes</b>
+          </div>
+          <div class="msg bot" data-reply>Done. Stand-up at 10, release review at 3 — I've set a reminder 30 minutes before, and drafted the release notes from your notes.</div>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
+{p.slug === 'discova' && (
+  <div class="phone reveal" aria-hidden="true">
+    <div class="notch"></div>
+    <div class="pic"></div>
+    <div class="place">
+      <div class="ring"><span class="mono">92</span></div>
+      <div>
+        <div class="pname">Blue Tokai Cafe</div>
+        <div class="psub">Accessibility score · Verified</div>
+      </div>
+    </div>
+    <div class="pills">
+      {['Ramp', 'Lift', 'Washroom', 'Parking'].map((x, i) => <span style={`--d:${i}`}>{x} ✓</span>)}
+    </div>
+  </div>
+)}
+
+<style>
+  .browser {
+    max-width: 880px;
+    margin-inline: auto;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 50px 100px -50px color-mix(in srgb, var(--p) 60%, transparent);
+  }
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+  }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--border-strong); }
+  .url {
+    flex: 1;
+    max-width: 380px;
+    margin-inline: auto;
+    padding: 5px 12px;
+    border-radius: 8px;
+    background: var(--bg);
+    font-size: 12.5px;
+    color: var(--text-3);
+    text-align: center;
+  }
+  .appnav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: var(--text); }
+  .brand :global(svg) { color: var(--p); }
+  .tabs { display: flex; gap: 6px; }
+  .tabs b {
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text-3);
+  }
+  .tabs b.on { color: var(--text); background: color-mix(in srgb, var(--p) 16%, transparent); }
+  .pad { padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+
+  .kpis { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
+  .kpis span { padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; color: var(--text-2); }
+  .kpis b { color: var(--text); margin-right: 6px; font-size: 18px; }
+  .trow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    font-size: 15px;
+  }
+  .trow .mono { margin-left: auto; font-size: 13px; color: var(--text-3); }
+  .ic { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; font-size: 12px; font-weight: 700; }
+  .trow.ok .ic { background: color-mix(in srgb, var(--pass) 18%, transparent); color: var(--pass); }
+  .ic.spin { border: 2px solid var(--border-strong); border-top-color: var(--p); animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .dephead { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--text-3); padding-bottom: 6px; }
+  .dep {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    font-size: 15px;
+    animation: slidein 0.7s var(--ease-out) both;
+    animation-delay: calc(0.4s + var(--d) * 0.15s);
+  }
+  .rk { color: var(--p); }
+  .nm { font-weight: 600; }
+  .vb { color: var(--text-3); font-size: 13px; }
+  .ai { padding: 2px 8px; border-radius: 6px; background: color-mix(in srgb, var(--p) 18%, transparent); color: var(--p); font-size: 12.5px; }
+  .pr { color: var(--text-2); font-size: 13px; }
+  @media (max-width: 560px) { .vb, .pr { display: none; } .dep { grid-template-columns: 30px minmax(0, 1fr) auto; } }
+  @keyframes slidein { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+
+  .chat { gap: 14px; min-height: 250px; }
+  .msg { max-width: 78%; padding: 12px 16px; border-radius: 16px; font-size: 15.5px; line-height: 1.5; }
+  .msg.me { align-self: flex-end; background: color-mix(in srgb, var(--p) 20%, transparent); border-bottom-right-radius: 5px; }
+  .msg.bot { background: var(--surface-2); border: 1px solid var(--border); border-bottom-left-radius: 5px; color: var(--text-2); }
+  .route { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text-3); }
+  .route b { font-weight: 500; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); transition: all 0.3s; }
+  .route b.on { color: var(--text); border-color: var(--p); background: color-mix(in srgb, var(--p) 16%, transparent); box-shadow: 0 0 16px -4px var(--p); }
+  .chat :global(.caret) {
+    display: inline-block; width: 7px; height: 1em; margin-left: 2px; vertical-align: -2px;
+    background: var(--p); animation: blink 0.9s steps(1) infinite;
+  }
+  .chat :global(.dots3) { display: inline-flex; gap: 4px; }
+  .chat :global(.dots3 i) { width: 6px; height: 6px; border-radius: 50%; background: var(--p); animation: bounce 1.2s infinite; }
+  .chat :global(.dots3 i:nth-child(2)) { animation-delay: 0.15s; }
+  .chat :global(.dots3 i:nth-child(3)) { animation-delay: 0.3s; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes bounce { 0%, 60%, 100% { transform: none; opacity: 0.5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+  /* DISCOVA phone */
+  .phone {
+    width: min(320px, 100%);
+    margin-inline: auto;
+    padding: 14px 14px 22px;
+    border-radius: 40px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    box-shadow: 0 50px 100px -50px color-mix(in srgb, var(--p) 70%, transparent);
+  }
+  .notch { width: 96px; height: 22px; margin: 0 auto 12px; border-radius: 0 0 14px 14px; background: var(--bg); }
+  .pic {
+    height: 190px;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 30% 30%, color-mix(in srgb, var(--p) 55%, transparent), transparent 60%),
+      linear-gradient(140deg, #134e4a, #0f172a 70%);
+  }
+  .place { display: flex; align-items: center; gap: 14px; margin: 18px 6px 14px; }
+  .ring {
+    --score: 0.92;
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    flex: none;
+    border-radius: 50%;
+    background: conic-gradient(var(--p) calc(var(--score) * 360deg), var(--border) 0);
+    animation: score 1.6s var(--ease-out) both 0.4s;
+  }
+  .ring span {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--surface);
+    font-weight: 600;
+  }
+  @property --score { syntax: '<number>'; initial-value: 0; inherits: false; }
+  @keyframes score { from { --score: 0; } to { --score: 0.92; } }
+  .pname { font-weight: 700; font-size: 18px; }
+  .psub { color: var(--text-3); font-size: 13.5px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; padding-inline: 6px; }
+  .pills span {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--p);
+    background: color-mix(in srgb, var(--p) 14%, transparent);
+    animation: popin 0.5s var(--ease-spring) both;
+    animation-delay: calc(1s + var(--d) * 0.12s);
+  }
+  @keyframes popin { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
+</style>
+
+<script>
+  // AbhiNova chat demo: user message → route to agents → typed reply, looping while visible.
+  const chat = document.querySelector<HTMLElement>('[data-nova]');
+  if (chat && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const agents = [...chat.querySelectorAll<HTMLElement>('[data-agent]')];
+    const route = chat.querySelector<HTMLElement>('[data-route]')!;
+    const reply = chat.querySelector<HTMLElement>('[data-reply]')!;
+    const me = chat.querySelector<HTMLElement>('.msg.me')!;
+    const full = reply.textContent ?? '';
+    let visible = false;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.3 }).observe(chat);
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const ready = async () => { while (!visible || document.hidden) await sleep(250); };
+
+    const loop = async () => {
+      while (true) {
+        await ready();
+        me.style.opacity = '0';
+        route.style.opacity = '0';
+        reply.style.opacity = '0';
+        agents.forEach((a) => a.classList.remove('on'));
+        await sleep(400);
+        me.style.transition = route.style.transition = reply.style.transition = 'opacity .4s';
+        me.style.opacity = '1';
+        await sleep(700);
+        route.style.opacity = '1';
+        for (const a of agents) { a.classList.add('on'); await sleep(450); }
+        reply.style.opacity = '1';
+        reply.innerHTML = '<span class="dots3"><i></i><i></i><i></i></span>';
+        await sleep(1100);
+        reply.textContent = '';
+        const caret = document.createElement('span');
+        caret.className = 'caret';
+        for (const ch of full) { reply.textContent += ch; reply.append(caret); await sleep(16); }
+        caret.remove();
+        await sleep(5000);
+      }
+    };
+    loop();
+  }
+</script>

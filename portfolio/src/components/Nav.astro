@@ -1,0 +1,140 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+interface Props { home?: boolean }
+const { home = false } = Astro.props;
+const base = home ? '' : '/';
+const links = [
+  { href: `${base}#work`, label: 'work' },
+  { href: `${base}#approach`, label: 'approach' },
+  { href: `${base}#about`, label: 'about' },
+  { href: `${base}#contact`, label: 'contact' },
+];
+---
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="brand" aria-label="Abhinav Saxena — home">
+      Abhinav.<span class="grad-text">dev</span>
+    </a>
+    <nav aria-label="Primary" class="links">
+      {links.map((l) => <a href={l.href}><span aria-hidden="true">/</span>{l.label}</a>)}
+    </nav>
+    <div class="actions">
+      <a href={site.resume} class="resume" download="Abhinav_Saxena_Resume.pdf">
+        <Icon name="download" size={16} /> Resume
+      </a>
+      <button type="button" class="theme" data-theme-toggle aria-label="Switch to light theme">
+        <Icon name="sun" class="i-sun" />
+        <Icon name="moon" class="i-moon" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--nav-bg);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+  @supports (animation-timeline: scroll()) {
+    .nav { animation: nav-edge linear both; animation-timeline: scroll(root); animation-range: 0 120px; }
+  }
+  :global(html.no-sda) .nav { border-bottom-color: var(--border); }
+  @keyframes nav-edge { to { border-bottom-color: var(--border); } }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px 28px;
+    min-height: 72px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .links {
+    display: flex;
+    gap: 26px;
+    font-family: var(--f-mono);
+    font-size: 14px;
+  }
+  .links a {
+    position: relative;
+    text-decoration: none;
+    color: var(--text-2);
+    padding-block: 6px;
+    transition: color 0.2s;
+  }
+  .links a span { color: var(--violet); }
+  .links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--grad);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease-out);
+  }
+  .links a:hover { color: var(--text); }
+  .links a:hover::after, .links a[aria-current='true']::after { transform: scaleX(1); }
+  .links a[aria-current='true'] { color: var(--text); }
+
+  .actions { display: flex; align-items: center; gap: 10px; }
+  .resume {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 0.2s;
+  }
+  .resume:hover { border-color: var(--violet); }
+  .theme {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 40px;
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.4s var(--ease-spring);
+  }
+  .theme:hover { border-color: var(--violet); transform: rotate(-18deg); }
+  .theme :global(.i-sun) { display: block; }
+  .theme :global(.i-moon) { display: none; }
+  :global(:root[data-theme='light']) .theme :global(.i-sun) { display: none; }
+  :global(:root[data-theme='light']) .theme :global(.i-moon) { display: block; }
+
+  @media (max-width: 760px) {
+    .nav-inner { padding-block: 10px; min-height: 0; }
+    .links {
+      order: 3;
+      width: 100%;
+      justify-content: space-between;
+      gap: 12px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+    .resume { display: none; }
+  }
+</style>

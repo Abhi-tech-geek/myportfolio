@@ -1,0 +1,148 @@
+---
+import { Image } from 'astro:assets';
+import avatar from '../assets/avatar.png';
+import { stats, journey } from '../data/site';
+---
+<section id="about" class="section">
+  <div class="container">
+    <div class="top">
+      <figure class="photo reveal">
+        <Image src={avatar} alt="Abhinav Saxena at his desk with code on the screens behind him" widths={[360, 560, 720]} sizes="(max-width: 760px) 90vw, 400px" loading="lazy" />
+        <figcaption class="mono"><span class="dot pulse"></span> Gurgaon, India</figcaption>
+      </figure>
+
+      <div class="text">
+        <span class="eyebrow reveal">// about</span>
+        <h2 class="reveal">I test for the people most products <span class="grad-text">forget.</span></h2>
+        <p class="reveal">
+          I'm a QA Tester at Accenture with 2+ years in software testing, and a BCA graduate from Lovely Professional
+          University. Being a person with a disability has given me a different lens — on resilience, and on software:
+          if it doesn't work for everyone, it doesn't work.
+        </p>
+        <p class="reveal">
+          At work I break enterprise apps on purpose. After hours I build AI tools that do the testing for me, and apps
+          like DISCOVA that make places accessible.
+        </p>
+        <ul class="traits reveal" aria-label="What I bring">
+          <li class="chip">Eye for detail</li>
+          <li class="chip">Quick learner</li>
+          <li class="chip">AI-first builder</li>
+          <li class="chip">Growth mindset</li>
+        </ul>
+      </div>
+    </div>
+
+    <dl class="stats">
+      {stats.map((s, i) => (
+        <div class="stat reveal" style={`--i:${i}`}>
+          <dt>{s.label}</dt>
+          <dd><span data-count={s.value} data-suffix={s.suffix}>{s.value}{s.suffix}</span></dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="journey">
+      <h3 class="reveal">Journey</h3>
+      <ol>
+        {journey.map((j, i) => (
+          <li class="job reveal" style={`--i:${i}`}>
+            <span class="when mono">{j.when}</span>
+            <div>
+              <h4>{j.title}</h4>
+              <span class="org">{j.org}</span>
+              <ul>
+                {j.points.map((pt) => <li>{pt}</li>)}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .top { display: flex; flex-wrap: wrap; gap: clamp(36px, 5vw, 72px); align-items: center; }
+  .photo {
+    flex: 1 1 300px;
+    max-width: 440px;
+    margin: 0;
+    position: relative;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(140deg, #8b5cf6, transparent 40%, transparent 60%, #ec4899);
+  }
+  .photo :global(img) {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 23px;
+  }
+  .photo figcaption {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(14, 15, 18, 0.78);
+    color: #ececea;
+    font-size: 12.5px;
+  }
+  .text { flex: 999 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+  .text h2 { font-size: clamp(36px, 4.4vw, 58px); }
+  .text p { color: var(--text-2); font-size: 17.5px; line-height: 1.7; max-width: 640px; }
+  .traits { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    margin: clamp(56px, 7vw, 88px) 0 0;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .stat { display: flex; flex-direction: column-reverse; gap: 6px; padding: 28px; background: var(--surface); }
+  .stat dt { font-family: var(--f-mono); font-size: 13px; color: var(--text-3); }
+  .stat dd { margin: 0; font-size: clamp(40px, 4vw, 56px); font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+  .stat dd span { font-variant-numeric: tabular-nums; }
+
+  .journey { margin-top: clamp(56px, 7vw, 88px); }
+  .journey h3 { font-size: 28px; margin-bottom: 24px; }
+  .journey ol { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .job {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 28px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .when {
+    align-self: flex-start;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--violet);
+    border: 1px solid color-mix(in srgb, var(--violet) 40%, transparent);
+  }
+  .job h4 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .org { display: block; margin-top: 4px; color: var(--text-3); font-size: 15px; }
+  .job ul { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .job ul li { position: relative; padding-left: 18px; color: var(--text-2); font-size: 15.5px; }
+  .job ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--grad);
+  }
+</style>
