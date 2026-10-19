@@ -99,8 +99,8 @@ export const projects: Project[] = [
     category: 'AI travel planner',
     tagline: "Go where the crowd isn't.",
     short: 'Eight verified hidden-gem trips from a vibe and a budget, each with a full day-by-day plan.',
-    status: 'live',
-    statusLabel: 'Live',
+    status: 'paused',
+    statusLabel: 'Demo offline',
     color: '#F59E0B',
     colorLight: '#B45309',
     color2: '#FBBF24',
@@ -110,8 +110,8 @@ export const projects: Project[] = [
         'Turn a rough idea and a budget into eight verified hidden-gem destinations, each with a complete day-by-day plan, live weather, stays, routes and real booking links.',
       og: '/og-aurago.png',
     },
-    primary: { label: 'Open live app', href: 'https://aurago.theabhinavsaxena.in/' },
-    secondary: { label: 'Source', href: 'https://github.com/Abhi-tech-geek/AuraGo' },
+    // Hosted demo is offline for now (Cloud Run returns 503), so no live link.
+    primary: { label: 'View source on GitHub', href: 'https://github.com/Abhi-tech-geek/AuraGo' },
     overviewTitle: 'The overview',
     overview: [
       'AuraGo helps people discover places they would never find on a typical "top 10" list. You describe a vibe and a budget; it returns eight off-the-beaten-path destinations (five domestic, three international), ranked by an AI value score. Open any one and it expands into a full itinerary: day-by-day plan, live weather, stays, a route map, transport choices, a packing list and real booking links.',
@@ -138,9 +138,9 @@ export const projects: Project[] = [
       { value: '8', count: 8, label: 'Destinations per search' },
       { value: '5+3', label: 'Domestic + international' },
       { value: '2', count: 2, label: 'Travel modes' },
-      { value: 'Live', label: 'On Google Cloud Run' },
+      { value: '1', count: 1, label: 'Docker image for the whole app' },
     ],
-    cta: { title: 'Plan your next hidden gem', text: 'A vague idea in, a full trip out. Try AuraGo live.' },
+    cta: { title: 'See how AuraGo is built', text: 'The hosted demo is offline for now. The full source is on GitHub.' },
     next: 'discova',
   },
   {
