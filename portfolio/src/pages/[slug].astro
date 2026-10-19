@@ -36,7 +36,7 @@ const isExternal = (href: string) => href.startsWith('http');
             class="btn btn-project"
             {...(isExternal(p.primary.href) ? { target: '_blank', rel: 'noopener' } : {})}
           >
-            {p.status === 'android' ? <Icon name="android" /> : p.status === 'soon' ? <Icon name="github" /> : <Icon name="arrow-up-right" />}
+            {p.status === 'android' ? <Icon name="android" /> : p.primary.href.includes('github.com') ? <Icon name="github" /> : <Icon name="arrow-up-right" />}
             {p.primary.label}
           </a>
           {p.secondary && (
@@ -117,11 +117,11 @@ const isExternal = (href: string) => href.startsWith('http');
     {p.runLocally && (
       <section class="section">
         <div class="container narrow">
-          <span class="eyebrow reveal">// optional, just for the show</span>
-          <h2 class="reveal">Watch the browser open</h2>
+          <span class="eyebrow reveal">// try it yourself</span>
+          <h2 class="reveal">Run it on your machine</h2>
           <p class="lead reveal">
-            The live site runs Chrome headless on the server. Run AbhiMate locally and Chrome opens and performs every
-            click, type and navigation right in front of you.
+            The hosted demo is offline for now, but the code is open. Run AbhiMate locally and Chrome opens and performs
+            every click, type and navigation right in front of you.
           </p>
           <pre class="code reveal"><code>{p.runLocally.map((l) => l.comment
             ? <span class="c">{l.comment}{'\n'}</span>

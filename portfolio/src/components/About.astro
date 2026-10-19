@@ -1,6 +1,4 @@
 ---
-import { Image } from 'astro:assets';
-import avatar from '../assets/avatar.png';
 import Icon from './Icon.astro';
 import { stats, journey, site } from '../data/site';
 
@@ -16,20 +14,6 @@ const facts = [
 <section id="about" class="section">
   <div class="container">
     <div class="grid">
-      <figure class="photo reveal">
-        <Image
-          src={avatar}
-          alt="Abhinav Saxena at his desk with code on the screens behind him"
-          widths={[480, 720, 960]}
-          sizes="(max-width: 900px) 92vw, 560px"
-          loading="lazy"
-        />
-        <figcaption>
-          <span class="loc mono"><span class="dot pulse"></span> Gurgaon, India</span>
-          <span class="quote">"I test for the people most products forget."</span>
-        </figcaption>
-      </figure>
-
       <div class="text">
         <span class="eyebrow reveal">// about me</span>
         <h2 class="reveal">Hi, I'm <span class="grad-text">Abhinav.</span></h2>
@@ -44,20 +28,20 @@ const facts = [
           DISCOVA, an app that tells you if a place is accessible before you go.
         </p>
 
-        <dl class="facts reveal">
-          {facts.map((f) => (
-            <div class="fact">
-              <dt>{f.k}</dt>
-              <dd>{f.v}</dd>
-            </div>
-          ))}
-        </dl>
-
         <div class="links reveal">
           <a href={site.resume} class="btn btn-primary" download="Abhinav_Saxena_Resume.pdf"><Icon name="download" /> Download resume</a>
           <a href={site.linkedin} class="btn btn-ghost" target="_blank" rel="noopener"><Icon name="linkedin" /> LinkedIn</a>
         </div>
       </div>
+
+      <dl class="facts reveal">
+        {facts.map((f) => (
+          <div class="fact">
+            <dt>{f.k}</dt>
+            <dd>{f.v}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
 
     <dl class="stats">
@@ -92,41 +76,10 @@ const facts = [
 <style>
   .grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; align-items: start; }
   @media (min-width: 900px) {
-    .grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(40px, 5vw, 80px); }
+    /* text on the left, quick facts on the right (the photo now lives in the hero) */
+    .grid { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); gap: clamp(40px, 5vw, 80px); align-items: end; }
+    .facts { grid-template-columns: minmax(0, 1fr) !important; }
   }
-
-  .photo {
-    max-width: 560px;
-    margin: 0;
-    position: relative;
-    border-radius: 28px;
-    padding: 1px;
-    background: linear-gradient(150deg, #8b5cf6, rgba(139, 92, 246, 0.15) 40%, rgba(236, 72, 153, 0.15) 60%, #ec4899);
-    box-shadow: 0 50px 100px -50px rgba(139, 92, 246, 0.6);
-  }
-  @media (min-width: 900px) { .photo { position: sticky; top: 110px; } }
-  .photo :global(img) {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: 58% 40%;
-    border-radius: 27px;
-  }
-  .photo figcaption {
-    position: absolute;
-    left: 1px;
-    right: 1px;
-    bottom: 1px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 70px 22px 22px;
-    border-radius: 0 0 27px 27px;
-    background: linear-gradient(transparent, rgba(10, 10, 14, 0.92) 55%);
-    color: #ececea;
-  }
-  .loc { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: #c9c9c5; }
-  .quote { font-size: clamp(19px, 1.8vw, 23px); font-weight: 600; line-height: 1.3; letter-spacing: -0.01em; }
 
   .text { min-width: 0; display: flex; flex-direction: column; gap: 20px; padding-top: 8px; }
   .text h2 { font-size: clamp(44px, 5.6vw, 76px); letter-spacing: -0.045em; }

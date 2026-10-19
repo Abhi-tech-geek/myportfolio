@@ -7,7 +7,8 @@ export type Project = {
   category: string;
   tagline: string;
   short: string;
-  status: 'live' | 'android' | 'soon';
+  /** 'paused' = hosted demo offline; the code is still public and runs locally */
+  status: 'live' | 'android' | 'soon' | 'paused';
   statusLabel: string;
   /** brand color on dark ground, and a darker one that passes contrast on light ground */
   color: string;
@@ -36,8 +37,8 @@ export const projects: Project[] = [
     category: 'AI QA platform',
     tagline: 'Describe a feature. Get a tested suite.',
     short: 'Plain-English feature in, runnable BDD suite out. 11 agents across Selenium and Playwright.',
-    status: 'live',
-    statusLabel: 'Live',
+    status: 'paused',
+    statusLabel: 'Runs locally',
     color: '#38BDF8',
     colorLight: '#0369A1',
     color2: '#3B82F6',
@@ -47,8 +48,8 @@ export const projects: Project[] = [
         'Describe a feature in plain English, get a runnable BDD test suite. A multi-agent AI QA platform with 11 agents, Selenium & Playwright, visual regression and self-healing locators.',
       og: '/og-abhimate.png',
     },
-    primary: { label: 'Open live app', href: 'https://abhimate.theabhinavsaxena.in/' },
-    secondary: { label: 'Source', href: 'https://github.com/Abhi-tech-geek/AbhiMate' },
+    // Hosted demo is offline for now, so no live link: the open-source repo is the way in.
+    primary: { label: 'View source on GitHub', href: 'https://github.com/Abhi-tech-geek/AbhiMate' },
     overviewTitle: 'The overview',
     overview: [
       "AbhiMate is an end-to-end QA automation platform built around a multi-agent architecture. Instead of writing test scripts by hand, you describe what you want to test in plain English and eleven specialized AI agents handle the rest: language understanding, DOM analysis, BDD test generation, browser execution, failure root-cause analysis and reporting.",
@@ -89,7 +90,7 @@ export const projects: Project[] = [
       { comment: '# 6. Run it, then open http://localhost:5000' },
       { cmd: 'python app.py' },
     ],
-    cta: { title: 'See AbhiMate in action', text: 'Fully containerized and live-deployed. Try the dashboard yourself.' },
+    cta: { title: 'Try AbhiMate on your machine', text: 'The hosted demo is offline for now. The code is open and runs locally in a few minutes.' },
     next: 'aurago',
   },
   {
