@@ -1,0 +1,161 @@
+---
+// Layout for the new (editorial) UI. Pages live under /v2 but are served on the normal public
+// URLs by middleware.js, so canonical URLs and internal links always use the public paths.
+import '@fontsource-variable/newsreader/opsz.css';
+import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '../styles/editorial.css';
+import serifFont from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
+import sansFont from '@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
+import OwnerSwitch from '../components/OwnerSwitch.astro';
+import { site } from '../data/site';
+import { themeInit } from '../lib/theme-init.mjs';
+
+interface Props {
+  title: string;
+  description?: string;
+  og?: string;
+  /** public path, e.g. "/" or "/abhimate" */
+  path: string;
+  home?: boolean;
+}
+const { title, description = site.description, og = '/og-banner.png', path, home = false } = Astro.props;
+const canonical = new URL(path, site.url).href.replace(/\/$/, '') || site.url;
+const ogImage = new URL(og, site.url).href;
+const base = home ? '' : '/';
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  jobTitle: 'Software Tester',
+  worksFor: { '@type': 'Organization', name: site.company },
+  url: site.url,
+  email: `mailto:${site.email}`,
+  sameAs: [site.linkedin, site.github],
+};
+---
+<!doctype html>
+<html lang="en" data-ui="new">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={serifFont} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sansFont} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline set:html={themeInit} />
+    {home && <script type="application/ld+json" set:html={JSON.stringify(person)} />}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="wrap mast" id="top">
+      <a href="/" class="name" aria-label="Abhinav Saxena, home">Abhinav Saxena</a>
+      <nav aria-label="Primary">
+        <a href={`${base}#work`}>Work</a>
+        <a href={`${base}#about`}>About</a>
+        <a href={`${base}#experience`}>Experience</a>
+        <a href={`${base}#contact`}>Contact</a>
+        <button type="button" class="theme" data-theme-toggle aria-pressed="false">
+          <span data-theme-label>Dark</span> mode
+        </button>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="wrap foot">
+      <p>© {new Date().getFullYear()} Abhinav Saxena · Gurgaon, India</p>
+      <p>
+        Privacy: no analytics, no trackers, no cookies for visitors. Body text is set in Atkinson Hyperlegible Next, designed by
+        the Braille Institute for readers with low vision.
+      </p>
+      <p><a href="#top">Back to top</a></p>
+    </footer>
+
+    <OwnerSwitch />
+
+    <style>
+      .mast {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px 24px;
+        padding-block: 28px;
+      }
+      .name { font-family: var(--f-serif); font-size: 22px; font-weight: 600; text-decoration: none; }
+      nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 22px; font-size: 16px; }
+      nav a { text-decoration: none; color: var(--ink-2); padding-block: 8px; }
+      nav a:hover { color: var(--accent); text-decoration: underline; }
+      .theme {
+        min-height: 40px;
+        padding: 0 12px;
+        border: 1px solid var(--rule);
+        border-radius: 6px;
+        background: transparent;
+        color: var(--ink-2);
+        font: inherit;
+        font-size: 15px;
+        cursor: pointer;
+      }
+      .theme:hover { color: var(--ink); border-color: var(--ink-3); }
+      .foot {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-block: 40px 56px;
+        border-top: 1px solid var(--rule);
+        font-size: 15px;
+        color: var(--ink-3);
+      }
+      .foot p:nth-child(2) { max-width: 70ch; }
+      .foot a { display: inline-block; padding-block: 12px; }
+    </style>
+
+    <script>
+      const root = document.documentElement;
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce) {
+        const smooth = () => setTimeout(() => root.classList.add('smooth'), 100);
+        if (document.readyState === 'complete') smooth();
+        else addEventListener('load', smooth, { once: true });
+      }
+
+      // Theme: saved choice wins, otherwise the system setting
+      const btn = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+      const label = document.querySelector<HTMLElement>('[data-theme-label]');
+      const isDark = () =>
+        root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      const sync = () => {
+        const dark = isDark();
+        if (label) label.textContent = dark ? 'Light' : 'Dark';
+        btn?.setAttribute('aria-pressed', String(dark));
+      };
+      sync();
+      btn?.addEventListener('click', () => {
+        const next = isDark() ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch {}
+        sync();
+      });
+    </script>
+  </body>
+</html>

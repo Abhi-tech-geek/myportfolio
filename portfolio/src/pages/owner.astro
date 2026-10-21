@@ -1,0 +1,71 @@
+---
+// Owner unlock page. The form posts to /owner, which middleware.js handles on Vercel's servers.
+// Not linked anywhere and excluded from search engines.
+import '@fontsource/jetbrains-mono/latin-400.css';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Owner</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <main>
+      <h1>Owner unlock</h1>
+      <p>This switch is only for the site owner.</p>
+      <form method="post" action="/owner">
+        <label for="key">Owner key</label>
+        <input id="key" name="key" type="password" autocomplete="current-password" required minlength="20" maxlength="200" />
+        <p class="err" data-err hidden role="alert">That key didn't work.</p>
+        <button type="submit">Unlock</button>
+      </form>
+      <a href="/">Back to the site</a>
+    </main>
+
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #111;
+        color: #eee;
+        font: 16px/1.5 system-ui, sans-serif;
+      }
+      main { width: min(380px, calc(100% - 40px)); display: flex; flex-direction: column; gap: 14px; }
+      h1 { margin: 0; font-size: 24px; }
+      p { margin: 0; color: #aaa; }
+      form { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+      label { font-size: 14px; color: #ccc; }
+      input {
+        min-height: 44px;
+        padding: 0 12px;
+        border: 1px solid #555;
+        border-radius: 10px;
+        background: #1a1a1a;
+        color: #fff;
+        font: 15px 'JetBrains Mono', ui-monospace, monospace;
+      }
+      input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+      button {
+        min-height: 44px;
+        border: 0;
+        border-radius: 10px;
+        background: #f5f5f5;
+        color: #111;
+        font: 600 15px system-ui, sans-serif;
+        cursor: pointer;
+      }
+      .err { color: #ff8a80; }
+      a { color: #ccc; font-size: 14px; }
+    </style>
+    <script>
+      if (new URLSearchParams(location.search).has('e')) {
+        document.querySelector<HTMLElement>('[data-err]')!.hidden = false;
+      }
+    </script>
+  </body>
+</html>

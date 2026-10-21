@@ -28,6 +28,10 @@ export type Project = {
   runLocally?: { comment?: string; cmd?: string }[];
   cta: { title: string; text: string };
   next: Project['slug'];
+  /** used by the new (editorial) UI */
+  problem: string;
+  role: string;
+  decisions: string[];
 };
 
 export const projects: Project[] = [
@@ -92,6 +96,13 @@ export const projects: Project[] = [
     ],
     cta: { title: 'Try AbhiMate on your machine', text: 'The hosted demo is offline for now. The code is open and runs locally in a few minutes.' },
     next: 'aurago',
+    problem: 'Writing UI test scripts by hand is slow, and suites break every time the interface changes.',
+    role: 'My own project: I designed and built the agent pipeline, the dashboard and its test suite.',
+    decisions: [
+      'Tests are generated as a typed JSON Action Plan instead of raw code, so the same suite runs on Selenium or Playwright.',
+      'Self-healing locators find an element again when the UI changes, instead of failing the run.',
+      'A dedicated agent works out why a test failed and explains it in plain language.',
+    ],
   },
   {
     slug: 'aurago',
@@ -142,6 +153,15 @@ export const projects: Project[] = [
     ],
     cta: { title: 'See how AuraGo is built', text: 'The hosted demo is offline for now. The full source is on GitHub.' },
     next: 'discova',
+    problem: 'Travel apps keep recommending the same crowded top-ten places.',
+    role: 'My own project: product idea, the LLM pipeline, the React app and deployment.',
+    decisions: [
+      'Separate model stages for intent, candidates and the itinerary, each returning strict JSON.',
+      'Places, prices and weather are checked against live web results instead of trusting the model.',
+      'A rule engine keeps transport realistic, so it never suggests a train across an ocean.',
+      'Live trip editing with friends runs on Supabase change-data-capture, with row-level security keeping every trip private by default.',
+      'The API and the React app ship as one Docker image on Cloud Run.',
+    ],
   },
   {
     slug: 'discova',
@@ -187,6 +207,13 @@ export const projects: Project[] = [
     ],
     cta: { title: 'Try DISCOVA on Android', text: 'Download the APK and check a place before you go.' },
     next: 'abhinova',
+    problem: 'Wheelchair users, parents with strollers and seniors often find out a place has stairs only after they arrive.',
+    role: 'My own project: I designed and built the Android app, from the AI scoring to the community features.',
+    decisions: [
+      'Gemini reads photos and reviews of a place to score ramps, lifts, washrooms and parking.',
+      'Only real Google places rated 3.9 or higher are shown, with their real photos.',
+      'The whole app runs on free tiers.',
+    ],
   },
   {
     slug: 'abhinova',
@@ -221,6 +248,12 @@ export const projects: Project[] = [
     metrics: [],
     cta: { title: 'AbhiNova 2.0 is on the way', text: 'Follow along on GitHub to see it ship.' },
     next: 'abhimate',
+    problem: 'One everyday request often needs several tools at once: a calendar, mail and notes.',
+    role: 'My own project, currently being rebuilt as version 2.',
+    decisions: [
+      'One chatbot in front, and a multi-agent core behind it that splits each request into tasks.',
+      'Version 2 replaces the orchestration engine so tasks are routed to agents more reliably.',
+    ],
   },
 ];
 

@@ -1,0 +1,305 @@
+---
+import { Image } from 'astro:assets';
+import Editorial from '../../layouts/Editorial.astro';
+import ProjectLogo from '../../components/ProjectLogo.astro';
+import avatar from '../../assets/avatar.png';
+import { site, journey, certs, capabilities } from '../../data/site';
+import { projects } from '../../data/projects';
+
+const useLabel = { work: 'At work', projects: 'In my projects', learning: 'Learning' } as const;
+const statusText = (p: (typeof projects)[number]) =>
+  p.status === 'paused' ? 'Demo offline, code on GitHub' : p.status === 'soon' ? 'Version 2 in progress' : p.statusLabel;
+const [featured, ...rest] = projects;
+---
+<Editorial title="Abhinav Saxena | Software Tester and Automation Engineer" path="/" home>
+  <!-- Hero ---------------------------------------------------------------------------------->
+  <section class="wrap hero">
+    <div class="hero-copy">
+      <p class="kicker">Software tester at Accenture · Gurgaon, India</p>
+      <h1>Building confidence in software through testing, automation and AI.</h1>
+      <p class="lead">
+        I'm Abhinav Saxena. I test enterprise software at Accenture, automate the checks that keep coming back, and build
+        AI tools in my own time to see how far testing can go.
+      </p>
+      <div class="hero-cta">
+        <a class="btn" href="#work">See my projects</a>
+        <a class="textlink" href={site.resume} download="Abhinav_Saxena_Resume.pdf">Resume (PDF)</a>
+        <a class="textlink" href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+    <figure class="hero-photo">
+      <Image
+        src={avatar}
+        alt="Abhinav Saxena in his wheelchair at a desk, with code on the monitors behind him"
+        widths={[360, 540, 760]}
+        sizes="(max-width: 900px) 80vw, 380px"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </figure>
+  </section>
+
+  <!-- About ---------------------------------------------------------------------------------->
+  <section class="wrap sec" id="about" aria-labelledby="about-h">
+    <div class="sec-label"><span class="num">01</span><h2 id="about-h">About</h2></div>
+    <div>
+      <p class="lead">
+        I've spent the last two-plus years as a QA tester at Accenture, testing large enterprise applications.
+      </p>
+      <p class="body" style="margin-top:1.1em">
+        Most of my day is functional and end-to-end testing: writing test cases that catch the edge cases, reporting
+        defects clearly enough that whoever picks them up knows what to do, and checking data with SQL. The flows that
+        come back every release, I automate with Selenium, TestNG, Robot Framework and Python.
+      </p>
+      <p class="body">
+        Automation is what pulled me further into code. These days I build my own projects on the side, mostly with AI:
+        agents that write and run tests, a travel planner, an accessibility app and a personal assistant. I studied
+        Computer Applications at Lovely Professional University, but most of what I know about AI I learned by building
+        things and breaking them.
+      </p>
+    </div>
+  </section>
+
+  <!-- Skills --------------------------------------------------------------------------------->
+  <section class="wrap sec" aria-labelledby="skills-h">
+    <div class="sec-label">
+      <span class="num">02</span><h2 id="skills-h">What I work with</h2>
+      <p class="meta legend">
+        <span class="tag">At work</span> professionally at Accenture<br />
+        <span class="tag">In my projects</span> my own builds<br />
+        <span class="tag learn">Learning</span> currently picking up
+      </p>
+    </div>
+    <ol class="caps">
+      {capabilities.map((c) => (
+        <li class="cap">
+          <h3>{c.title}</h3>
+          <p class="body">{c.summary}</p>
+          <ul class="tools" aria-label={`Tools for ${c.title}`}>
+            {c.tools.map((t) => (
+              <li>
+                <span class="tool">{t.name}</span>
+                <span class:list={['tag', { learn: t.at === 'learning' }]}>{useLabel[t.at]}</span>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- Projects ------------------------------------------------------------------------------->
+  <section class="wrap sec" id="work" aria-labelledby="work-h">
+    <div class="sec-label">
+      <span class="num">03</span><h2 id="work-h">Projects</h2>
+      <p class="meta">Things I built on my own time. Each one taught me something about testing.</p>
+    </div>
+
+    <div class="projects">
+      <article class="feature">
+        <header class="p-head">
+          <span class="p-logo" aria-hidden="true"><ProjectLogo slug={featured.slug} size={30} /></span>
+          <div>
+            <h3><a href={`/${featured.slug}`}>{featured.name}</a></h3>
+            <p class="meta">{featured.category} · {statusText(featured)}</p>
+          </div>
+        </header>
+        <p class="lead">{featured.tagline}</p>
+        <dl class="facts">
+          <div><dt>The problem</dt><dd>{featured.problem}</dd></div>
+          <div><dt>My role</dt><dd>{featured.role}</dd></div>
+          <div class="wide">
+            <dt>Decisions that mattered</dt>
+            <dd><ul class="decisions">{featured.decisions.map((d) => <li>{d}</li>)}</ul></dd>
+          </div>
+          <div class="wide"><dt>Built with</dt><dd>{featured.stack.join(', ')}</dd></div>
+        </dl>
+        <p class="p-links">
+          <a class="textlink" href={`/${featured.slug}`}>Read the case study<span class="sr-only"> for {featured.name}</span></a>
+          <a class="textlink" href={featured.primary.href} target="_blank" rel="noopener">{featured.primary.label}</a>
+        </p>
+      </article>
+
+      {rest.map((p, i) => (
+        <article class:list={['row', { flip: i % 2 === 1 }]}>
+          <header class="p-head">
+            <span class="p-logo" aria-hidden="true"><ProjectLogo slug={p.slug} size={26} /></span>
+            <div>
+              <h3><a href={`/${p.slug}`}>{p.name}</a></h3>
+              <p class="meta">{p.category} · {statusText(p)}</p>
+            </div>
+          </header>
+          <div class="row-body">
+            <p class="body"><strong>The problem.</strong> {p.problem}</p>
+            <p class="body"><strong>What I built.</strong> {p.short}</p>
+            <p class="body"><strong>Built with.</strong> {p.stack.slice(0, 6).join(', ')}.</p>
+            <p class="p-links">
+              <a class="textlink" href={`/${p.slug}`}>Read the case study<span class="sr-only"> for {p.name}</span></a>
+              <a class="textlink" href={p.primary.href} target="_blank" rel="noopener">{p.primary.label}</a>
+            </p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Experience ----------------------------------------------------------------------------->
+  <section class="wrap sec" id="experience" aria-labelledby="exp-h">
+    <div class="sec-label"><span class="num">04</span><h2 id="exp-h">Experience</h2></div>
+    <div class="exp">
+      {journey.map((j) => (
+        <article class="job">
+          <div class="job-head">
+            <h3>{j.title}</h3>
+            <p class="meta">{j.org} · {j.when}</p>
+          </div>
+          <ul class="points">{j.points.map((pt) => <li>{pt}</li>)}</ul>
+        </article>
+      ))}
+
+      <div class="certs">
+        <h3>Certificates</h3>
+        <ul>
+          {certs.map((c) => (
+            <li>
+              <span>{c.title}<span class="meta"> · {c.org}{c.badge === 'Awarded' ? ' (awarded)' : ''}</span></span>
+              <span class="meta date">{c.date}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Personal ------------------------------------------------------------------------------->
+  <section class="wrap sec" aria-labelledby="around-h">
+    <div class="sec-label"><span class="num">05</span><h2 id="around-h">Getting around</h2></div>
+    <div>
+      <p class="lead">I use a wheelchair, and I like going places anyway.</p>
+      <p class="body" style="margin-top:1.1em">
+        Before I go anywhere new, I check the same few things. Is there a ramp? Does the lift actually work? Is there a
+        washroom I can use? Most of the time the answer isn't online, so I find out at the door.
+      </p>
+      <p class="body">
+        Checking everything that could go wrong before it does is most of what testing is, so maybe it's not a surprise
+        that I ended up here. It's also why I built <a href="/discova">DISCOVA</a>, and why accessibility is part of how I
+        test, not a separate checklist at the end.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact -------------------------------------------------------------------------------->
+  <section class="wrap sec" id="contact" aria-labelledby="contact-h">
+    <div class="sec-label"><span class="num">06</span><h2 id="contact-h">Contact</h2></div>
+    <div class="contact">
+      <p class="lead">Hiring for QA or automation, or want to talk about testing and AI? Email is the best way to reach me.</p>
+      <p><a class="mail" href={`mailto:${site.email}`}>{site.email}</a></p>
+      <ul class="elsewhere">
+        <li><a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href={site.github} target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href={site.resume} download="Abhinav_Saxena_Resume.pdf">Resume (PDF)</a></li>
+      </ul>
+    </div>
+  </section>
+</Editorial>
+
+<style>
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+    align-items: end;
+    padding-block: clamp(32px, 6vw, 72px) clamp(56px, 8vw, 104px);
+  }
+  @media (min-width: 900px) { .hero { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 64px; } }
+  .hero-copy { display: flex; flex-direction: column; gap: 24px; }
+  .kicker { font-size: 16px; color: var(--ink-3); }
+  .hero h1 { font-size: clamp(42px, 6vw, 80px); line-height: 1.02; letter-spacing: -0.025em; max-width: 16ch; }
+  .hero .lead { max-width: 54ch; color: var(--ink-2); }
+  .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: 4px; }
+  .hero-photo { margin: 0; }
+  .hero-photo :global(img) {
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 58% 40%;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+  }
+  @media (max-width: 899px) { .hero-photo :global(img) { max-width: 320px; } }
+
+  /* Skills */
+  .legend { margin-top: 14px; line-height: 2.2; }
+  .caps { display: flex; flex-direction: column; }
+  .cap { padding-block: 26px; border-bottom: 1px solid var(--rule); display: flex; flex-direction: column; gap: 10px; }
+  .cap:first-child { padding-top: 0; }
+  .cap h3 { font-size: 25px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 4px; }
+  .tools li { display: inline-flex; align-items: baseline; gap: 8px; }
+  .tool { font-weight: 700; }
+  .tag.learn { border-style: dashed; }
+
+  /* Projects */
+  .projects { display: flex; flex-direction: column; }
+  .p-head { display: flex; align-items: center; gap: 16px; }
+  .p-logo {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    color: var(--ink);
+  }
+  .p-head h3 { font-size: clamp(28px, 3vw, 38px); }
+  .p-head h3 a { text-decoration: none; }
+  .p-head h3 a:hover { text-decoration: underline; }
+  .p-links { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 6px; }
+
+  .feature { display: flex; flex-direction: column; gap: 22px; padding-bottom: 48px; border-bottom: 1px solid var(--rule); }
+  .feature .lead { font-family: var(--f-serif); font-size: clamp(24px, 2.4vw, 30px); font-style: italic; }
+  .facts { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px 40px; margin: 0; }
+  @media (min-width: 700px) { .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } .facts .wide { grid-column: 1 / -1; } }
+  .facts dt { font-family: var(--f-mono); font-size: 13px; color: var(--ink-3); margin-bottom: 6px; }
+  .facts dd { margin: 0; color: var(--ink-2); }
+  .decisions { display: flex; flex-direction: column; gap: 8px; }
+  .decisions li { position: relative; padding-left: 20px; }
+  .decisions li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 8px; height: 1px; background: var(--ink-3); }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px 48px;
+    align-items: start;
+    padding-block: 40px;
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (min-width: 760px) {
+    .row { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); }
+    .row.flip .p-head { order: 2; }
+    .row.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+  }
+  .row-body { display: flex; flex-direction: column; gap: 10px; }
+  .row-body .body + .body { margin-top: 0; }
+  .row-body strong { color: var(--ink); }
+
+  /* Experience */
+  .exp { display: flex; flex-direction: column; gap: 40px; }
+  .job-head h3 { font-size: 28px; }
+  .points { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; color: var(--ink-2); max-width: 66ch; }
+  .points li { position: relative; padding-left: 20px; }
+  .points li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 8px; height: 1px; background: var(--ink-3); }
+  .certs h3 { font-size: 24px; margin-bottom: 12px; }
+  .certs ul { display: flex; flex-direction: column; }
+  .certs li { display: flex; justify-content: space-between; gap: 20px; padding-block: 12px; border-bottom: 1px solid var(--rule); }
+  .date { white-space: nowrap; }
+
+  /* Contact */
+  .contact { display: flex; flex-direction: column; gap: 22px; }
+  .mail { font-family: var(--f-serif); font-size: clamp(26px, 3.4vw, 42px); overflow-wrap: anywhere; }
+  .elsewhere { display: flex; flex-wrap: wrap; gap: 10px 28px; font-weight: 700; }
+  .elsewhere a { display: inline-block; padding-block: 6px; }
+</style>

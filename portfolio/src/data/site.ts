@@ -131,3 +131,61 @@ export const toolbelt = [
   'Selenium', 'Playwright', 'Python', 'Pytest', 'TestNG', 'Robot Framework', 'Jira', 'SQL',
   'Postman', 'Docker', 'Groq', 'Gemini', 'React', 'Supabase', 'Firebase', 'Databricks',
 ];
+
+/** Skills grouped by what I can do, for the new UI. `at` = where I use it. */
+export type SkillUse = 'work' | 'projects' | 'learning';
+export const capabilities: {
+  title: string;
+  summary: string;
+  tools: { name: string; at: SkillUse }[];
+}[] = [
+  {
+    title: 'Quality assurance and manual testing',
+    summary: 'Functional and end-to-end testing of large enterprise apps, test case design that covers the edges, and defects tracked through their full lifecycle.',
+    tools: [
+      { name: 'Jira', at: 'work' },
+      { name: 'ALM', at: 'work' },
+      { name: 'SQL', at: 'work' },
+      { name: 'Postman', at: 'work' },
+    ],
+  },
+  {
+    title: 'Web test automation',
+    summary: 'Automating the stable, repetitive flows so regression runs take less of the team’s time.',
+    tools: [
+      { name: 'Selenium', at: 'work' },
+      { name: 'Python', at: 'work' },
+      { name: 'TestNG', at: 'work' },
+      { name: 'Robot Framework', at: 'work' },
+      { name: 'Playwright', at: 'projects' },
+      { name: 'Pytest', at: 'projects' },
+    ],
+  },
+  {
+    title: 'Mobile test automation',
+    summary: 'Extending the same automation habits to Android and iOS apps.',
+    tools: [{ name: 'Appium', at: 'learning' }],
+  },
+  {
+    title: 'AI and intelligent applications',
+    summary: 'Multi-agent systems, model pipelines that return strict JSON, and answers checked against live data.',
+    tools: [
+      { name: 'Groq / Llama', at: 'projects' },
+      { name: 'Gemini', at: 'projects' },
+      { name: 'Agentic AI', at: 'projects' },
+    ],
+  },
+  {
+    title: 'Development tools and workflow',
+    summary: 'What I use to build and ship my own projects.',
+    tools: [
+      { name: 'Git and GitHub', at: 'projects' },
+      { name: 'Docker', at: 'projects' },
+      { name: 'Flask', at: 'projects' },
+      { name: 'React', at: 'projects' },
+      { name: 'React Native', at: 'projects' },
+      { name: 'Supabase', at: 'projects' },
+      { name: 'Firebase', at: 'projects' },
+    ],
+  },
+];

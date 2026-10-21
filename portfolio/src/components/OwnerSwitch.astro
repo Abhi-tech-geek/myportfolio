@@ -1,0 +1,60 @@
+---
+// Owner-only UI switch. Rendered hidden on every page; shown only when the `owner_ui` marker
+// cookie exists. The marker grants nothing by itself: the real check happens on Vercel's
+// servers (middleware.js) against the HttpOnly owner_key cookie, so a visitor who forces this
+// panel visible still can't switch anything.
+---
+<aside class="owner" data-owner hidden aria-label="Owner controls">
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+  <span class="lbl">UI</span>
+  <a data-to="classic" href="/owner/switch?to=classic">Classic</a>
+  <a data-to="new" href="/owner/switch?to=new">New</a>
+  <a class="lock" href="/owner/lock" title="Lock: hide these controls on this browser">Lock</a>
+</aside>
+
+<style>
+  .owner {
+    position: fixed;
+    left: 16px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 6px 6px 12px;
+    border-radius: 999px;
+    background: #111;
+    color: #eee;
+    border: 1px solid #444;
+    font: 500 13px/1 system-ui, sans-serif;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+  .owner[hidden] { display: none; }
+  .lbl { margin: 0 6px 0 4px; color: #aaa; }
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    color: #ddd;
+    text-decoration: none;
+  }
+  a:hover { background: #2a2a2a; }
+  a[aria-current='true'] { background: #f5f5f5; color: #111; }
+  .lock { color: #aaa; }
+  a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+</style>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('[data-owner]');
+  if (panel && /(?:^|;\s*)owner_ui=1(?:;|$)/.test(document.cookie)) {
+    const current = document.documentElement.dataset.ui ?? 'classic';
+    const back = encodeURIComponent(location.pathname.replace(/^\/v2(?=\/|$)/, '') || '/');
+    panel.querySelectorAll<HTMLAnchorElement>('a[data-to]').forEach((a) => {
+      a.href = `/owner/switch?to=${a.dataset.to}&back=${back}`;
+      a.setAttribute('aria-current', String(a.dataset.to === current));
+    });
+    panel.hidden = false;
+  }
+</script>

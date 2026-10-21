@@ -8,6 +8,7 @@ import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolag
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ScrollRail from '../components/ScrollRail.astro';
+import OwnerSwitch from '../components/OwnerSwitch.astro';
 import { site } from '../data/site';
 import { themeInit } from '../lib/theme-init.mjs';
 
@@ -33,7 +34,7 @@ const person = {
 };
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-ui="classic">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -70,6 +71,7 @@ const person = {
       <slot />
     </main>
     <Footer />
+    <OwnerSwitch />
 
     <script>
       const root = document.documentElement;
