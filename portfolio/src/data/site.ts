@@ -163,8 +163,8 @@ export const capabilities: {
   },
   {
     title: 'Mobile test automation',
-    summary: 'Extending the same automation habits to Android and iOS apps.',
-    tools: [{ name: 'Appium', at: 'learning' }],
+    summary: 'Automating mobile app flows at work with the same habits I use for web.',
+    tools: [{ name: 'Appium', at: 'work' }],
   },
   {
     title: 'AI and intelligent applications',
