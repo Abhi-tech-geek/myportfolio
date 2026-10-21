@@ -241,22 +241,12 @@ const [featured, ...rest] = projects;
     background: #1f9d55;
     box-shadow: 0 0 0 4px color-mix(in srgb, #1f9d55 18%, transparent);
   }
-  .hero h1 { font-size: clamp(38px, 4.6vw, 64px); line-height: 1.05; letter-spacing: -0.025em; max-width: 18ch; text-wrap: balance; }
+  .hero h1 { font-size: clamp(38px, 4.4vw, 60px); line-height: 1.05; letter-spacing: -0.025em; max-width: 22ch; text-wrap: balance; }
   .hero h1 em { font-style: italic; color: var(--accent); }
   .hero .lead { max-width: 52ch; color: var(--ink-2); }
   .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: 4px; }
 
   .hero-photo { position: relative; margin: 0; width: 100%; max-width: 440px; justify-self: end; }
-  /* offset frame behind the photo: a quiet editorial touch, no animation */
-  .ph { position: relative; }
-  .ph::before {
-    content: '';
-    position: absolute;
-    inset: 14px -14px -14px 14px;
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    opacity: 0.45;
-  }
   .hero-photo :global(img) {
     position: relative;
     display: block;
@@ -272,14 +262,14 @@ const [featured, ...rest] = projects;
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 30px;
+    margin-top: 14px;
     padding-top: 10px;
     border-top: 1px solid var(--rule);
     font-size: 14px;
     color: var(--ink-3);
   }
   .hero-photo figcaption span:first-child { font-family: var(--f-serif); font-style: italic; font-size: 17px; color: var(--ink-2); }
-  @media (max-width: 899px) { .hero-photo { justify-self: start; max-width: min(360px, calc(100% - 14px)); } }
+  @media (max-width: 899px) { .hero-photo { justify-self: start; max-width: 360px; } }
 
   /* Currently */
   .now {
