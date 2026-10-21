@@ -269,7 +269,22 @@ const [featured, ...rest] = projects;
     color: var(--ink-3);
   }
   .hero-photo figcaption span:first-child { font-family: var(--f-serif); font-style: italic; font-size: 17px; color: var(--ink-2); }
-  @media (max-width: 899px) { .hero-photo { justify-self: start; max-width: 360px; } }
+  /* Phones and tablets: the photo sits right under the headline instead of after everything */
+  @media (max-width: 899px) {
+    .hero { gap: 20px; padding-top: 20px; }
+    .hero-copy { display: contents; }
+    .kicker { order: 1; }
+    .hero h1 { order: 2; }
+    .hero-photo { order: 3; justify-self: stretch; max-width: 520px; margin-block: 8px; }
+    .hero-photo :global(img) { aspect-ratio: 1 / 1; object-position: 58% 35%; }
+    .hero .lead { order: 4; }
+    .hero-cta { order: 5; }
+  }
+  @media (max-width: 560px) {
+    .hero-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+    .hero-cta .btn { grid-column: 1 / -1; justify-content: center; }
+    .hero-cta .textlink { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
+  }
 
   /* Currently */
   .now {
@@ -278,7 +293,7 @@ const [featured, ...rest] = projects;
     border-block: 1px solid var(--rule);
     margin-bottom: clamp(24px, 4vw, 48px);
   }
-  .now > div { display: flex; flex-direction: column; gap: 4px; padding: 18px 0; }
+  .now > div { display: flex; flex-direction: column; gap: 4px; padding: 14px 0; }
   .now > div + div { border-top: 1px solid var(--rule); }
   @media (min-width: 760px) {
     .now { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -363,6 +378,21 @@ const [featured, ...rest] = projects;
     .row { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); }
     .row.flip .p-head { order: 2; }
     .row.flip { grid-template-columns: minmax(0, 7fr) minmax(0, 4fr); }
+  }
+  /* Phones: each project becomes its own card with a strip of its colour, so the list isn't one long wall of text */
+  @media (max-width: 759px) {
+    .projects { gap: 16px; }
+    .feature, .row {
+      padding: 22px 18px 24px;
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--pc, var(--accent));
+      border-radius: 10px;
+    }
+    :global(html[data-theme='dark']) :is(.feature, .row) { border-top-color: var(--pcd); }
+    .p-num { display: none; }
+  }
+  @media (max-width: 759px) and (prefers-color-scheme: dark) {
+    :global(html:not([data-theme='light'])) :is(.feature, .row) { border-top-color: var(--pcd); }
   }
   .row-body { display: flex; flex-direction: column; gap: 10px; }
   .row-body .body + .body { margin-top: 0; }

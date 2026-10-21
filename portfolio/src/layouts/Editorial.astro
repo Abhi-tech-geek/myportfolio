@@ -73,10 +73,10 @@ const person = {
         <a href={`${base}#about`}>About</a>
         <a href={`${base}#experience`}>Experience</a>
         <a href={`${base}#contact`}>Contact</a>
-        <button type="button" class="theme" data-theme-toggle aria-pressed="false">
-          <span data-theme-label>Dark</span> mode
-        </button>
       </nav>
+      <button type="button" class="theme" data-theme-toggle aria-pressed="false">
+        <span data-theme-label>Dark</span><span class="theme-word"> mode</span>
+      </button>
     </header>
 
     <main id="main">
@@ -100,7 +100,15 @@ const person = {
         padding-block: 28px;
       }
       .name { font-family: var(--f-serif); font-size: 22px; font-weight: 600; text-decoration: none; }
-      nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 22px; font-size: 16px; }
+      nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 22px; font-size: 16px; margin-left: auto; }
+      /* Phones: name + theme on one row, the four links spread across the row below */
+      @media (max-width: 640px) {
+        .mast { gap: 6px 16px; padding-block: 16px 8px; }
+        .theme { order: 2; min-height: 44px; }
+        .theme-word { display: none; }
+        nav { order: 3; flex-basis: 100%; justify-content: space-between; margin-left: 0; border-top: 1px solid var(--rule); }
+        nav a { padding-block: 12px; }
+      }
       nav a { text-decoration: none; color: var(--ink-2); padding-block: 8px; }
       nav a:hover { color: var(--accent); text-decoration: underline; }
       .theme {

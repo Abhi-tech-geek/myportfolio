@@ -112,6 +112,12 @@ a:hover { color: var(--accent); }
 .sec-label .num { font-family: var(--f-serif); font-style: italic; font-size: clamp(30px, 3vw, 40px); line-height: 1; color: var(--accent); }
 .sec-label h2 { font-size: clamp(30px, 3.2vw, 40px); }
 @media (min-width: 900px) { .sec-label { position: sticky; top: 32px; align-self: start; } }
+@media (max-width: 899px) {
+  .sec { padding-block: 52px; gap: 18px; }
+  .sec-label { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .sec-label .num { font-size: 26px; }
+  .sec-label > :not(.num):not(h2) { flex-basis: 100%; }
+}
 
 .lead { font-size: clamp(20px, 1.9vw, 23px); line-height: 1.55; color: var(--ink); }
 .body { color: var(--ink-2); max-width: 66ch; }
