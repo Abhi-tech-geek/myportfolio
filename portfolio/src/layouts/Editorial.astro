@@ -8,6 +8,7 @@ import '../styles/editorial.css';
 import serifFont from '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url';
 import sansFont from '@fontsource-variable/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-wght-normal.woff2?url';
 import OwnerSwitch from '../components/OwnerSwitch.astro';
+import OwnerDialog from '../components/OwnerDialog.astro';
 import { site } from '../data/site';
 import { themeInit } from '../lib/theme-init.mjs';
 
@@ -87,7 +88,7 @@ const person = {
         Privacy: no analytics, no trackers, no cookies for visitors. Body text is set in Atkinson Hyperlegible Next, designed by
         the Braille Institute for readers with low vision.
       </p>
-      <p><a href="#top">Back to top</a></p>
+      <p class="foot-end"><a href="#top">Back to top</a><OwnerDialog variant="paper" /></p>
     </footer>
 
     <OwnerSwitch />
@@ -128,6 +129,7 @@ const person = {
       }
       .foot p:nth-child(2) { max-width: 70ch; }
       .foot a { display: inline-block; padding-block: 12px; }
+      .foot-end { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     </style>
 
     <script>

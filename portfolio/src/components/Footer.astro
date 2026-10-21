@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import OwnerDialog from './OwnerDialog.astro';
 import { site } from '../data/site';
 ---
 <footer class="footer">
@@ -9,6 +10,7 @@ import { site } from '../data/site';
       <a href={site.github} target="_blank" rel="noopener"><Icon name="github" size={16} /> github</a>
       <a href={site.linkedin} target="_blank" rel="noopener"><Icon name="linkedin" size={16} /> linkedin</a>
       <a href="#top" class="top" aria-label="Back to top"><Icon name="arrow-up" size={16} /></a>
+      <OwnerDialog variant="neon" />
     </span>
   </div>
 </footer>

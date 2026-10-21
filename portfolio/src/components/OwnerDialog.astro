@@ -1,0 +1,232 @@
+---
+// Small lock button (placed in the footer) + the owner sign-in dialog.
+// All checks happen on the server (middleware.js); this is only the form.
+interface Props { variant?: 'neon' | 'paper' }
+const { variant = 'neon' } = Astro.props;
+---
+<button type="button" class:list={['lockbtn', variant]} data-owner-open aria-label="Owner sign-in" title="Owner sign-in">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+</button>
+
+<dialog class="od" data-owner-dialog aria-labelledby="od-title">
+  <div class="od-top">
+    <h2 id="od-title" data-od-title>Owner sign-in</h2>
+    <button type="button" class="od-x" data-od-close aria-label="Close">✕</button>
+  </div>
+
+  <!-- sign in -->
+  <form data-view="login" novalidate>
+    <label for="od-pw">Password</label>
+    <input id="od-pw" name="password" type="password" autocomplete="current-password" required maxlength="128" />
+    <button type="submit" class="od-go">Sign in</button>
+    <button type="button" class="od-link" data-goto="setup">First time, or forgot your password?</button>
+  </form>
+
+  <!-- first-time setup / forgot password (needs the recovery key) -->
+  <form data-view="setup" novalidate hidden>
+    <p class="od-help">Do this once. Paste the recovery key from your notes, then choose the password you'll use from now on.</p>
+    <label for="od-rk">Recovery key</label>
+    <input id="od-rk" name="recoveryKey" type="password" autocomplete="off" required maxlength="200" />
+    <label for="od-np">New password <span class="od-hint">(at least 8 characters)</span></label>
+    <input id="od-np" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128" />
+    <label for="od-np2">Type it again</label>
+    <input id="od-np2" name="confirm" type="password" autocomplete="new-password" required minlength="8" maxlength="128" />
+    <button type="submit" class="od-go">Set password</button>
+    <button type="button" class="od-link" data-goto="login">Back to sign-in</button>
+  </form>
+
+  <!-- change password (signed in) -->
+  <form data-view="change" novalidate hidden>
+    <label for="od-cur">Current password</label>
+    <input id="od-cur" name="current" type="password" autocomplete="current-password" required maxlength="128" />
+    <label for="od-new">New password <span class="od-hint">(at least 8 characters)</span></label>
+    <input id="od-new" name="next" type="password" autocomplete="new-password" required minlength="8" maxlength="128" />
+    <label for="od-new2">Type it again</label>
+    <input id="od-new2" name="confirm" type="password" autocomplete="new-password" required minlength="8" maxlength="128" />
+    <button type="submit" class="od-go">Change password</button>
+    <p class="od-help">Every other device you're signed in on will be signed out.</p>
+  </form>
+
+  <p class="od-msg" data-od-msg role="status" aria-live="polite"></p>
+</dialog>
+
+<style>
+  .lockbtn {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    opacity: 0.55;
+    cursor: pointer;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+  .lockbtn:hover, .lockbtn:focus-visible { opacity: 1; border-color: currentColor; }
+
+  .od {
+    width: min(400px, calc(100vw - 32px));
+    padding: 24px;
+    border: 1px solid #3a3a3a;
+    border-radius: 16px;
+    background: #141414;
+    color: #eee;
+    font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  .od::backdrop { background: rgba(0, 0, 0, 0.55); }
+  .od-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .od h2 { margin: 0; font: 600 20px/1.2 system-ui, sans-serif; letter-spacing: 0; }
+  .od-x {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: #bbb;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .od-x:hover { background: #262626; color: #fff; }
+  form { display: flex; flex-direction: column; gap: 8px; }
+  form[hidden] { display: none; } /* author display:flex would otherwise beat the hidden attribute */
+  label { margin-top: 6px; font-size: 14px; color: #ccc; }
+  .od-hint { color: #999; }
+  input {
+    min-height: 46px;
+    padding: 0 12px;
+    border: 1px solid #555;
+    border-radius: 10px;
+    background: #1d1d1d;
+    color: #fff;
+    font: 16px system-ui, sans-serif; /* 16px stops iOS from zooming in */
+  }
+  .od-go {
+    margin-top: 12px;
+    min-height: 46px;
+    border: 0;
+    border-radius: 10px;
+    background: #f3f3f3;
+    color: #111;
+    font: 600 16px system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .od-go:disabled { opacity: 0.6; cursor: wait; }
+  .od-link {
+    align-self: flex-start;
+    min-height: 40px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #bbb;
+    font: 14px system-ui, sans-serif;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .od-help { margin: 0 0 4px; font-size: 14px; color: #aaa; }
+  .od-msg { margin: 14px 0 0; min-height: 1.5em; font-size: 15px; color: #ffd27a; }
+  .od-msg[data-ok] { color: #7ee2a8; }
+  .od :focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+</style>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('[data-owner-dialog]');
+  if (dialog) {
+    const views = [...dialog.querySelectorAll<HTMLFormElement>('form[data-view]')];
+    const title = dialog.querySelector<HTMLElement>('[data-od-title]')!;
+    const msg = dialog.querySelector<HTMLElement>('[data-od-msg]')!;
+    const TITLES: Record<string, string> = { login: 'Owner sign-in', setup: 'Set your password', change: 'Change password' };
+
+    const say = (text: string, ok = false) => {
+      msg.textContent = text;
+      msg.toggleAttribute('data-ok', ok);
+    };
+    const show = (name: string) => {
+      views.forEach((v) => (v.hidden = v.dataset.view !== name));
+      title.textContent = TITLES[name] ?? 'Owner';
+      say('');
+      const first = dialog.querySelector<HTMLInputElement>(`form[data-view="${name}"] input`);
+      setTimeout(() => first?.focus(), 30);
+    };
+    const open = (name = 'login') => {
+      show(name);
+      if (!dialog.open) dialog.showModal();
+    };
+
+    document.querySelectorAll('[data-owner-open]').forEach((b) =>
+      b.addEventListener('click', () => {
+        // Already signed in on this browser? Go straight to changing the password.
+        open(/(?:^|;\s*)owner_ui=1(?:;|$)/.test(document.cookie) ? 'change' : 'login');
+      }),
+    );
+    addEventListener('owner:open', (e) => open((e as CustomEvent).detail));
+    dialog.querySelector('[data-od-close]')!.addEventListener('click', () => dialog.close());
+    dialog.querySelectorAll<HTMLElement>('[data-goto]').forEach((b) => b.addEventListener('click', () => show(b.dataset.goto!)));
+
+    const explain = (status: number, body: any): string => {
+      switch (body?.error) {
+        case 'wrong': return body.left > 0 ? `That's not right. ${body.left} ${body.left === 1 ? 'try' : 'tries'} left.` : 'Too many wrong tries. Wait 15 minutes.';
+        case 'wrong-key': return body.left > 0 ? `That recovery key didn't work. ${body.left} tries left.` : 'Too many wrong tries. Wait 15 minutes.';
+        case 'too-many': return `Too many wrong tries. Try again in ${body.minutes} min.`;
+        case 'paused': return 'Sign-in is paused for an hour because of many wrong tries.';
+        case 'weak': return `Use at least ${body.min ?? 8} characters.`;
+        case 'signed-out': return 'You were signed out. Sign in again.';
+        case 'storage-missing': return 'Sign-in storage is not connected in Vercel yet.';
+        case 'unavailable': return 'Sign-in is unavailable right now. Try again in a minute.';
+      }
+      if (status === 404 || status === 405) return 'Owner sign-in only works on the live site.';
+      return 'Something went wrong. Try again.';
+    };
+
+    const send = async (path: string, payload: Record<string, string>) => {
+      const res = await fetch(path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(payload),
+      });
+      let body: any = null;
+      try { body = await res.json(); } catch {}
+      return { status: res.status, body };
+    };
+
+    views.forEach((form) =>
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+        const view = form.dataset.view!;
+        if ((view === 'setup' || view === 'change') && data.confirm !== (view === 'setup' ? data.password : data.next)) {
+          say("The two new passwords don't match.");
+          return;
+        }
+        const btn = form.querySelector<HTMLButtonElement>('.od-go')!;
+        btn.disabled = true;
+        say('Checking…');
+        try {
+          const path = view === 'login' ? '/owner/login' : view === 'setup' ? '/owner/setup' : '/owner/password';
+          const { confirm, ...payload } = data;
+          const { status, body } = await send(path, payload);
+          if (status === 200 && body?.ok) {
+            form.reset();
+            if (view === 'change') {
+              say('Password changed. Other devices were signed out.', true);
+            } else {
+              say('Signed in. Loading your switch…', true);
+              setTimeout(() => location.reload(), 600);
+            }
+          } else if (body?.error === 'not-set-up') {
+            show('setup');
+            say('First time here: set your password once with the recovery key.');
+          } else {
+            say(explain(status, body));
+          }
+        } catch {
+          say('Owner sign-in only works on the live site.');
+        } finally {
+          btn.disabled = false;
+        }
+      }),
+    );
+  }
+</script>
