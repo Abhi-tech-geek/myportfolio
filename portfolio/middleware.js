@@ -173,7 +173,6 @@ function redirect(url, location, setCookies = []) {
   for (const c of setCookies) headers.append('Set-Cookie', c);
   return new Response(null, { status: 303, headers });
 }
-const safeBack = (value) => (PAGES.has(value) ? value : '/');
 
 // ---- rate limiting -----------------------------------------------------------------------------
 const clientIp = (request) =>
@@ -229,6 +228,12 @@ async function ownerApi(request, url, path) {
   // Only our own pages may call these (blocks cross-site form posts)
   const origin = request.headers.get('origin');
   if (origin && origin !== url.origin) return json(403, { error: 'forbidden' });
+  // Browsers always send Origin on POSTs from fetch; a missing one is treated as cross-site too
+  if (!origin && request.headers.get('sec-fetch-site') !== 'same-origin') return json(403, { error: 'forbidden' });
+
+  // Lock only clears this browser's cookies: no storage or body needed
+  if (path === '/owner/lock') return json(200, { ok: true }, clearOwner());
+
   if (!store()) return json(503, { error: 'storage-missing' });
 
   const ip = clientIp(request);
@@ -264,6 +269,16 @@ async function ownerApi(request, url, path) {
     return json(200, { ok: true }, await makeSession(secret, cred.ver));
   }
 
+  if (path === '/owner/switch') {
+    // POST + same-origin + JSON only, so another site can't flip the design through the owner's browser
+    if (!(await isOwner(request))) return json(401, { error: 'signed-out' });
+    const to = normalize(body.to);
+    if (!to) return json(400, { error: 'bad-request' });
+    await redis([['SET', K.live, to]]); // the design for EVERYONE until the owner switches again
+    liveCache = { value: to, at: Date.now() };
+    return json(200, { ok: true, live: to === 'new' ? 'paper' : 'neon' }, [cookie('ui', '', { maxAge: 0 })]);
+  }
+
   if (path === '/owner/password') {
     if (!(await isOwner(request))) return json(401, { error: 'signed-out' });
     // isOwner() verified this cookie; its signature identifies the session (independent of IP)
@@ -288,7 +303,7 @@ export default async function middleware(request) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\.html$/, '').replace(/\/+$/, '') || '/';
 
-  if (request.method === 'POST' && ['/owner/login', '/owner/setup', '/owner/password'].includes(path)) {
+  if (request.method === 'POST' && ['/owner/login', '/owner/setup', '/owner/password', '/owner/switch', '/owner/lock'].includes(path)) {
     try {
       return await ownerApi(request, url, path);
     } catch (e) {
@@ -297,26 +312,11 @@ export default async function middleware(request) {
   }
 
   try {
-    if (path === '/owner/lock') return redirect(url, '/', clearOwner());
+    // State changes are POST-only (handled above). A GET to these URLs does nothing.
+    if (path === '/owner/switch' || path === '/owner/lock') return redirect(url, '/');
 
     // Session check only when an owner session cookie is present
     const owner = readCookie(request, 'owner_session') ? await isOwner(request).catch(() => false) : false;
-
-    if (path === '/owner/switch') {
-      if (!owner) return redirect(url, '/');
-      const to = normalize(url.searchParams.get('to'));
-      if (to) {
-        // Sets the design for EVERYONE until the owner switches again
-        try {
-          await redis([['SET', K.live, to]]);
-          liveCache = { value: to, at: Date.now() };
-        } catch {
-          return redirect(url, `${safeBack(url.searchParams.get('back'))}?switch=failed`);
-        }
-      }
-      // also drop the per-browser preference cookie from the earlier version of the switch
-      return redirect(url, safeBack(url.searchParams.get('back')), [cookie('ui', '', { maxAge: 0 })]);
-    }
 
     const ui = await currentUI();
     const noStore = { headers: NO_STORE };

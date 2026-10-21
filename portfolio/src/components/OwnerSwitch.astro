@@ -1,16 +1,15 @@
 ---
 // Owner-only design switch. Rendered hidden on every page; shown only when the `owner_ui` marker
-// cookie exists. The marker grants nothing by itself: the real check happens on Vercel's
-// servers (middleware.js) against the signed, HttpOnly owner_session cookie, so a visitor who
-// forces this panel visible still can't switch anything.
+// cookie exists. The marker grants nothing by itself: every action is a same-origin JSON POST
+// checked on Vercel's servers (middleware.js) against the signed, HttpOnly owner_session cookie.
 ---
 <aside class="owner" data-owner hidden aria-label="Owner controls">
   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
   <span class="lbl">Live for everyone</span>
-  <a data-to="classic" href="/owner/switch?to=neon" title="Show Neon (the dark design) to every visitor">Neon</a>
-  <a data-to="new" href="/owner/switch?to=paper" title="Show Paper (the editorial design) to every visitor">Paper</a>
-  <button type="button" class="pw" data-owner-password title="Change your owner password">Password</button>
-  <a class="lock" href="/owner/lock" title="Lock: sign this browser out">Lock</a>
+  <button type="button" data-to="neon" title="Show Neon (the dark design) to every visitor">Neon</button>
+  <button type="button" data-to="paper" title="Show Paper (the editorial design) to every visitor">Paper</button>
+  <button type="button" class="dim" data-owner-password title="Change your owner password">Password</button>
+  <button type="button" class="dim" data-owner-lock title="Sign this browser out">Lock</button>
 </aside>
 
 <style>
@@ -33,7 +32,7 @@
   .owner[hidden] { display: none; }
   .lbl { margin: 0 6px 0 4px; color: #aaa; white-space: nowrap; }
   @media (max-width: 480px) { .lbl { display: none; } }
-  a, .pw {
+  button {
     display: inline-flex;
     align-items: center;
     min-height: 36px;
@@ -43,36 +42,58 @@
     background: transparent;
     color: #ddd;
     font: inherit;
-    text-decoration: none;
     cursor: pointer;
   }
-  a:hover, .pw:hover { background: #2a2a2a; }
-  a[aria-current='true'] { background: #f5f5f5; color: #111; }
-  .lock, .pw { color: #aaa; }
-  a:focus-visible, .pw:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  button:hover { background: #2a2a2a; }
+  button[aria-pressed='true'] { background: #f5f5f5; color: #111; cursor: default; }
+  button:disabled { opacity: 0.6; cursor: wait; }
+  .dim { color: #aaa; }
+  button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 </style>
 
 <script>
   const panel = document.querySelector<HTMLElement>('[data-owner]');
   if (panel && /(?:^|;\s*)owner_ui=1(?:;|$)/.test(document.cookie)) {
-    const current = document.documentElement.dataset.ui ?? 'classic';
-    const back = encodeURIComponent(location.pathname.replace(/^\/v2(?=\/|$)/, '') || '/');
-    panel.querySelectorAll<HTMLAnchorElement>('a[data-to]').forEach((a) => {
-      a.href = `/owner/switch?to=${a.dataset.to === 'new' ? 'paper' : 'neon'}&back=${back}`;
-      a.setAttribute('aria-current', String(a.dataset.to === current));
-      // This changes the site for every visitor, so ask first (and do nothing if already live)
-      a.addEventListener('click', (e) => {
-        if (a.dataset.to === current) { e.preventDefault(); return; }
-        const name = a.dataset.to === 'new' ? 'Paper' : 'Neon';
-        if (!confirm(`Show the ${name} design to everyone? It stays until you switch again.`)) e.preventDefault();
+    const live = document.documentElement.dataset.ui === 'new' ? 'paper' : 'neon';
+    const buttons = [...panel.querySelectorAll<HTMLButtonElement>('button')];
+
+    const post = async (path: string, body: object = {}) => {
+      const res = await fetch(path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify(body),
+      });
+      let data: any = null;
+      try { data = await res.json(); } catch {}
+      return { ok: res.ok && data?.ok, data };
+    };
+
+    panel.querySelectorAll<HTMLButtonElement>('button[data-to]').forEach((b) => {
+      b.setAttribute('aria-pressed', String(b.dataset.to === live));
+      b.addEventListener('click', async () => {
+        if (b.dataset.to === live) return;
+        const name = b.dataset.to === 'paper' ? 'Paper' : 'Neon';
+        if (!confirm(`Show the ${name} design to everyone? It stays until you switch again.`)) return;
+        buttons.forEach((x) => (x.disabled = true));
+        try {
+          const { ok, data } = await post('/owner/switch', { to: b.dataset.to });
+          if (ok) { location.reload(); return; }
+          alert(data?.error === 'signed-out' ? 'You were signed out. Sign in again from the lock in the footer.' : 'The design could not be changed right now. Try again in a minute.');
+        } catch {
+          alert('The design could not be changed right now. Try again in a minute.');
+        }
+        buttons.forEach((x) => (x.disabled = false));
       });
     });
-    if (new URLSearchParams(location.search).get('switch') === 'failed') {
-      alert('The design could not be changed right now. Try again in a minute.');
-    }
+
     panel.querySelector('[data-owner-password]')?.addEventListener('click', () =>
       dispatchEvent(new CustomEvent('owner:open', { detail: 'change' })),
     );
+    panel.querySelector('[data-owner-lock]')?.addEventListener('click', async () => {
+      try { await post('/owner/lock'); } catch {}
+      location.reload();
+    });
     panel.hidden = false;
   }
 </script>
