@@ -12,7 +12,9 @@
 //   - the password lives only in Upstash Redis (connected through Vercel), hashed with PBKDF2.
 //     Nothing about it is in the public GitHub repo.
 //   - first-time setup and "forgot password" need the recovery key (only its SHA-256 is here)
-//   - 5 wrong tries per IP = 15 minute block; 100 wrong tries site-wide in an hour = sign-in paused
+//   - attempts are counted atomically before the check: 5 per IP = 15 minute block; 100 password
+//     attempts site-wide in an hour = password sign-in paused (the recovery key still works, and
+//     using it clears the pause, so nobody can lock the owner out)
 //   - a signed session cookie (HttpOnly, Secure) remembers the device for a year; changing the
 //     password signs every other device out
 //   - any failure falls back to the normal public page: a bug here can never take the site down
@@ -86,7 +88,12 @@ async function redis(commands) {
   return out.map((r) => (r && 'result' in r ? r.result : null));
 }
 
-const K = { cred: 'owner:cred', secret: 'owner:secret', all: 'owner:fail:all', ip: (ip) => `owner:fail:ip:${ip}` };
+const K = {
+  cred: 'owner:cred',
+  secret: 'owner:secret',
+  all: 'owner:fail:all',
+  ip: (scope, ip) => `owner:fail:${scope}:${ip}`,
+};
 
 async function loadAuth() {
   const [cred, secret] = await redis([['GET', K.cred], ['GET', K.secret]]);
@@ -151,19 +158,31 @@ const safeBack = (value) => (PAGES.has(value) ? value : '/');
 const clientIp = (request) =>
   (request.headers.get('x-real-ip') || request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown').trim().slice(0, 64);
 
-async function blocked(ip) {
-  const [mine, all, ttl] = await redis([['GET', K.ip(ip)], ['GET', K.all], ['TTL', K.ip(ip)]]);
-  if (Number(all) >= GLOBAL_LIMIT) return { error: 'paused', minutes: 60 };
-  if (Number(mine) >= IP_LIMIT) return { error: 'too-many', minutes: Math.max(1, Math.ceil(Number(ttl) / 60)) };
-  return null;
+// Every attempt is counted BEFORE the password is checked, in one atomic pipeline, so firing many
+// requests at once can't slip extra guesses past the limit. A correct answer gives the slot back.
+//
+// scope 'login'    : per-IP limit + the site-wide limit (stops guessing from many IPs)
+// scope 'recovery' : per-IP limit only. The recovery key is 256-bit random, so it can't be guessed,
+//                    and keeping it out of the site-wide limit means an attacker can never lock the
+//                    owner out: the recovery key always works.
+// scope 'change'   : per-IP limit only (it already needs a signed-in session)
+async function reserveAttempt(scope, ip) {
+  const global = scope === 'login';
+  const cmds = [['SET', K.ip(scope, ip), 0, 'EX', IP_WINDOW, 'NX'], ['INCR', K.ip(scope, ip)], ['TTL', K.ip(scope, ip)]];
+  if (global) cmds.push(['SET', K.all, 0, 'EX', GLOBAL_WINDOW, 'NX'], ['INCR', K.all]);
+  const out = await redis(cmds);
+  const mine = Number(out[1]);
+  const ttl = Number(out[2]);
+  const all = global ? Number(out[4]) : 0;
+  if (global && all > GLOBAL_LIMIT) return { blocked: { error: 'paused', minutes: 60 } };
+  if (mine > IP_LIMIT) return { blocked: { error: 'too-many', minutes: Math.max(1, Math.ceil(ttl / 60)) } };
+  return { left: Math.max(0, IP_LIMIT - mine) };
 }
-async function recordFailure(ip) {
-  // SET NX starts the window (with its expiry) only once; INCR keeps that expiry
-  const [, mine] = await redis([
-    ['SET', K.ip(ip), 0, 'EX', IP_WINDOW, 'NX'], ['INCR', K.ip(ip)],
-    ['SET', K.all, 0, 'EX', GLOBAL_WINDOW, 'NX'], ['INCR', K.all],
-  ]);
-  return Math.max(0, IP_LIMIT - Number(mine));
+async function releaseAttempt(scope, ip) {
+  // Success: clear this IP's count and give the site-wide slot back
+  const cmds = [['DEL', K.ip(scope, ip)]];
+  if (scope === 'login') cmds.push(['DECR', K.all]);
+  await redis(cmds);
 }
 
 async function readJson(request) {
@@ -193,44 +212,45 @@ async function ownerApi(request, url, path) {
   if (!body) return json(400, { error: 'bad-request' });
 
   if (path === '/owner/login') {
-    const block = await blocked(ip);
-    if (block) return json(429, block);
     const { cred, secret } = await loadAuth();
     if (!cred || !secret) return json(409, { error: 'not-set-up' });
+    const attempt = await reserveAttempt('login', ip);
+    if (attempt.blocked) return json(429, attempt.blocked);
     const ok = typeof body.password === 'string' && body.password.length <= 128 &&
       sameHex(await pbkdf2(body.password, cred.salt, cred.iter), cred.hash);
-    if (!ok) return json(401, { error: 'wrong', left: await recordFailure(ip) });
-    await redis([['DEL', K.ip(ip)]]);
+    if (!ok) return json(401, { error: 'wrong', left: attempt.left });
+    await releaseAttempt('login', ip);
     return json(200, { ok: true }, await makeSession(secret, cred.ver));
   }
 
   if (path === '/owner/setup') {
     // First-time setup and "forgot password": proven with the recovery key
-    const block = await blocked(ip);
-    if (block) return json(429, block);
+    const attempt = await reserveAttempt('recovery', ip);
+    if (attempt.blocked) return json(429, attempt.blocked);
     const key = typeof body.recoveryKey === 'string' ? body.recoveryKey.trim() : '';
     if (key.length < 20 || key.length > 200 || !sameHex(await sha256Hex(key), recoveryHash())) {
-      return json(401, { error: 'wrong-key', left: await recordFailure(ip) });
+      return json(401, { error: 'wrong-key', left: attempt.left });
     }
     if (!validPassword(body.password)) return json(400, { error: 'weak', min: MIN_PASSWORD });
     const { cred: previous, secret: existing } = await loadAuth();
     const secret = existing || randomHex(32);
     const cred = await newCredential(body.password, previous);
-    await redis([['SET', K.cred, JSON.stringify(cred)], ['SET', K.secret, secret], ['DEL', K.ip(ip)]]);
+    // A fresh password also clears an active site-wide pause, so the owner is never stuck
+    await redis([['SET', K.cred, JSON.stringify(cred)], ['SET', K.secret, secret], ['DEL', K.ip('recovery', ip)], ['DEL', K.all]]);
     return json(200, { ok: true }, await makeSession(secret, cred.ver));
   }
 
   if (path === '/owner/password') {
     if (!(await isOwner(request))) return json(401, { error: 'signed-out' });
-    const block = await blocked(ip);
-    if (block) return json(429, block);
+    const attempt = await reserveAttempt('change', ip);
+    if (attempt.blocked) return json(429, attempt.blocked);
     const { cred, secret } = await loadAuth();
     const ok = typeof body.current === 'string' && body.current.length <= 128 &&
       sameHex(await pbkdf2(body.current, cred.salt, cred.iter), cred.hash);
-    if (!ok) return json(401, { error: 'wrong', left: await recordFailure(ip) });
+    if (!ok) return json(401, { error: 'wrong', left: attempt.left });
     if (!validPassword(body.next)) return json(400, { error: 'weak', min: MIN_PASSWORD });
     const fresh = await newCredential(body.next, cred); // version bump signs out every other device
-    await redis([['SET', K.cred, JSON.stringify(fresh)]]);
+    await redis([['SET', K.cred, JSON.stringify(fresh)], ['DEL', K.ip('change', ip)]]);
     return json(200, { ok: true }, await makeSession(secret, fresh.ver));
   }
 

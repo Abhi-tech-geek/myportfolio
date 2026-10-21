@@ -35,6 +35,7 @@ globalThis.fetch = async (input, init) => {
       return { result: 'OK' };
     }
     if (c === 'INCR') { const e = live(key) ?? { v: '0', exp: 0 }; e.v = String(Number(e.v) + 1); db.set(key, e); return { result: Number(e.v) }; }
+    if (c === 'DECR') { const e = live(key) ?? { v: '0', exp: 0 }; e.v = String(Number(e.v) - 1); db.set(key, e); return { result: Number(e.v) }; }
     if (c === 'DEL') return { result: db.delete(key) ? 1 : 0 };
     if (c === 'TTL') { const e = live(key); return { result: !e ? -2 : e.exp ? Math.ceil((e.exp - now) / 1000) : -1 }; }
     return { error: 'unknown command' };
@@ -291,4 +292,31 @@ test('malformed cookies never crash the site', async () => {
   for (const cookie of ['owner_session=%E0%A4%A; ui=new', `owner_session=${'x'.repeat(5000)}`, '=;;;=;', 'ui']) {
     assert.ok(isNext(await middleware(req('/', { cookie }))), cookie.slice(0, 20));
   }
+});
+
+// ---- security review fixes ------------------------------------------------------------------
+test('a burst of parallel guesses cannot get past the per-IP limit', async () => {
+  await setUp();
+  const results = await Promise.all(
+    Array.from({ length: 20 }, (_, i) => post('/owner/login', { password: `burst-guess-${i}` })),
+  );
+  const checked = results.filter((r) => r.status === 401).length;
+  const refused = results.filter((r) => r.status === 429).length;
+  assert.ok(checked <= 5, `only 5 guesses may be checked, got ${checked}`);
+  assert.equal(checked + refused, 20);
+});
+
+test('site-wide pause cannot lock the owner out: the recovery key still works and clears it', async () => {
+  await setUp();
+  for (let i = 0; i < 100; i++) await post('/owner/login', { password: 'nope-nope-nope' }, { ip: `10.1.${i >> 8}.${i & 255}` });
+  assert.equal((await post('/owner/login', { password: PASSWORD }, { ip: '8.8.8.8' })).status, 429, 'paused');
+  const rescue = await post('/owner/setup', { recoveryKey: RECOVERY, password: 'rescued passphrase' }, { ip: '8.8.8.8' });
+  assert.equal(rescue.status, 200, 'recovery works during the pause');
+  assert.equal((await post('/owner/login', { password: 'rescued passphrase' }, { ip: '7.7.7.7' })).status, 200, 'pause cleared');
+});
+
+test('a successful sign-in gives its site-wide slot back', async () => {
+  await setUp();
+  for (let i = 0; i < 3; i++) assert.equal((await post('/owner/login', { password: PASSWORD }, { ip: `5.5.5.${i}` })).status, 200);
+  assert.equal(Number(db.get('owner:fail:all')?.v ?? 0), 0);
 });
