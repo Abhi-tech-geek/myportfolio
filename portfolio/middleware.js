@@ -165,22 +165,25 @@ const clientIp = (request) =>
 // scope 'recovery' : per-IP limit only. The recovery key is 256-bit random, so it can't be guessed,
 //                    and keeping it out of the site-wide limit means an attacker can never lock the
 //                    owner out: the recovery key always works.
-// scope 'change'   : per-IP limit only (it already needs a signed-in session)
-async function reserveAttempt(scope, ip) {
-  const global = scope === 'login';
-  const cmds = [['SET', K.ip(scope, ip), 0, 'EX', IP_WINDOW, 'NX'], ['INCR', K.ip(scope, ip)], ['TTL', K.ip(scope, ip)]];
-  if (global) cmds.push(['SET', K.all, 0, 'EX', GLOBAL_WINDOW, 'NX'], ['INCR', K.all]);
-  const out = await redis(cmds);
-  const mine = Number(out[1]);
-  const ttl = Number(out[2]);
-  const all = global ? Number(out[4]) : 0;
-  if (global && all > GLOBAL_LIMIT) return { blocked: { error: 'paused', minutes: 60 } };
-  if (mine > IP_LIMIT) return { blocked: { error: 'too-many', minutes: Math.max(1, Math.ceil(ttl / 60)) } };
-  return { left: Math.max(0, IP_LIMIT - mine) };
+// scope 'change'   : counted per signed-in SESSION, not per IP, so a stolen session can't
+//                    rotate IPs to keep guessing the current password
+//
+// The site-wide counter only grows when the caller is still inside their own limit, so a single
+// IP (or session) can add at most IP_LIMIT to it and can't trigger the pause on its own.
+async function reserveAttempt(scope, who) {
+  const [, mine, ttl] = await redis([
+    ['SET', K.ip(scope, who), 0, 'EX', IP_WINDOW, 'NX'], ['INCR', K.ip(scope, who)], ['TTL', K.ip(scope, who)],
+  ]);
+  if (Number(mine) > IP_LIMIT) return { blocked: { error: 'too-many', minutes: Math.max(1, Math.ceil(Number(ttl) / 60)) } };
+  if (scope === 'login') {
+    const [, all] = await redis([['SET', K.all, 0, 'EX', GLOBAL_WINDOW, 'NX'], ['INCR', K.all]]);
+    if (Number(all) > GLOBAL_LIMIT) return { blocked: { error: 'paused', minutes: 60 } };
+  }
+  return { left: Math.max(0, IP_LIMIT - Number(mine)) };
 }
-async function releaseAttempt(scope, ip) {
-  // Success: clear this IP's count and give the site-wide slot back
-  const cmds = [['DEL', K.ip(scope, ip)]];
+async function releaseAttempt(scope, who) {
+  // Success: clear this caller's count and give the site-wide slot back
+  const cmds = [['DEL', K.ip(scope, who)]];
   if (scope === 'login') cmds.push(['DECR', K.all]);
   await redis(cmds);
 }
@@ -242,7 +245,9 @@ async function ownerApi(request, url, path) {
 
   if (path === '/owner/password') {
     if (!(await isOwner(request))) return json(401, { error: 'signed-out' });
-    const attempt = await reserveAttempt('change', ip);
+    // isOwner() verified this cookie; its signature identifies the session (independent of IP)
+    const sessionId = readCookie(request, 'owner_session').slice(-32);
+    const attempt = await reserveAttempt('change', `s:${sessionId}`);
     if (attempt.blocked) return json(429, attempt.blocked);
     const { cred, secret } = await loadAuth();
     const ok = typeof body.current === 'string' && body.current.length <= 128 &&
@@ -250,7 +255,7 @@ async function ownerApi(request, url, path) {
     if (!ok) return json(401, { error: 'wrong', left: attempt.left });
     if (!validPassword(body.next)) return json(400, { error: 'weak', min: MIN_PASSWORD });
     const fresh = await newCredential(body.next, cred); // version bump signs out every other device
-    await redis([['SET', K.cred, JSON.stringify(fresh)], ['DEL', K.ip('change', ip)]]);
+    await redis([['SET', K.cred, JSON.stringify(fresh)], ['DEL', K.ip('change', `s:${sessionId}`)]]);
     return json(200, { ok: true }, await makeSession(secret, fresh.ver));
   }
 

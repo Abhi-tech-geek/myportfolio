@@ -320,3 +320,20 @@ test('a successful sign-in gives its site-wide slot back', async () => {
   for (let i = 0; i < 3; i++) assert.equal((await post('/owner/login', { password: PASSWORD }, { ip: `5.5.5.${i}` })).status, 200);
   assert.equal(Number(db.get('owner:fail:all')?.v ?? 0), 0);
 });
+
+test('one IP hammering sign-in cannot trigger the site-wide pause', async () => {
+  await setUp();
+  for (let i = 0; i < 150; i++) await post('/owner/login', { password: 'nope-nope-nope' }, { ip: '6.6.6.6' });
+  assert.ok(Number(db.get('owner:fail:all')?.v ?? 0) <= 5, 'one IP adds at most 5 to the site-wide count');
+  assert.equal((await post('/owner/login', { password: PASSWORD }, { ip: '4.4.4.4' })).status, 200, 'owner unaffected');
+});
+
+test('changing the password is limited per session, whatever the IP', async () => {
+  const s = await setUp();
+  for (let i = 0; i < 5; i++) {
+    const r = await post('/owner/password', { current: `wrong-${i}-wrong`, next: 'whatever whatever' }, { cookie: s, ip: `3.3.3.${i}` });
+    assert.equal(r.status, 401);
+  }
+  const blockedRes = await post('/owner/password', { current: PASSWORD, next: 'whatever whatever' }, { cookie: s, ip: '3.3.3.99' });
+  assert.equal(blockedRes.status, 429, 'new IP, same session: still blocked');
+});
