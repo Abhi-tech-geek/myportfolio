@@ -259,6 +259,14 @@ test('non-JSON bodies are refused', async () => {
   assert.equal(res.status, 400);
 });
 
+test('oversized bodies are refused before parsing or counting an attempt', async () => {
+  await setUp();
+  const res = await post('/owner/login', { password: 'x'.repeat(5000) }, { ip: '7.7.7.7' });
+  assert.equal(res.status, 400);
+  const ok = await post('/owner/login', { password: PASSWORD }, { ip: '7.7.7.7' });
+  assert.equal(ok.status, 200);
+});
+
 test('an expired session is not the owner', async () => {
   await setUp();
   const secret = db.get('owner:secret').v;

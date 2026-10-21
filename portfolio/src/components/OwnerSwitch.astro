@@ -67,7 +67,7 @@
     padding: 14px;
     border: 1px solid #3a3a3a;
     border-radius: 14px;
-    background: rgba(17, 17, 17, 0.97);
+    background: #111;
     color: #eee;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
   }
@@ -209,7 +209,10 @@
       min.setAttribute('aria-label', c ? 'Expand Dev Mode' : 'Collapse Dev Mode');
       try { sessionStorage.setItem('dm-collapsed', c ? '1' : ''); } catch {}
     };
-    try { setCollapsed(sessionStorage.getItem('dm-collapsed') === '1'); } catch {}
+    // Phones start collapsed so the panel doesn't cover the page; after that, the owner's choice wins
+    let saved: string | null = null;
+    try { saved = sessionStorage.getItem('dm-collapsed'); } catch {}
+    setCollapsed(saved === null ? matchMedia('(max-width: 600px)').matches : saved === '1');
     min.addEventListener('click', () => setCollapsed(!panel.classList.contains('collapsed')));
 
     // Countdown to auto-lock; hide the panel the moment the session ends

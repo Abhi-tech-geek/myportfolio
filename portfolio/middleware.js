@@ -246,10 +246,15 @@ async function releaseAttempt(scope, who) {
   await redis(cmds);
 }
 
+// Every owner request body is a few short strings; anything bigger is refused before parsing
+const MAX_BODY = 2048;
 async function readJson(request) {
   try {
     if (!(request.headers.get('content-type') || '').includes('application/json')) return null;
-    const body = await request.json();
+    if (Number(request.headers.get('content-length') || 0) > MAX_BODY) return null;
+    const text = await request.text();
+    if (text.length > MAX_BODY) return null;
+    const body = JSON.parse(text);
     return body && typeof body === 'object' ? body : null;
   } catch { return null; }
 }
