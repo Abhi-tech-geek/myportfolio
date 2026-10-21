@@ -6,9 +6,9 @@
 ---
 <aside class="owner" data-owner hidden aria-label="Owner controls">
   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
-  <span class="lbl">UI</span>
-  <a data-to="classic" href="/owner/switch?to=neon" title="Neon: the current dark design">Neon</a>
-  <a data-to="new" href="/owner/switch?to=paper" title="Paper: the editorial redesign">Paper</a>
+  <span class="lbl">Live for everyone</span>
+  <a data-to="classic" href="/owner/switch?to=neon" title="Show Neon (the dark design) to every visitor">Neon</a>
+  <a data-to="new" href="/owner/switch?to=paper" title="Show Paper (the editorial design) to every visitor">Paper</a>
   <button type="button" class="pw" data-owner-password title="Change your owner password">Password</button>
   <a class="lock" href="/owner/lock" title="Lock: sign this browser out">Lock</a>
 </aside>
@@ -31,7 +31,8 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   }
   .owner[hidden] { display: none; }
-  .lbl { margin: 0 6px 0 4px; color: #aaa; }
+  .lbl { margin: 0 6px 0 4px; color: #aaa; white-space: nowrap; }
+  @media (max-width: 480px) { .lbl { display: none; } }
   a, .pw {
     display: inline-flex;
     align-items: center;
@@ -59,7 +60,16 @@
     panel.querySelectorAll<HTMLAnchorElement>('a[data-to]').forEach((a) => {
       a.href = `/owner/switch?to=${a.dataset.to === 'new' ? 'paper' : 'neon'}&back=${back}`;
       a.setAttribute('aria-current', String(a.dataset.to === current));
+      // This changes the site for every visitor, so ask first (and do nothing if already live)
+      a.addEventListener('click', (e) => {
+        if (a.dataset.to === current) { e.preventDefault(); return; }
+        const name = a.dataset.to === 'new' ? 'Paper' : 'Neon';
+        if (!confirm(`Show the ${name} design to everyone? It stays until you switch again.`)) e.preventDefault();
+      });
     });
+    if (new URLSearchParams(location.search).get('switch') === 'failed') {
+      alert('The design could not be changed right now. Try again in a minute.');
+    }
     panel.querySelector('[data-owner-password]')?.addEventListener('click', () =>
       dispatchEvent(new CustomEvent('owner:open', { detail: 'change' })),
     );

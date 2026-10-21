@@ -1,8 +1,9 @@
 // Vercel Routing Middleware: runs on Vercel's servers before a page is served.
 //
 // Which design a request gets:
-//   - everyone gets LIVE_UI ('neon' or 'paper'; site-ui.config.js or the LIVE_UI env var)
-//   - the owner, once signed in with their password, can switch Neon/Paper for themselves
+//   - everyone gets the design the owner last picked with the on-site switch (stored in Redis)
+//   - if nothing was picked yet, or storage is unreachable: LIVE_UI from site-ui.config.js / env
+//   - the signed-in owner can also open /v2 directly to preview Paper while Neon is live
 //
 // The Paper design is built under /v2/*. Public URLs never change: /, /abhimate, ... are
 // rewritten to /v2, /v2/abhimate, ... when Paper should be shown. /v2/* is closed to the public
@@ -89,11 +90,31 @@ async function redis(commands) {
 }
 
 const K = {
+  live: 'site:ui', // the design everyone sees, set by the owner's switch
   cred: 'owner:cred',
   secret: 'owner:secret',
   all: 'owner:fail:all',
   ip: (scope, ip) => `owner:fail:${scope}:${ip}`,
 };
+
+// The live design comes from storage (the owner's switch). It is cached in memory for a few
+// seconds per server instance, so visitors almost never wait on storage, and if storage is
+// unreachable the last known value (or LIVE_UI from the config) is used.
+let liveCache = { value: null, at: 0 };
+const cacheMs = () => (env('UI_CACHE_MS') !== undefined ? Number(env('UI_CACHE_MS')) : 15_000);
+
+async function currentUI() {
+  if (!store()) return liveUI();
+  if (liveCache.value && Date.now() - liveCache.at < cacheMs()) return liveCache.value;
+  try {
+    const [stored] = await redis([['GET', K.live]]);
+    const value = normalize(stored) ?? liveUI();
+    liveCache = { value, at: Date.now() };
+    return value;
+  } catch {
+    return liveCache.value ?? liveUI();
+  }
+}
 
 async function loadAuth() {
   const [cred, secret] = await redis([['GET', K.cred], ['GET', K.secret]]);
@@ -278,21 +299,31 @@ export default async function middleware(request) {
   try {
     if (path === '/owner/lock') return redirect(url, '/', clearOwner());
 
-    // Only touch storage when an owner session cookie is present; visitors never wait on it.
+    // Session check only when an owner session cookie is present
     const owner = readCookie(request, 'owner_session') ? await isOwner(request).catch(() => false) : false;
 
     if (path === '/owner/switch') {
       if (!owner) return redirect(url, '/');
       const to = normalize(url.searchParams.get('to'));
-      return redirect(url, safeBack(url.searchParams.get('back')), to ? [cookie('ui', to)] : []);
+      if (to) {
+        // Sets the design for EVERYONE until the owner switches again
+        try {
+          await redis([['SET', K.live, to]]);
+          liveCache = { value: to, at: Date.now() };
+        } catch {
+          return redirect(url, `${safeBack(url.searchParams.get('back'))}?switch=failed`);
+        }
+      }
+      // also drop the per-browser preference cookie from the earlier version of the switch
+      return redirect(url, safeBack(url.searchParams.get('back')), [cookie('ui', '', { maxAge: 0 })]);
     }
 
-    const pref = owner ? normalize(readCookie(request, 'ui')) : null;
-    const ui = pref ?? liveUI();
+    const ui = await currentUI();
     const noStore = { headers: NO_STORE };
 
     if (path === '/v2' || path.startsWith('/v2/')) {
-      if (owner || liveUI() === 'new') return next(noStore);
+      // The owner can always preview Paper here, even while Neon is live
+      if (owner || ui === 'new') return next(noStore);
       return redirect(url, '/');
     }
 
