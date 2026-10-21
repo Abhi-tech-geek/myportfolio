@@ -28,15 +28,17 @@ const [featured, ...rest] = projects;
       </div>
     </div>
     <figure class="hero-photo">
-      <Image
-        src={avatar}
-        alt="Abhinav Saxena in his wheelchair at a desk, with code on the monitors behind him"
-        widths={[400, 600, 840]}
-        sizes="(max-width: 900px) 86vw, 440px"
-        loading="eager"
-        fetchpriority="high"
-      />
-      <figcaption>Abhinav Saxena · Gurgaon, India</figcaption>
+      <div class="ph">
+        <Image
+          src={avatar}
+          alt="Abhinav Saxena in his wheelchair at a desk, with code on the monitors behind him"
+          widths={[400, 600, 840]}
+          sizes="(max-width: 900px) 86vw, 440px"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+      <figcaption><span>Abhinav Saxena</span><span>Gurgaon, India</span></figcaption>
     </figure>
   </section>
 
@@ -44,7 +46,7 @@ const [featured, ...rest] = projects;
   <section class="wrap now" aria-label="What I'm doing now">
     <div><span class="now-k">Working</span><span class="now-v">QA Tester at Accenture</span></div>
     <div><span class="now-k">Building</span><span class="now-v"><a href="/abhinova">AbhiNova 2.0</a>, my AI assistant</span></div>
-    <div><span class="now-k">Learning</span><span class="now-v">Mobile automation with Appium</span></div>
+    <div><span class="now-k">Learning</span><span class="now-v">AI agents and testing LLM apps</span></div>
   </section>
 
   <!-- About ---------------------------------------------------------------------------------->
@@ -247,7 +249,8 @@ const [featured, ...rest] = projects;
 
   .hero-photo { position: relative; margin: 0; width: 100%; max-width: 440px; justify-self: end; }
   /* offset frame behind the photo: a quiet editorial touch, no animation */
-  .hero-photo::before {
+  .ph { position: relative; }
+  .ph::before {
     content: '';
     position: absolute;
     inset: 14px -14px -14px 14px;
@@ -266,7 +269,17 @@ const [featured, ...rest] = projects;
     border-radius: 6px;
     border: 1px solid var(--rule);
   }
-  .hero-photo figcaption { position: relative; margin-top: 24px; font-family: var(--f-mono); font-size: 12.5px; color: var(--ink-3); }
+  .hero-photo figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+    font-size: 14px;
+    color: var(--ink-3);
+  }
+  .hero-photo figcaption span:first-child { font-family: var(--f-serif); font-style: italic; font-size: 17px; color: var(--ink-2); }
   @media (max-width: 899px) { .hero-photo { justify-self: start; max-width: min(360px, calc(100% - 14px)); } }
 
   /* Currently */

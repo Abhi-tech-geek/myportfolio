@@ -84,11 +84,7 @@ const person = {
 
     <footer class="wrap foot">
       <p>© {new Date().getFullYear()} Abhinav Saxena · Gurgaon, India</p>
-      <p>
-        Privacy: no analytics, no trackers, no cookies for visitors. Body text is set in Atkinson Hyperlegible Next, designed by
-        the Braille Institute for readers with low vision.
-      </p>
-      <p class="foot-end"><a href="#top">Back to top</a><OwnerDialog variant="paper" /></p>
+      <div class="foot-end"><a href="#top">Back to top</a><OwnerDialog variant="paper" /></div>
     </footer>
 
     <OwnerSwitch />
@@ -120,16 +116,17 @@ const person = {
       .theme:hover { color: var(--ink); border-color: var(--ink-3); }
       .foot {
         display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding-block: 40px 56px;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px 24px;
+        padding-block: 28px 40px;
         border-top: 1px solid var(--rule);
         font-size: 15px;
         color: var(--ink-3);
       }
-      .foot p:nth-child(2) { max-width: 70ch; }
       .foot a { display: inline-block; padding-block: 12px; }
-      .foot-end { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+      .foot-end { display: flex; align-items: center; gap: 16px; }
     </style>
 
     <script>
