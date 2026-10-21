@@ -163,3 +163,23 @@ test('trailing slashes and .html variants are treated the same', async () => {
   assert.equal(rewriteOf(await middleware(req('/abhimate/', { cookie: owner('; ui=new') }))), `${BASE}/v2/abhimate`);
   assert.equal((await middleware(req('/v2/abhimate.html'))).status, 303);
 });
+
+// ---- friendly names: neon = classic, paper = new ----------------------------------------------
+test('LIVE_UI accepts the friendly names (any case)', async () => {
+  for (const [value, expectNew] of [['paper', true], ['Paper ', true], ['neon', false], ['NEON', false]]) {
+    process.env.LIVE_UI = value;
+    try {
+      const res = await middleware(req('/'));
+      assert.equal(rewriteOf(res) === `${BASE}/v2`, expectNew, value);
+    } finally {
+      delete process.env.LIVE_UI;
+    }
+  }
+});
+
+test('switch accepts to=paper / to=neon', async () => {
+  const toPaper = await middleware(req('/owner/switch?to=paper&back=/', { cookie: owner() }));
+  assert.ok(setCookies(toPaper).some((c) => c.startsWith('ui=new')));
+  const toNeon = await middleware(req('/owner/switch?to=neon&back=/', { cookie: owner() }));
+  assert.ok(setCookies(toNeon).some((c) => c.startsWith('ui=classic')));
+});

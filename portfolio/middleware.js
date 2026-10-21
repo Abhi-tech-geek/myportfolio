@@ -21,8 +21,12 @@ const PAGES = new Set(['/', '/abhimate', '/aurago', '/discova', '/abhinova']);
 const YEAR = 60 * 60 * 24 * 365;
 const UIS = new Set(['classic', 'new']);
 
+// Friendly names: "neon" = the current dark design (classic), "paper" = the editorial redesign (new).
+const ALIAS = { neon: 'classic', paper: 'new', classic: 'classic', new: 'new' };
+const normalize = (v) => ALIAS[String(v ?? '').trim().toLowerCase()];
+
 const env = (name) => (typeof process !== 'undefined' ? process.env?.[name] : undefined);
-const liveUI = () => (UIS.has(env('LIVE_UI')) ? env('LIVE_UI') : LIVE_UI);
+const liveUI = () => normalize(env('LIVE_UI')) ?? normalize(LIVE_UI) ?? 'classic';
 // An env var can replace the committed hash (lets the key be rotated from the Vercel dashboard)
 const ownerHash = () => (/^[0-9a-f]{64}$/.test(env('OWNER_KEY_SHA256') || '') ? env('OWNER_KEY_SHA256') : OWNER_KEY_SHA256);
 
@@ -87,8 +91,8 @@ export default async function middleware(request) {
 
     if (path === '/owner/switch') {
       if (!owner) return redirect(url, '/');
-      const to = url.searchParams.get('to');
-      return redirect(url, safeBack(url.searchParams.get('back')), UIS.has(to) ? [cookie('ui', to)] : []);
+      const to = normalize(url.searchParams.get('to'));
+      return redirect(url, safeBack(url.searchParams.get('back')), to ? [cookie('ui', to)] : []);
     }
 
     if (path === '/owner/lock') {

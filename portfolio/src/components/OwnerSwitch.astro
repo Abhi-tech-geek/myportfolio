@@ -7,8 +7,8 @@
 <aside class="owner" data-owner hidden aria-label="Owner controls">
   <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
   <span class="lbl">UI</span>
-  <a data-to="classic" href="/owner/switch?to=classic">Classic</a>
-  <a data-to="new" href="/owner/switch?to=new">New</a>
+  <a data-to="classic" href="/owner/switch?to=neon" title="Neon: the current dark design">Neon</a>
+  <a data-to="new" href="/owner/switch?to=paper" title="Paper: the editorial redesign">Paper</a>
   <a class="lock" href="/owner/lock" title="Lock: hide these controls on this browser">Lock</a>
 </aside>
 
@@ -52,7 +52,7 @@
     const current = document.documentElement.dataset.ui ?? 'classic';
     const back = encodeURIComponent(location.pathname.replace(/^\/v2(?=\/|$)/, '') || '/');
     panel.querySelectorAll<HTMLAnchorElement>('a[data-to]').forEach((a) => {
-      a.href = `/owner/switch?to=${a.dataset.to}&back=${back}`;
+      a.href = `/owner/switch?to=${a.dataset.to === 'new' ? 'paper' : 'neon'}&back=${back}`;
       a.setAttribute('aria-current', String(a.dataset.to === current));
     });
     panel.hidden = false;
