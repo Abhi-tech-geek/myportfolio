@@ -4,13 +4,13 @@
 interface Props { variant?: 'neon' | 'paper' }
 const { variant = 'neon' } = Astro.props;
 ---
-<button type="button" class:list={['lockbtn', variant]} data-owner-open aria-label="Owner sign-in" title="Owner sign-in">
+<button type="button" class:list={['lockbtn', variant]} data-owner-open aria-label="Dev Mode" title="Dev Mode">
   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
 </button>
 
 <dialog class="od" data-owner-dialog aria-labelledby="od-title">
   <div class="od-top">
-    <h2 id="od-title" data-od-title>Owner sign-in</h2>
+    <h2 id="od-title" data-od-title>Dev Mode</h2>
     <button type="button" class="od-x" data-od-close aria-label="Close">✕</button>
   </div>
 
@@ -18,7 +18,7 @@ const { variant = 'neon' } = Astro.props;
   <form data-view="login" novalidate>
     <label for="od-pw">Password</label>
     <input id="od-pw" name="password" type="password" autocomplete="current-password" required maxlength="128" />
-    <button type="submit" class="od-go">Sign in</button>
+    <button type="submit" class="od-go">Open Dev Mode</button>
     <button type="button" class="od-link" data-goto="setup">First time, or forgot your password?</button>
   </form>
 
@@ -44,7 +44,7 @@ const { variant = 'neon' } = Astro.props;
     <label for="od-new2">Type it again</label>
     <input id="od-new2" name="confirm" type="password" autocomplete="new-password" required minlength="8" maxlength="128" />
     <button type="submit" class="od-go">Change password</button>
-    <p class="od-help">Every other device you're signed in on will be signed out.</p>
+    <p class="od-help">Every other device will be signed out, and Dev Mode locks 10 seconds after the change.</p>
   </form>
 
   <p class="od-msg" data-od-msg role="status" aria-live="polite"></p>
@@ -136,7 +136,7 @@ const { variant = 'neon' } = Astro.props;
     const views = [...dialog.querySelectorAll<HTMLFormElement>('form[data-view]')];
     const title = dialog.querySelector<HTMLElement>('[data-od-title]')!;
     const msg = dialog.querySelector<HTMLElement>('[data-od-msg]')!;
-    const TITLES: Record<string, string> = { login: 'Owner sign-in', setup: 'Set your password', change: 'Change password' };
+    const TITLES: Record<string, string> = { login: 'Dev Mode', setup: 'Set your Dev Mode password', change: 'Change password' };
 
     const say = (text: string, ok = false) => {
       msg.textContent = text;
@@ -156,8 +156,9 @@ const { variant = 'neon' } = Astro.props;
 
     document.querySelectorAll('[data-owner-open]').forEach((b) =>
       b.addEventListener('click', () => {
-        // Already signed in on this browser? Go straight to changing the password.
-        open(/(?:^|;\s*)owner_ui=1(?:;|$)/.test(document.cookie) ? 'change' : 'login');
+        // Dev Mode already open on this browser? Go straight to changing the password.
+        const m = document.cookie.match(/(?:^|;\s*)owner_ui=(\d+)/);
+        open(m && Number(m[1]) > Date.now() / 1000 ? 'change' : 'login');
       }),
     );
     addEventListener('owner:open', (e) => open((e as CustomEvent).detail));
@@ -210,9 +211,10 @@ const { variant = 'neon' } = Astro.props;
           if (status === 200 && body?.ok) {
             form.reset();
             if (view === 'change') {
-              say('Password changed. Other devices were signed out.', true);
+              say('Password changed. Other devices were signed out. Dev Mode locks in 10s.', true);
+              setTimeout(() => location.reload(), 1500);
             } else {
-              say('Signed in. Loading your switch…', true);
+              say('Dev Mode is open. Loading…', true);
               setTimeout(() => location.reload(), 600);
             }
           } else if (body?.error === 'not-set-up') {

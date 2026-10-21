@@ -1,61 +1,226 @@
 ---
-// Owner-only design switch. Rendered hidden on every page; shown only when the `owner_ui` marker
-// cookie exists. The marker grants nothing by itself: every action is a same-origin JSON POST
-// checked on Vercel's servers (middleware.js) against the signed, HttpOnly owner_session cookie.
+// Dev Mode: the owner's control panel, plus the "only me" preview badge.
+// Hidden on every page; shown only when the owner_ui marker cookie (Dev Mode open) or the pv
+// cookie (preview) exists. Neither grants anything by itself: every action is a same-origin
+// JSON POST checked on Vercel's servers (middleware.js) against the signed owner session.
 ---
-<aside class="owner" data-owner hidden aria-label="Owner controls">
-  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
-  <span class="lbl">Live for everyone</span>
-  <button type="button" data-to="neon" title="Show Neon (the dark design) to every visitor">Neon</button>
-  <button type="button" data-to="paper" title="Show Paper (the editorial design) to every visitor">Paper</button>
-  <button type="button" class="dim" data-owner-password title="Change your owner password">Password</button>
-  <button type="button" class="dim" data-owner-lock title="Sign this browser out">Lock</button>
-</aside>
+<div class="dm-wrap" aria-live="polite">
+  <section class="dm" data-dm hidden aria-labelledby="dm-title">
+    <header class="dm-head">
+      <span class="dm-dot" aria-hidden="true"></span>
+      <h2 id="dm-title">Dev Mode</h2>
+      <span class="dm-timer" data-dm-timer title="Dev Mode locks itself automatically"></span>
+      <button type="button" class="dm-min" data-dm-min aria-expanded="true" aria-label="Collapse Dev Mode">–</button>
+    </header>
+
+    <div class="dm-body" data-dm-body>
+      <p class="dm-now" data-dm-now></p>
+
+      <fieldset>
+        <legend>Design</legend>
+        <div class="seg">
+          <input type="radio" name="dm-design" id="dm-neon" value="neon" /><label for="dm-neon">Neon</label>
+          <input type="radio" name="dm-design" id="dm-paper" value="paper" /><label for="dm-paper">Paper</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Show to</legend>
+        <div class="seg">
+          <input type="radio" name="dm-scope" id="dm-everyone" value="everyone" checked /><label for="dm-everyone">Everyone</label>
+          <input type="radio" name="dm-scope" id="dm-me" value="me" /><label for="dm-me">Only me</label>
+        </div>
+      </fieldset>
+
+      <button type="button" class="dm-apply" data-dm-apply>Apply</button>
+      <p class="dm-msg" data-dm-msg></p>
+
+      <div class="dm-foot">
+        <button type="button" class="dm-link" data-owner-password>Change password</button>
+        <button type="button" class="dm-link" data-dm-lock>Lock now</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="pv" data-pv hidden>
+    <span>Previewing <b data-pv-name></b> · only you</span>
+    <button type="button" data-pv-exit>Exit preview</button>
+  </div>
+</div>
 
 <style>
-  .owner {
+  .dm-wrap {
     position: fixed;
     left: 16px;
     bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     z-index: 200;
     display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 6px 6px 12px;
-    border-radius: 999px;
-    background: #111;
-    color: #eee;
-    border: 1px solid #444;
-    font: 500 13px/1 system-ui, sans-serif;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font: 14px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
-  .owner[hidden] { display: none; }
-  .lbl { margin: 0 6px 0 4px; color: #aaa; white-space: nowrap; }
-  @media (max-width: 480px) { .lbl { display: none; } }
-  button {
-    display: inline-flex;
+  [hidden] { display: none !important; }
+
+  .dm {
+    width: min(300px, calc(100vw - 32px));
+    padding: 14px;
+    border: 1px solid #3a3a3a;
+    border-radius: 14px;
+    background: rgba(17, 17, 17, 0.97);
+    color: #eee;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  }
+  .dm-head { display: flex; align-items: center; gap: 8px; }
+  .dm-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.18); }
+  .dm h2 { margin: 0; font: 600 14px/1 system-ui, sans-serif; letter-spacing: 0.02em; }
+  .dm-timer { margin-left: auto; font: 500 12px/1 ui-monospace, 'Cascadia Code', monospace; color: #aaa; font-variant-numeric: tabular-nums; }
+  .dm-timer.soon { color: #ffd27a; }
+  .dm-min {
+    width: 28px;
+    height: 28px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #bbb;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .dm-min:hover { background: #262626; color: #fff; }
+  .dm.collapsed .dm-body { display: none; }
+
+  .dm-body { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; }
+  .dm-now { margin: 0; padding: 8px 10px; border-radius: 8px; background: #1d1d1d; color: #ccc; font-size: 13px; }
+  .dm-now b { color: #fff; }
+  fieldset { margin: 0; padding: 0; border: 0; }
+  legend { margin-bottom: 6px; padding: 0; font-size: 12px; color: #999; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .seg { display: grid; grid-template-columns: 1fr 1fr; padding: 3px; border-radius: 10px; background: #1d1d1d; border: 1px solid #333; }
+  .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .seg label {
+    display: grid;
+    place-items: center;
+    min-height: 34px;
+    border-radius: 8px;
+    color: #bbb;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+  }
+  .seg label:hover { color: #fff; }
+  .seg input:checked + label { background: #f3f3f3; color: #111; font-weight: 600; }
+  .seg input:focus-visible + label { outline: 2px solid #fff; outline-offset: 2px; }
+
+  .dm-apply {
+    min-height: 40px;
+    border: 0;
+    border-radius: 10px;
+    background: #a78bfa;
+    color: #111;
+    font: 600 14px system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .dm-apply:hover { background: #c4b5fd; }
+  .dm-apply:disabled { opacity: 0.55; cursor: default; }
+  .dm-msg { margin: -4px 0 0; min-height: 1.2em; font-size: 12.5px; color: #ffd27a; }
+  .dm-msg[data-ok] { color: #7ee2a8; }
+
+  .dm-foot { display: flex; justify-content: space-between; gap: 8px; padding-top: 10px; border-top: 1px solid #2a2a2a; }
+  .dm-link {
+    min-height: 32px;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: #aaa;
+    font: 13px system-ui, sans-serif;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .dm-link:hover { color: #fff; }
+  .dm button:focus-visible, .pv button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+  .pv {
+    display: flex;
     align-items: center;
-    min-height: 36px;
+    gap: 10px;
+    padding: 6px 6px 6px 14px;
+    border-radius: 999px;
+    background: #4c1d95;
+    color: #f5f3ff;
+    border: 1px solid #7c3aed;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+  .pv button {
+    min-height: 32px;
     padding: 0 12px;
     border: 0;
     border-radius: 999px;
-    background: transparent;
-    color: #ddd;
-    font: inherit;
+    background: #f5f3ff;
+    color: #4c1d95;
+    font: 600 13px system-ui, sans-serif;
     cursor: pointer;
   }
-  button:hover { background: #2a2a2a; }
-  button[aria-pressed='true'] { background: #f5f5f5; color: #111; cursor: default; }
-  button:disabled { opacity: 0.6; cursor: wait; }
-  .dim { color: #aaa; }
-  button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 </style>
 
 <script>
-  const panel = document.querySelector<HTMLElement>('[data-owner]');
-  if (panel && /(?:^|;\s*)owner_ui=1(?:;|$)/.test(document.cookie)) {
-    const live = document.documentElement.dataset.ui === 'new' ? 'paper' : 'neon';
-    const buttons = [...panel.querySelectorAll<HTMLButtonElement>('button')];
+  const readCookie = (name: string) => {
+    const m = document.cookie.match(new RegExp(`(?:^|;\\s*)${name}=([^;]*)`));
+    return m ? decodeURIComponent(m[1]) : null;
+  };
+  const current = document.documentElement.dataset.ui === 'new' ? 'paper' : 'neon';
+  const label = (d: string) => (d === 'paper' ? 'Paper' : 'Neon');
+
+  // ---- "only me" preview badge (works even after Dev Mode has locked) ----------------------
+  const pvBadge = document.querySelector<HTMLElement>('[data-pv]');
+  const pvCookie = readCookie('pv');
+  const previewing = !!pvCookie && /^(classic|new)\./.test(pvCookie);
+  if (pvBadge && previewing) {
+    pvBadge.querySelector<HTMLElement>('[data-pv-name]')!.textContent = label(current);
+    pvBadge.hidden = false;
+    pvBadge.querySelector('[data-pv-exit]')!.addEventListener('click', () => {
+      document.cookie = 'pv=; Path=/; Max-Age=0; Secure; SameSite=Lax';
+      location.reload();
+    });
+  }
+
+  // ---- Dev Mode panel -------------------------------------------------------------------------
+  const panel = document.querySelector<HTMLElement>('[data-dm]');
+  const exp = Number(readCookie('owner_ui'));
+  if (panel && exp > Date.now() / 1000) {
+    const timer = panel.querySelector<HTMLElement>('[data-dm-timer]')!;
+    const msg = panel.querySelector<HTMLElement>('[data-dm-msg]')!;
+    const apply = panel.querySelector<HTMLButtonElement>('[data-dm-apply]')!;
+    const nowLine = panel.querySelector<HTMLElement>('[data-dm-now]')!;
+    const say = (t: string, ok = false) => { msg.textContent = t; msg.toggleAttribute('data-ok', ok); };
+
+    nowLine.replaceChildren(
+      previewing ? 'You are previewing ' : 'Everyone sees ',
+      Object.assign(document.createElement('b'), { textContent: label(current) }),
+      previewing ? ' (only you).' : '.',
+    );
+    (panel.querySelector<HTMLInputElement>(`#dm-${current}`)!).checked = true;
+
+    // Collapse state is remembered for the session of this tab
+    const min = panel.querySelector<HTMLButtonElement>('[data-dm-min]')!;
+    const setCollapsed = (c: boolean) => {
+      panel.classList.toggle('collapsed', c);
+      min.setAttribute('aria-expanded', String(!c));
+      min.textContent = c ? '+' : '–';
+      min.setAttribute('aria-label', c ? 'Expand Dev Mode' : 'Collapse Dev Mode');
+      try { sessionStorage.setItem('dm-collapsed', c ? '1' : ''); } catch {}
+    };
+    try { setCollapsed(sessionStorage.getItem('dm-collapsed') === '1'); } catch {}
+    min.addEventListener('click', () => setCollapsed(!panel.classList.contains('collapsed')));
+
+    // Countdown to auto-lock; hide the panel the moment the session ends
+    const tick = () => {
+      const left = Math.max(0, Math.round(exp - Date.now() / 1000));
+      timer.textContent = left >= 60 ? `locks in ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}` : `locks in ${left}s`;
+      timer.classList.toggle('soon', left <= 15);
+      if (left <= 0) { panel.hidden = true; clearInterval(iv); }
+    };
+    const iv = setInterval(tick, 1000);
+    tick();
 
     const post = async (path: string, body: object = {}) => {
       const res = await fetch(path, {
@@ -69,28 +234,31 @@
       return { ok: res.ok && data?.ok, data };
     };
 
-    panel.querySelectorAll<HTMLButtonElement>('button[data-to]').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.to === live));
-      b.addEventListener('click', async () => {
-        if (b.dataset.to === live) return;
-        const name = b.dataset.to === 'paper' ? 'Paper' : 'Neon';
-        if (!confirm(`Show the ${name} design to everyone? It stays until you switch again.`)) return;
-        buttons.forEach((x) => (x.disabled = true));
-        try {
-          const { ok, data } = await post('/owner/switch', { to: b.dataset.to });
-          if (ok) { location.reload(); return; }
-          alert(data?.error === 'signed-out' ? 'You were signed out. Sign in again from the lock in the footer.' : 'The design could not be changed right now. Try again in a minute.');
-        } catch {
-          alert('The design could not be changed right now. Try again in a minute.');
+    apply.addEventListener('click', async () => {
+      const design = (panel.querySelector<HTMLInputElement>('input[name="dm-design"]:checked')!).value;
+      const scope = (panel.querySelector<HTMLInputElement>('input[name="dm-scope"]:checked')!).value;
+      if (scope === 'everyone' && design === current && !previewing) { say(`Everyone already sees ${label(design)}.`); return; }
+      if (scope === 'everyone' && !confirm(`Show the ${label(design)} design to everyone? It stays until you change it.`)) return;
+      apply.disabled = true;
+      say('Saving…');
+      try {
+        const { ok, data } = await post('/owner/switch', { to: design, scope });
+        if (ok) {
+          say(scope === 'everyone' ? `Live for everyone. Dev Mode locks in ${data.locksIn}s.` : `Preview on, only you. Dev Mode locks in ${data.locksIn}s.`, true);
+          setTimeout(() => location.reload(), 900);
+          return;
         }
-        buttons.forEach((x) => (x.disabled = false));
-      });
+        say(data?.error === 'signed-out' ? 'Dev Mode has closed. Open it again from the lock in the footer.' : 'Could not save right now. Try again in a minute.');
+      } catch {
+        say('Could not save right now. Try again in a minute.');
+      }
+      apply.disabled = false;
     });
 
-    panel.querySelector('[data-owner-password]')?.addEventListener('click', () =>
+    panel.querySelector('[data-owner-password]')!.addEventListener('click', () =>
       dispatchEvent(new CustomEvent('owner:open', { detail: 'change' })),
     );
-    panel.querySelector('[data-owner-lock]')?.addEventListener('click', async () => {
+    panel.querySelector('[data-dm-lock]')!.addEventListener('click', async () => {
       try { await post('/owner/lock'); } catch {}
       location.reload();
     });

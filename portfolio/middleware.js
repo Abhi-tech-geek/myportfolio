@@ -27,7 +27,9 @@ export const config = {
 };
 
 const PAGES = new Set(['/', '/abhimate', '/aurago', '/discova', '/abhinova']);
-const YEAR = 60 * 60 * 24 * 365;
+const SESSION_TTL = 10 * 60; // Dev Mode stays open 10 minutes after sign-in...
+const AFTER_CHANGE_TTL = 10; // ...and closes 10 seconds after any change
+const PREVIEW_TTL = 60 * 60; // an "only me" preview lasts an hour, even after Dev Mode closes
 const ITERATIONS = 100_000;
 const IP_LIMIT = 5;
 const IP_WINDOW = 15 * 60;
@@ -95,6 +97,7 @@ const K = {
   secret: 'owner:secret',
   all: 'owner:fail:all',
   ip: (scope, ip) => `owner:fail:${scope}:${ip}`,
+  closed: (sig) => `owner:closed:${sig.slice(0, 32)}`,
 };
 
 // The live design comes from storage (the owner's switch). It is cached in memory for a few
@@ -134,13 +137,21 @@ function readCookie(request, name) {
   }
   return null;
 }
-const cookie = (name, value, { httpOnly = false, maxAge = YEAR } = {}) =>
+const cookie = (name, value, { httpOnly = false, maxAge = SESSION_TTL } = {}) =>
   `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAge}; Secure; SameSite=Lax${httpOnly ? '; HttpOnly' : ''}`;
+const now = () => Math.floor(Date.now() / 1000);
 
-async function makeSession(secret, ver) {
-  const exp = Math.floor(Date.now() / 1000) + YEAR;
-  const sig = await hmac(secret, `owner.${ver}.${exp}`);
-  return [cookie('owner_session', `${ver}.${exp}.${sig}`, { httpOnly: true }), cookie('owner_ui', '1')];
+// The session's expiry is inside the signed value, so a shortened session really ends on the
+// server too, even if the browser kept the cookie. `owner_ui` carries the same expiry so the
+// page can show the countdown; it grants nothing by itself.
+async function makeSession(secret, ver, ttl = SESSION_TTL) {
+  const exp = now() + ttl;
+  const nonce = randomHex(8); // every session token is unique, even two issued in the same second
+  const sig = await hmac(secret, `owner.${ver}.${exp}.${nonce}`);
+  return [
+    cookie('owner_session', `${ver}.${exp}.${nonce}.${sig}`, { httpOnly: true, maxAge: ttl }),
+    cookie('owner_ui', String(exp), { maxAge: ttl }),
+  ];
 }
 const clearOwner = () => [
   cookie('owner_session', '', { httpOnly: true, maxAge: 0 }),
@@ -149,15 +160,42 @@ const clearOwner = () => [
   cookie('owner_key', '', { httpOnly: true, maxAge: 0 }), // cookie from the first version of the switch
 ];
 
+// "Only me" preview: a signed cookie that shows one browser a design other than the live one.
+// Readable by the page (to show the "Preview" badge and let you exit) but not forgeable.
+async function makePreview(secret, ui) {
+  const exp = now() + PREVIEW_TTL;
+  const sig = await hmac(secret, `preview.${ui}.${exp}`);
+  return cookie('pv', `${ui}.${exp}.${sig}`, { maxAge: PREVIEW_TTL });
+}
+const clearPreview = () => cookie('pv', '', { maxAge: 0 });
+
+async function readPreview(request) {
+  const raw = readCookie(request, 'pv');
+  const m = raw && /^(classic|new)\.(\d{10})\.([0-9a-f]{64})$/.exec(raw);
+  if (!m || Number(m[2]) < now()) return null;
+  const { secret } = await loadAuth();
+  if (!secret) return null;
+  return sameHex(await hmac(secret, `preview.${m[1]}.${m[2]}`), m[3]) ? m[1] : null;
+}
+
 async function isOwner(request) {
   const raw = readCookie(request, 'owner_session');
-  const m = raw && /^(\d{1,9})\.(\d{10})\.([0-9a-f]{64})$/.exec(raw);
+  const m = raw && /^(\d{1,9})\.(\d{10})\.([0-9a-f]{16})\.([0-9a-f]{64})$/.exec(raw);
   if (!m) return false;
-  const [, ver, exp, sig] = m;
-  if (Number(exp) < Date.now() / 1000) return false;
-  const { cred, secret } = await loadAuth();
-  if (!cred || !secret || String(cred.ver) !== ver) return false;
-  return sameHex(await hmac(secret, `owner.${ver}.${exp}`), sig);
+  const [, ver, exp, nonce, sig] = m;
+  if (Number(exp) < now()) return false;
+  const [credRaw, secret, closed] = await redis([['GET', K.cred], ['GET', K.secret], ['GET', K.closed(sig)]]);
+  let cred = null;
+  try { cred = credRaw ? JSON.parse(credRaw) : null; } catch {}
+  if (!cred || !secret || closed || String(cred.ver) !== ver) return false;
+  return sameHex(await hmac(secret, `owner.${ver}.${exp}.${nonce}`), sig);
+}
+
+// After a change the old (longer) session is closed on the server, so only the new 10-second
+// session works, even if someone kept a copy of the old cookie.
+async function closeSession(request) {
+  const sig = (readCookie(request, 'owner_session') || '').split('.')[3];
+  if (sig && /^[0-9a-f]{64}$/.test(sig)) await redis([['SET', K.closed(sig), 1, 'EX', SESSION_TTL]]);
 }
 
 // ---- responses ----------------------------------------------------------------------------------
@@ -232,7 +270,11 @@ async function ownerApi(request, url, path) {
   if (!origin && request.headers.get('sec-fetch-site') !== 'same-origin') return json(403, { error: 'forbidden' });
 
   // Lock only clears this browser's cookies: no storage or body needed
-  if (path === '/owner/lock') return json(200, { ok: true }, clearOwner());
+  if (path === '/owner/lock') {
+    // Also close the session on the server when storage is available
+    if (store()) await closeSession(request).catch(() => {});
+    return json(200, { ok: true }, clearOwner());
+  }
 
   if (!store()) return json(503, { error: 'storage-missing' });
 
@@ -273,10 +315,23 @@ async function ownerApi(request, url, path) {
     // POST + same-origin + JSON only, so another site can't flip the design through the owner's browser
     if (!(await isOwner(request))) return json(401, { error: 'signed-out' });
     const to = normalize(body.to);
-    if (!to) return json(400, { error: 'bad-request' });
-    await redis([['SET', K.live, to]]); // the design for EVERYONE until the owner switches again
-    liveCache = { value: to, at: Date.now() };
-    return json(200, { ok: true, live: to === 'new' ? 'paper' : 'neon' }, [cookie('ui', '', { maxAge: 0 })]);
+    const scope = body.scope === 'me' ? 'me' : body.scope === 'everyone' ? 'everyone' : null;
+    if (!to || !scope) return json(400, { error: 'bad-request' });
+    const { cred, secret } = await loadAuth();
+    const cookies = [cookie('ui', '', { maxAge: 0 })];
+
+    if (scope === 'everyone') {
+      await redis([['SET', K.live, to]]); // the design for EVERYONE until the owner switches again
+      liveCache = { value: to, at: Date.now() };
+      cookies.push(clearPreview());
+    } else {
+      // Only this browser; picking the design that's already live just ends the preview
+      cookies.push(to === (await currentUI()) ? clearPreview() : await makePreview(secret, to));
+    }
+    // Any change closes Dev Mode 10 seconds later
+    await closeSession(request);
+    cookies.push(...(await makeSession(secret, cred.ver, AFTER_CHANGE_TTL)));
+    return json(200, { ok: true, design: to === 'new' ? 'paper' : 'neon', scope, locksIn: AFTER_CHANGE_TTL }, cookies);
   }
 
   if (path === '/owner/password') {
@@ -292,7 +347,7 @@ async function ownerApi(request, url, path) {
     if (!validPassword(body.next)) return json(400, { error: 'weak', min: MIN_PASSWORD });
     const fresh = await newCredential(body.next, cred); // version bump signs out every other device
     await redis([['SET', K.cred, JSON.stringify(fresh)], ['DEL', K.ip('change', `s:${sessionId}`)]]);
-    return json(200, { ok: true }, await makeSession(secret, fresh.ver));
+    return json(200, { ok: true, locksIn: AFTER_CHANGE_TTL }, await makeSession(secret, fresh.ver, AFTER_CHANGE_TTL));
   }
 
   return json(404, { error: 'not-found' });
@@ -318,11 +373,14 @@ export default async function middleware(request) {
     // Session check only when an owner session cookie is present
     const owner = readCookie(request, 'owner_session') ? await isOwner(request).catch(() => false) : false;
 
-    const ui = await currentUI();
+    // A valid "only me" preview overrides the live design for this browser
+    const preview = readCookie(request, 'pv') ? await readPreview(request).catch(() => null) : null;
+    const ui = preview ?? (await currentUI());
+    const personal = owner || preview !== null;
     const noStore = { headers: NO_STORE };
 
     if (path === '/v2' || path.startsWith('/v2/')) {
-      // The owner can always preview Paper here, even while Neon is live
+      // The owner (or a Paper preview) can always open Paper here, even while Neon is live
       if (owner || ui === 'new') return next(noStore);
       return redirect(url, '/');
     }
@@ -330,10 +388,10 @@ export default async function middleware(request) {
     if (ui === 'new' && PAGES.has(path)) {
       const target = new URL(path === '/' ? '/v2' : `/v2${path}`, url);
       target.search = url.search;
-      return rewrite(target, owner ? noStore : undefined);
+      return rewrite(target, personal ? noStore : undefined);
     }
 
-    return owner ? next(noStore) : next();
+    return personal ? next(noStore) : next();
   } catch {
     // Never let a middleware bug take the site down: fall through to the normal page.
     return next();

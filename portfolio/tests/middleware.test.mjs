@@ -80,7 +80,8 @@ async function setUp(password = PASSWORD) {
   assert.equal(res.status, 200, 'setup should succeed');
   return `${sessionFrom(res)}; owner_ui=1`;
 }
-const sw = (to, cookie, opts = {}) => post('/owner/switch', { to }, { cookie, ...opts });
+const sw = (to, cookie, opts = {}, scope = 'everyone') => post('/owner/switch', { to, scope }, { cookie, ...opts });
+const cookieFrom = (res, name) => setCookies(res).find((c) => c.startsWith(`${name}=`))?.split(';')[0] ?? null;
 const isOwnerCookie = async (cookie) => isNext(await get('/v2', { cookie })); // only the owner may open /v2 while Neon is live
 
 // ---- visitors -----------------------------------------------------------------------------
@@ -119,15 +120,16 @@ test('owner switching to Paper shows Paper to EVERY visitor until switched back'
   const s = await setUp();
   const res = await sw('paper', s);
   assert.equal(res.status, 200);
-  assert.equal((await res.json()).live, 'paper');
+  assert.equal((await res.json()).design, 'paper');
   assert.equal(db.get('site:ui').v, 'new');
+  const s2 = sessionFrom(res); // the 10-second session issued by the change
   for (const [from, to] of Object.entries(PAGES)) {
     assert.equal(rewriteOf(await get(from)), BASE + to, `visitor ${from}`);
     assert.equal(rewriteOf(await get(from, { cookie: s })), BASE + to, `owner ${from}`);
   }
   assert.ok(isNext(await get('/v2')), 'visitors may open /v2 once Paper is live');
 
-  assert.equal((await sw('neon', s)).status, 200);
+  assert.equal((await sw('neon', s2)).status, 200);
   assert.equal(db.get('site:ui').v, 'classic');
   for (const p of Object.keys(PAGES)) assert.equal(rewriteOf(await get(p)), null, `back to Neon ${p}`);
   assert.equal((await get('/v2')).status, 303);
@@ -137,7 +139,7 @@ test('switch clears the old per-browser preference cookie and ignores unknown na
   const s = await setUp();
   const res = await sw('paper', s);
   assert.ok(setCookies(res).some((c) => c.startsWith('ui=') && /Max-Age=0/.test(c)));
-  assert.equal((await sw('banana', s)).status, 400);
+  assert.equal((await sw('banana', sessionFrom(res))).status, 400);
   assert.equal(db.get('site:ui').v, 'new', 'unknown name changed nothing');
 });
 
@@ -261,8 +263,9 @@ test('an expired session is not the owner', async () => {
   await setUp();
   const secret = db.get('owner:secret').v;
   const exp = Math.floor(Date.now() / 1000) - 10;
-  const sig = createHmac('sha256', Buffer.from(secret, 'hex')).update(`owner.1.${exp}`).digest('hex');
-  const cookie = `owner_session=1.${exp}.${sig}`;
+  const nonce = '0123456789abcdef';
+  const sig = createHmac('sha256', Buffer.from(secret, 'hex')).update(`owner.1.${exp}.${nonce}`).digest('hex');
+  const cookie = `owner_session=1.${exp}.${nonce}.${sig}`; // correctly signed, but expired
   assert.equal(await isOwnerCookie(cookie), false);
   assert.equal((await sw('paper', cookie)).status, 401);
   assert.equal(db.get('site:ui'), undefined);
@@ -369,4 +372,66 @@ test('changing the password is limited per session, whatever the IP', async () =
     assert.equal((await post('/owner/password', { current: `wrong-${i}-wrong`, next: 'whatever whatever' }, { cookie: s, ip: `3.3.3.${i}` })).status, 401);
   }
   assert.equal((await post('/owner/password', { current: PASSWORD, next: 'whatever whatever' }, { cookie: s, ip: '3.3.3.99' })).status, 429);
+});
+
+
+// ---- Dev Mode: short sessions, auto-close, "only me" preview -------------------------------
+test('sign-in lasts 10 minutes; any change closes Dev Mode 10 seconds later', async () => {
+  await setUp();
+  const login = await post('/owner/login', { password: PASSWORD });
+  assert.match(setCookies(login).find((c) => c.startsWith('owner_session=')), /Max-Age=600/);
+  const s = sessionFrom(login);
+  const res = await sw('paper', s);
+  assert.match(setCookies(res).find((c) => c.startsWith('owner_session=')), /Max-Age=10;/);
+  assert.equal((await res.json()).locksIn, 10);
+  const fresh = sessionFrom(res);
+  assert.equal((await sw('neon', s)).status, 401, 'the old 10-minute session is closed on the server');
+  assert.equal((await sw('neon', fresh)).status, 200, 'the new short session works until it expires');
+});
+
+test('lock closes the session on the server too', async () => {
+  const s = await setUp();
+  await post('/owner/lock', {}, { cookie: s });
+  assert.equal(await isOwnerCookie(s), false);
+});
+
+test('"only me" previews a design for this browser without changing it for anyone else', async () => {
+  const s = await setUp();
+  const res = await sw('paper', s, {}, 'me');
+  assert.equal(res.status, 200);
+  assert.equal(db.get('site:ui'), undefined, 'live design untouched');
+  const pv = cookieFrom(res, 'pv');
+  assert.match(setCookies(res).find((c) => c.startsWith('pv=')), /Max-Age=3600/);
+  assert.equal(rewriteOf(await get('/')), null, 'visitors still get Neon');
+  assert.equal(rewriteOf(await get('/aurago', { cookie: pv })), `${BASE}/v2/aurago`, 'this browser sees Paper');
+  assert.ok(isNext(await get('/v2', { cookie: pv })), 'and may open /v2');
+  assert.equal(rewriteOf(await get('/', { cookie: pv })), `${BASE}/v2`, 'preview survives Dev Mode closing');
+});
+
+test('preview cookies cannot be forged or reused after expiry', async () => {
+  await setUp();
+  const secret = db.get('owner:secret').v;
+  const future = Math.floor(Date.now() / 1000) + 3600;
+  const past = Math.floor(Date.now() / 1000) - 10;
+  const sign = (ui, exp) => createHmac('sha256', Buffer.from(secret, 'hex')).update(`preview.${ui}.${exp}`).digest('hex');
+  for (const pv of [`new.${future}.${'0'.repeat(64)}`, `new.${past}.${sign('new', past)}`, `new.${future}.${sign('classic', future)}`, 'new', 'paper']) {
+    assert.equal(rewriteOf(await get('/', { cookie: `pv=${pv}` })), null, pv.slice(0, 30));
+  }
+  assert.equal(rewriteOf(await get('/', { cookie: `pv=new.${future}.${sign('new', future)}` })), `${BASE}/v2`, 'a genuine one works');
+});
+
+test('picking the live design for "only me", or switching everyone, ends the preview', async () => {
+  const s = await setUp();
+  const r1 = await sw('paper', s, {}, 'me');
+  const r2 = await sw('neon', sessionFrom(r1), {}, 'me'); // Neon is live: preview ends
+  assert.equal(r2.status, 200, `r2 status ${r2.status}`);
+  assert.ok(setCookies(r2).some((c) => c.startsWith('pv=') && /Max-Age=0/.test(c)), 'r2 ends preview: ' + setCookies(r2).map((c) => c.split(';')[0].slice(0, 12)).join(' | '));
+  const r3 = await sw('paper', sessionFrom(r2), {}, 'everyone');
+  assert.ok(setCookies(r3).some((c) => c.startsWith('pv=') && /Max-Age=0/.test(c)));
+});
+
+test('switch needs a valid scope', async () => {
+  const s = await setUp();
+  assert.equal((await post('/owner/switch', { to: 'paper' }, { cookie: s })).status, 400);
+  assert.equal((await post('/owner/switch', { to: 'paper', scope: 'world' }, { cookie: s })).status, 400);
 });
